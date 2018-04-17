@@ -66,6 +66,6 @@ py_test(
         # absl/testing dep
         # lxml dep
         # pandas dep
-        # tensorflow/python:platform dep
+        # tensorflow dep
     ],
 )

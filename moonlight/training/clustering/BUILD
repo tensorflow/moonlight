@@ -57,8 +57,7 @@ py_test(
         # absl dep
         # absl/testing dep
         # numpy dep
-        # tensorflow/core:protos_all_py_pb2 dep
-        # tensorflow/python:lib dep
+        # tensorflow dep
     ],
 )
 
@@ -74,9 +73,6 @@ py_library(
         # numpy dep
         # six dep
         # tensorflow dep
-        # tensorflow/core:protos_all_py_pb2 dep
-        # tensorflow/python:lib dep
-        # tensorflow/python:platform dep
     ],
 )
 
@@ -90,8 +86,7 @@ py_test(
         # absl/testing dep
         # mako dep
         # numpy dep
-        # tensorflow/core:protos_all_py_pb2 dep
-        # tensorflow/python:platform dep
+        # tensorflow dep
     ],
 )
 
@@ -108,6 +103,5 @@ py_binary(
         # numpy dep
         # six dep
         # tensorflow dep
-        # tensorflow/python:lib dep
     ],
 )

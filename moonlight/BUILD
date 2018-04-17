@@ -62,7 +62,7 @@ py_test(
         # librosa dep
         # lxml dep
         # numpy dep
-        # tensorflow/python:platform dep
+        # tensorflow dep
     ],
 )
 
