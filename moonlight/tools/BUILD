@@ -1,5 +1,7 @@
 package(default_visibility = ["//moonlight:__subpackages__"])
 
+licenses(["notice"])  # Apache 2.0
+
 py_binary(
     name = "gen_structure_test_case",
     srcs = ["gen_structure_test_case.py"],

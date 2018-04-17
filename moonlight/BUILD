@@ -5,7 +5,7 @@ package(
     default_visibility = ["//moonlight:__subpackages__"],
 )
 
-licenses(["notice"])
+licenses(["notice"])  # Apache 2.0
 
 # The OMR engine. Entry point for running OMR.
 py_library(

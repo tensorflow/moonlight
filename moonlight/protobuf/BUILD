@@ -15,7 +15,7 @@ package(
     default_visibility = ["//moonlight:__subpackages__"],
 )
 
-licenses(["notice"])
+licenses(["notice"])  # Apache 2.0
 
 load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
 
