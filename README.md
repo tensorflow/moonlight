@@ -1,4 +1,4 @@
-# Moonlight Optical Music Recognition (OMR)
+# Moonlight Optical Music Recognition (OMR) <img src="https://travis-ci.org/tensorflow/moonlight.svg?branch=master">
 
 An experimental [optical music
 recognition](https://en.wikipedia.org/wiki/Optical_music_recognition) engine.

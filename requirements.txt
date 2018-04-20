@@ -6,7 +6,7 @@ enum34
 librosa
 lxml
 Mako
-numpy
+numpy>=1.14.2
 pandas
 Pillow
 protobuf

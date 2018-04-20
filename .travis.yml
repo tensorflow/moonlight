@@ -1,0 +1,29 @@
+dist: trusty
+
+language: python
+python:
+  - "2.7"
+  - "3.6"
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - wget
+      - pkg-config
+
+before_install:
+  - wget https://github.com/bazelbuild/bazel/releases/download/0.12.0/bazel_0.12.0-linux-x86_64.deb
+  - sha256sum -c tools/bazel_0.12.0-linux-x86_64.deb.sha256
+  - sudo dpkg -i bazel_0.12.0-linux-x86_64.deb
+
+script:
+  # Dumb tests for NumPy API version errors.
+  - python -c 'import numpy'
+  - python -c 'import pandas'
+  - python -c 'import scipy'
+  - python -c 'import tensorflow'
+  # --local_test_jobs=1: Don't run multiple CPU-intensive jobs simultaneously on
+  # a small Travis instance.
+  - bazel test --test_output=errors --local_test_jobs=1 //moonlight/...
