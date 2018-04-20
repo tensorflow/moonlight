@@ -17,7 +17,7 @@ Moonlight is not an officially supported Google product.
     # Build the OMR command-line tool.
     bazel build moonlight:omr
     # Prints a Score message.
-    bazel-bin/moonlight/omr grom/testdata/IMSLP00747-000.png
+    bazel-bin/moonlight/omr moonlight/testdata/IMSLP00747-000.png
     # Scans several pages and prints a NoteSequence message.
     bazel-bin/moonlight/omr --output_type=NoteSequence IMSLP00001-*.png
     # Writes MusicXML to ~/mozart.xml.
