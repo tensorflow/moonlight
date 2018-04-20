@@ -48,7 +48,7 @@ py_binary(
 
 py_test(
     name = "omr_endtoend_test",
-    size = "medium",
+    size = "large",
     srcs = ["omr_endtoend_test.py"],
     data = ["//moonlight/testdata:images"],
     shard_count = 4,
@@ -68,7 +68,7 @@ py_test(
 
 py_test(
     name = "omr_regression_test",
-    size = "medium",
+    size = "large",
     srcs = ["omr_regression_test.py"],
     shard_count = 4,
     srcs_version = "PY2AND3",

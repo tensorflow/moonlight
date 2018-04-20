@@ -37,6 +37,7 @@ py_test(
         "//moonlight/testdata:musicxml",
     ],
     srcs_version = "PY2AND3",
+    size = "large",
     deps = [
         ":evaluator",
         "//moonlight/protobuf:protobuf_py_pb2",

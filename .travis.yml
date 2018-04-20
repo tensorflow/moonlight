@@ -24,6 +24,6 @@ script:
   - python -c 'import pandas'
   - python -c 'import scipy'
   - python -c 'import tensorflow'
-  # --local_test_jobs=1: Don't run multiple CPU-intensive jobs simultaneously on
-  # a small Travis instance.
-  - bazel test --test_output=errors --local_test_jobs=1 //moonlight/...
+  # End-to-end tests must be marked "large". They exceed Travis CI's 3GB RAM
+  # limit.
+  - bazel test --test_output=errors --test_size_filters=small,medium //moonlight/...
