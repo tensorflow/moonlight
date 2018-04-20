@@ -193,7 +193,7 @@ class Clef {
   /**
    * Samples a random note to display for the clef.
    * @param {!Random} random The random generator
-   * @return {!string} The note name, with accidental.
+   * @return {string} The note name, with accidental.
    */
   genNote(random) {
     const modifier = discreteSample(random, PROB_MODIFIERS);
@@ -203,7 +203,7 @@ class Clef {
   // TODO(ringw): Why does the bass clef render notes in the same positions
   // as a treble clef? Fix this and add a different range of notes for bass.
   /**
-   * @return {!array<!string>} The base note names (without accidentals) for
+   * @return {!array<string>} The base note names (without accidentals) for
    * notes that lie on the staff, or are within 2 ledger lines.
    * @private
    */
@@ -217,7 +217,7 @@ class Clef {
 
 
 class TrebleClef extends Clef {
-  /** @return {!string} the name used by VexFlow for the clef. */
+  /** @return {string} the name used by VexFlow for the clef. */
   name() {
     return 'treble';
   }
@@ -225,7 +225,7 @@ class TrebleClef extends Clef {
 
 
 class BassClef extends Clef {
-  /** @return {!string} the name used by VexFlow for the clef. */
+  /** @return {string} the name used by VexFlow for the clef. */
   name() {
     return 'bass';
   }
