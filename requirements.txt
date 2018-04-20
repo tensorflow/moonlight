@@ -1,0 +1,14 @@
+# List of all packages used by Moonlight.
+absl-py
+apache_beam
+backports.tempfile
+enum34
+librosa
+lxml
+Mako
+numpy
+pandas
+Pillow
+protobuf
+scipy
+tensorflow>=1.6.0
