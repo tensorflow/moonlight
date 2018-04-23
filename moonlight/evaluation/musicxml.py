@@ -50,6 +50,7 @@ import fractions
 from lxml import etree
 import pandas as pd
 import six
+from six import moves
 
 from moonlight.music import constants
 
@@ -98,8 +99,8 @@ def musicxml_similarity(a, b):
 
   measure_similarities = []
   index = []
-  for part_staff in xrange(a.num_partstaves()):
-    for measure_num in xrange(a.num_measures(part_staff)):
+  for part_staff in moves.xrange(a.num_partstaves()):
+    for measure_num in moves.xrange(a.num_measures(part_staff)):
       measure_similarities.append(
           measure_similarity(
               a.get_measure(part_staff, measure_num),
@@ -142,7 +143,7 @@ class PartStaves(object):
     self.score = score
     num_parts = len(score.findall('part'))
     part_staves = []
-    for i in xrange(num_parts):
+    for i in moves.xrange(num_parts):
       # XPath is 1-indexed.
       part = score.find('part[%d]' % (i + 1))
 
@@ -157,7 +158,7 @@ class PartStaves(object):
             yield int(attribute.attrib['number'])
 
       num_staves = max(num_staves(part))
-      for j in xrange(num_staves):
+      for j in moves.xrange(num_staves):
         part_staves.append((i, j))
     self.part_staves = part_staves
 
@@ -246,7 +247,7 @@ class PartStaves(object):
   def all_measure_counts(self):
     return [
         self.num_measures(part_staff)
-        for part_staff in xrange(self.num_partstaves())
+        for part_staff in moves.xrange(self.num_partstaves())
     ]
 
 

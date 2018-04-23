@@ -128,7 +128,7 @@ def _maybe_duplicate_beams(beams, staffline_distance):
     estimated_area_per_beam = width * staffline_distance * 0.75
     return max(1, np.round(beam[COLUMNS.SIZE] / estimated_area_per_beam))
 
-  estimated_num_beams = map(_estimate_num_beams, beams)
+  estimated_num_beams = list(map(_estimate_num_beams, beams))
   return np.repeat(beams, estimated_num_beams, axis=0)
 
 

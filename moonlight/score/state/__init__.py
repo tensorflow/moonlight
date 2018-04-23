@@ -17,9 +17,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from six.moves import xrange  # pylint: disable=redefined-builtin
-
 from moonlight.score.state import staff as staff_state
+from six import moves
 
 
 class ScoreState(object):
@@ -50,7 +49,9 @@ class ScoreState(object):
     """
     time = self.add_measure()
     if len(self.staves) != self.num_staves:
-      self.staves = [staff_state.StaffState(time) for _ in xrange(num_staves)]
+      self.staves = [
+          staff_state.StaffState(time) for _ in moves.xrange(num_staves)
+      ]
     else:
       self.staves = [staff.new_staff(time) for staff in self.staves]
 

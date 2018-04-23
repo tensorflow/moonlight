@@ -20,6 +20,7 @@ from __future__ import print_function
 import tensorflow as tf
 
 from moonlight.util import patches
+from six import moves
 
 
 class PatchesTest(tf.test.TestCase):
@@ -33,7 +34,7 @@ class PatchesTest(tf.test.TestCase):
       image_arr, patches_arr = sess.run((image_t, patches_t))
       self.assertEqual(patches_arr.shape, (200 - patch_width + 1, 100,
                                            patch_width))
-      for i in xrange(patches_arr.shape[0]):
+      for i in moves.xrange(patches_arr.shape[0]):
         self.assertAllEqual(patches_arr[i], image_arr[:, i:i + patch_width])
 
   def test4D(self):
@@ -47,9 +48,9 @@ class PatchesTest(tf.test.TestCase):
       image_arr, patches_arr = sess.run((image_t, patches_t))
       self.assertEqual(patches_arr.shape, (4, 8, width - patch_width + 1,
                                            height, patch_width))
-      for i in xrange(patches_arr.shape[0]):
-        for j in xrange(patches_arr.shape[1]):
-          for k in xrange(patches_arr.shape[2]):
+      for i in moves.xrange(patches_arr.shape[0]):
+        for j in moves.xrange(patches_arr.shape[1]):
+          for k in moves.xrange(patches_arr.shape[2]):
             self.assertAllEqual(patches_arr[i, j, k],
                                 image_arr[i, j, :, k:k + patch_width])
 

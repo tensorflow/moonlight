@@ -20,9 +20,8 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-from six.moves import xrange  # pylint: disable=redefined-builtin
-
 from moonlight.protobuf import musicscore_pb2
+from six import moves
 
 
 class Barlines(object):
@@ -44,12 +43,14 @@ class Barlines(object):
   def apply(self, page):
     """Splits the staves in the page into systems with barlines."""
     assert len(page.system) == 1
-    systems_map = dict((i, (i, i)) for i in xrange(len(page.system[0].staff)))
+    systems_map = dict(
+        (i, (i, i)) for i in moves.xrange(len(page.system[0].staff))
+    )
     for start, end in zip(self.barline_staff_start, self.barline_staff_end):
-      for staff in xrange(start, end + 1):
+      for staff in moves.xrange(start, end + 1):
         start = min(start, systems_map[staff][0])
         end = max(end, systems_map[staff][1])
-      for staff in xrange(start, end + 1):
+      for staff in moves.xrange(start, end + 1):
         systems_map[staff] = (start, end)
     system_inds = sorted(set(systems_map.values()), key=lambda x: x[0])
     staves = page.system[0].staff
@@ -71,7 +72,7 @@ class Barlines(object):
       system_end = system_start + len(system.staff) - 1
       selected_barlines = set()
       blacklist_x = self._get_blacklist_x(system)
-      for i in xrange(len(self.barlines)):
+      for i in moves.xrange(len(self.barlines)):
         barline_x = self.barlines[i, 0, 0]
         start = self.barline_staff_start[i]
         end = self.barline_staff_end[i]

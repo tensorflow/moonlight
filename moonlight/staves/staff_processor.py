@@ -21,6 +21,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from six import moves
+
 
 class StaffProcessor(object):
 
@@ -37,7 +39,7 @@ class StaffProcessor(object):
     staves_arr = self.staff_detector.staves
     for i, staff in enumerate(page.system[0].staff):
       staff.staffline_distance = self.staff_detector.staffline_distance[i]
-      for j in xrange(staves_arr.shape[1]):
+      for j in moves.xrange(staves_arr.shape[1]):
         if (0 < j and j + 1 < staves_arr.shape[1] and
             staves_arr[i, j - 1, 0] == staves_arr[i, j, 0] and
             staves_arr[i, j, 0] == staves_arr[i, j + 1, 0]):

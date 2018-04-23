@@ -27,9 +27,9 @@ from __future__ import print_function
 import itertools
 
 import librosa
-
 from moonlight.music import constants
 from moonlight.protobuf import musicscore_pb2
+import six
 
 Glyph = musicscore_pb2.Glyph  # pylint: disable=invalid-name
 
@@ -135,7 +135,7 @@ class KeySignature(_BaseAccidentals):
     # Determine the order of pitch classes (for either all sharps or all flats).
     values = set(self._accidentals.values())
     if len(values) == 1:
-      full_key_sig = _KEY_SIGNATURE_PITCH_CLASS_LIST[iter(values).next()]
+      full_key_sig = _KEY_SIGNATURE_PITCH_CLASS_LIST[six.next(iter(values))]
     else:
       # Key signature is empty. Don't know whether to predict a sharp or a flat.
       return None, None
@@ -146,7 +146,7 @@ class KeySignature(_BaseAccidentals):
     elif set(pitch_classes) == set(full_key_sig[:len(pitch_classes)]):
       # Use the next pitch class in the list.
       next_pitch_class = full_key_sig[len(pitch_classes)]
-      accidental = iter(values).next()
+      accidental = six.next(iter(values))
       # The pitch class must match exactly one of the 7 y positions that are
       # allowed for this key signature.
       for y_position in _KEY_SIGNATURE_Y_POSITION_RANGES[self.clef.glyph,
@@ -161,7 +161,7 @@ class KeySignature(_BaseAccidentals):
 
   def get_type(self):
     """Returns whether this is a sharp, flat, or None (C major) signature."""
-    return (iter(self._accidentals.values()).next()
+    return (six.next(iter(self._accidentals.values()))
             if self._accidentals else None)
 
   def __len__(self):

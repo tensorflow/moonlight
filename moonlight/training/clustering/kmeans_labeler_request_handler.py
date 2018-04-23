@@ -23,10 +23,11 @@ from __future__ import print_function
 
 import base64
 import cgi
-import StringIO
 from mako import template as mako_template
 import numpy as np
 from PIL import Image
+import six
+from six import moves
 from six.moves import BaseHTTPServer
 from six.moves import http_client
 from tensorflow.core.example import example_pb2
@@ -64,7 +65,8 @@ class LabelerHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     post_vars = cgi.parse_qs(
         self.rfile.read(int(self.headers.getheader('content-length'))))
     labels = [
-        post_vars['cluster%d' % i][0] for i in xrange(self.clusters.shape[0])
+        post_vars['cluster%d' % i][0]
+        for i in moves.xrange(self.clusters.shape[0])
     ]
     examples = create_examples(self.clusters, labels)
 
@@ -112,10 +114,10 @@ def _process_cluster(cluster):
   """
   image_arr = create_highlighted_image(cluster)
   image = Image.fromarray(image_arr)
-  buf = StringIO.StringIO()
+  buf = six.BytesIO()
   image.save(buf, 'PNG', optimize=True)
   buf.seek(0)
-  preview = 'data:image/png;base64,' + base64.b64encode(buf.read())
+  preview = 'data:image/png;base64,' + str(base64.b64encode(buf.read()))
   # The cluster is likely non-content (does not contain a glyph) if the
   # max standard deviation across all rows or all columns is low. Show those
   # patches at the bottom of the page so that they can still be double checked

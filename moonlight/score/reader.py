@@ -21,6 +21,8 @@ from moonlight.protobuf import musicscore_pb2
 from moonlight.score import measures
 from moonlight.score import state
 from moonlight.score.elements import clef
+import six
+from six import moves
 
 # The expected y position for clefs.
 TREBLE_CLEF_EXPECTED_Y = -2
@@ -83,7 +85,7 @@ class ScoreReader(object):
   def read_system(self, system):
     self.score_state.num_staves(len(system.staff))
     system_measures = measures.Measures(system)
-    for measure_num in xrange(system_measures.size()):
+    for measure_num in moves.xrange(system_measures.size()):
       for staff, staff_state in zip(system.staff, self.score_state.staves):
         for glyph in staff.glyph:
           if system_measures.get_measure(glyph) == measure_num:

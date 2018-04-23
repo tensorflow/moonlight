@@ -27,9 +27,9 @@ import re
 
 import librosa
 from lxml import etree
-
 from moonlight.protobuf import musicscore_pb2
 from moonlight.score import measures
+from six import moves
 
 DOCTYPE = ('<!DOCTYPE score-partwise PUBLIC\n'
            '    "-//Recordare//DTD MusicXML 3.0 Partwise//EN"\n'
@@ -72,7 +72,7 @@ def score_to_musicxml(score):
   for page in score.page:
     for system in page.system:
       system_measures = measures.Measures(system)
-      for system_measure_num in xrange(system_measures.size()):
+      for system_measure_num in moves.xrange(system_measures.size()):
         for staff_num, staff in enumerate(system.staff):
           # Produce the measure, even if there are no glyphs.
           measure = musicxml.get_measure(staff_num, measure_num)
@@ -223,7 +223,7 @@ class MusicXMLScore(object):
 
 def _create_part_list(num_parts):
   part_list = etree.Element('part-list')
-  for part_num in xrange(1, num_parts + 1):
+  for part_num in moves.xrange(1, num_parts + 1):
     score_part = etree.SubElement(part_list, 'score-part')
     score_part.set('id', 'P%d' % part_num)
     etree.SubElement(score_part, 'part-name').text = 'Part %d' % part_num

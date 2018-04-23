@@ -17,6 +17,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import six
 import tensorflow as tf
 
 
@@ -39,7 +40,7 @@ def patches_1d(images, patch_width):
   Raises:
     ValueError: If patch_width is not an int or long.
   """
-  if not isinstance(patch_width, (int, long)):
+  if not isinstance(patch_width, six.integer_types):
     raise ValueError("patch_width must be an integer")
   # The shape of the input, excluding image height and width.
   images_shape = tf.shape(images)[:-2]

@@ -22,10 +22,12 @@ import os.path
 
 from absl.testing import absltest
 from lxml import etree
+from moonlight.evaluation import musicxml
 import pandas as pd
 import pandas.util.testing as pd_testing
+import six
+from six import moves
 from tensorflow.python.platform import resource_loader
-from moonlight.evaluation import musicxml
 
 
 class MusicXMLTest(absltest.TestCase):
@@ -84,19 +86,19 @@ class MusicXMLTest(absltest.TestCase):
                 names=['staff', 'measure'])))
 
   def testIdentical(self):
-    filename = unicode(
+    filename = six.text_type(
         os.path.join(resource_loader.get_data_files_path(),
                      '../testdata/IMSLP00747.golden.xml'))
-    score = etree.fromstring(open(filename).read())
+    score = etree.fromstring(open(filename, 'rb').read())
     similarity = musicxml.musicxml_similarity(score, score)
     self.assertGreater(len(similarity), 1)
     self.assertEqual(similarity['overall_score']['total'][0], 1.0)
 
   def testMoreChangesLessSimilar(self):
-    filename = unicode(
+    filename = six.text_type(
         os.path.join(resource_loader.get_data_files_path(),
                      '../testdata/TWO_MEASURE_SAMPLE.xml'))
-    score = etree.fromstring(open(filename).read())
+    score = etree.fromstring(open(filename, 'rb').read())
     score2 = copy.deepcopy(score)
     durations2 = score2.findall('part/measure/note/duration')
     # Change the duration of one note by +1
@@ -186,16 +188,16 @@ class PartStavesTest(absltest.TestCase):
 
   def testDivisions_golden(self):
     """Test that <divisions> is propagated across all measures."""
-    filename = unicode(
+    filename = six.text_type(
         os.path.join(resource_loader.get_data_files_path(),
                      '../testdata/IMSLP00747.golden.xml'))
-    score = etree.fromstring(open(filename).read())
+    score = etree.fromstring(open(filename, 'rb').read())
     part_staves = musicxml.PartStaves(score)
     self.assertEqual(part_staves.num_partstaves(), 2)
     self.assertEqual(part_staves.num_measures(0), 22)
     self.assertEqual(part_staves.num_measures(1), 22)
-    for i in xrange(2):
-      for j in xrange(22):
+    for i in moves.xrange(2):
+      for j in moves.xrange(22):
         measure = part_staves.get_measure(i, j)
         self.assertEqual(measure.find('attributes/divisions').text, '8')
 
@@ -227,15 +229,15 @@ class PartStavesTest(absltest.TestCase):
     self.assertEqual(len(staff_1_measure), 1)
     attributes = staff_1_measure.find('attributes')
     self.assertEqual(len(attributes), 2)
-    self.assertEqual(etree.tostring(attributes[0]), '<divisions>8</divisions>')
-    self.assertEqual(etree.tostring(attributes[1]), '<key>C major</key>')
+    self.assertEqual(etree.tostring(attributes[0]), b'<divisions>8</divisions>')
+    self.assertEqual(etree.tostring(attributes[1]), b'<key>C major</key>')
 
     staff_2_measure = part_staves.get_measure(1, 0)
     self.assertEqual(len(staff_2_measure), 1)
     attributes = staff_2_measure.find('attributes')
     self.assertEqual(len(attributes), 2)
-    self.assertEqual(etree.tostring(attributes[0]), '<divisions>8</divisions>')
-    self.assertEqual(etree.tostring(attributes[1]), '<key>G major</key>')
+    self.assertEqual(etree.tostring(attributes[0]), b'<divisions>8</divisions>')
+    self.assertEqual(etree.tostring(attributes[1]), b'<key>G major</key>')
 
 
 if __name__ == '__main__':

@@ -19,11 +19,4 @@ before_install:
   - sudo dpkg -i bazel_0.12.0-linux-x86_64.deb
 
 script:
-  # Dumb tests for NumPy API version errors.
-  - python -c 'import numpy'
-  - python -c 'import pandas'
-  - python -c 'import scipy'
-  - python -c 'import tensorflow'
-  # End-to-end tests must be marked "large". They exceed Travis CI's 3GB RAM
-  # limit.
-  - bazel test --test_output=errors --test_size_filters=small,medium //moonlight/...
+  - tools/travis_tests.sh
