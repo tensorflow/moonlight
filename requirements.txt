@@ -3,7 +3,9 @@ absl-py
 apache_beam
 backports.tempfile
 enum34
-librosa
+# TODO(ringw): librosa > 0.4.0 currently can't be installed due to a bad
+# dependency in numba.
+librosa<=0.4.0
 lxml
 Mako
 numpy>=1.14.2
