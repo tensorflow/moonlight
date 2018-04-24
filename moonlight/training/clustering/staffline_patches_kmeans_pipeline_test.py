@@ -47,7 +47,8 @@ class StafflinePatchesKmeansPipelineTest(absltest.TestCase):
           example.features.feature['features'].float_list.value.extend(patch)
           patches_writer.write(example.SerializeToString())
       clusters = staffline_patches_kmeans_pipeline.train_kmeans(
-          patches_file.name, NUM_CLUSTERS, BATCH_SIZE, TRAIN_STEPS)
+          patches_file.name, NUM_CLUSTERS, BATCH_SIZE, TRAIN_STEPS,
+          min_eval_frequency=0)
       self.assertEqual(clusters.shape, (NUM_CLUSTERS, num_features))
 
 

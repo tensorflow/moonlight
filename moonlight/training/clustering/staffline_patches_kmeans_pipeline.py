@@ -59,7 +59,8 @@ flags.DEFINE_integer('kmeans_num_steps', 100,
                      'Number of k-means training steps.')
 
 
-def train_kmeans(patch_file_pattern, num_clusters, batch_size, train_steps):
+def train_kmeans(patch_file_pattern, num_clusters, batch_size, train_steps,
+                 min_eval_frequency=None):
   """Runs TensorFlow K-Means over TFRecords.
 
   Args:
@@ -68,6 +69,14 @@ def train_kmeans(patch_file_pattern, num_clusters, batch_size, train_steps):
     num_clusters: Number of output clusters.
     batch_size: Size of a k-means minibatch.
     train_steps: Number of steps for k-means training.
+    min_eval_frequency: The minimum number of steps between evaluations. Of
+      course, evaluation does not occur if no new snapshot is available, hence,
+      this is the minimum.  If 0, the evaluation will only happen after
+      training.  If None, defaults to 1. To avoid checking for
+      new checkpoints too frequent, the interval is further limited to be at
+      least check_interval_secs between checks. See
+        third_party/tensorflow/contrib/learn/python/learn/experiment.py
+      for details.
 
   Returns:
     A NumPy array of shape (num_clusters, patch_height * patch_width). The
@@ -111,7 +120,8 @@ def train_kmeans(patch_file_pattern, num_clusters, batch_size, train_steps):
         train_steps=train_steps,
         train_input_fn=input_fn,
         eval_steps=1,
-        eval_input_fn=input_fn)
+        eval_input_fn=input_fn,
+        min_eval_frequency=min_eval_frequency)
 
   output_dir = tempfile.mkdtemp(prefix='staffline_patches_kmeans')
   try:
