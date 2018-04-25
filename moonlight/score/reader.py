@@ -21,7 +21,6 @@ from moonlight.protobuf import musicscore_pb2
 from moonlight.score import measures
 from moonlight.score import state
 from moonlight.score.elements import clef
-import six
 from six import moves
 
 # The expected y position for clefs.
