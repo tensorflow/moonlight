@@ -31,3 +31,7 @@ message by default, or [MusicXML](https://www.musicxml.com/) or a
 Moonlight is intended to be run in bulk, and will not offer a full UI for
 correcting the score. The main entry point will be an Apache Beam pipeline that
 processes an entire corpus of images.
+
+### Resources
+
+[Forum](https://groups.google.com/forum/#!forum/moonlight-omr)
