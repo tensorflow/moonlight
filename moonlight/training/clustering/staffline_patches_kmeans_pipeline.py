@@ -29,12 +29,12 @@ import tempfile
 from absl import flags
 import apache_beam as beam
 from apache_beam.transforms import combiners
+from moonlight.pipeline import pipeline_flags
+from moonlight.training.clustering import staffline_patches_dofn
 import tensorflow as tf
 from tensorflow.contrib.learn.python.learn import learn_runner
 from tensorflow.python.lib.io import file_io
 from tensorflow.python.lib.io import tf_record
-
-from moonlight.training.clustering import staffline_patches_dofn
 
 FLAGS = flags.FLAGS
 
@@ -145,7 +145,7 @@ def main(_):
   records_dir = tempfile.mkdtemp(prefix='staffline_kmeans')
   try:
     patch_file_prefix = os.path.join(records_dir, 'patches')
-    with beam.Pipeline() as pipeline:
+    with pipeline_flags.create_pipeline() as pipeline:
       filenames = file_io.get_matching_files(FLAGS.music_pattern)
       assert filenames, 'Must have matched some filenames'
       if 0 < FLAGS.num_pages < len(filenames):

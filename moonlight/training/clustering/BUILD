@@ -43,6 +43,7 @@ py_binary(
     srcs_version = "PY2AND3",
     deps = [
         ":staffline_patches_dofn",
+        "//moonlight/pipeline:pipeline_flags",
         # absl dep
         # apache-beam dep
         # tensorflow dep
