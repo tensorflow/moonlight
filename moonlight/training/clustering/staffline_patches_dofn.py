@@ -91,7 +91,7 @@ class StafflinePatchesDoFn(beam.DoFn):
     self.graph = tf.Graph()
     with self.graph.as_default():
       self.session = tf.Session()
-      with self.session:
+      with self.session.as_default():
         # Construct the graph.
         self.png_path = tf.placeholder(tf.string, shape=(), name='png_path')
         self.patches = pipeline_graph(self.png_path, self.patch_height,
