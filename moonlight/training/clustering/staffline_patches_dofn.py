@@ -125,6 +125,8 @@ class StafflinePatchesDoFn(beam.DoFn):
       self.failed_pages_counter.inc()
       return
 
+    # len() is required for NumPy ndarrays.
+    # pylint: disable=g-explicit-length-test
     if not len(patches):
       self.empty_pages_counter.inc()
     self.total_patches_counter.inc(len(patches))
