@@ -28,6 +28,7 @@ import os.path
 import random
 
 import apache_beam as beam
+from apache_beam import metrics
 import tensorflow as tf
 
 from moonlight import image
@@ -86,18 +87,31 @@ class StafflinePatchesDoFn(beam.DoFn):
     self.num_stafflines = num_stafflines
     self.timeout_ms = timeout_ms
     self.max_patches_per_page = max_patches_per_page
+    self.total_pages_counter = metrics.Metrics.counter(
+        self.__class__, 'total_pages')
+    self.failed_pages_counter = metrics.Metrics.counter(
+        self.__class__, 'failed_pages')
+    self.successful_pages_counter = metrics.Metrics.counter(
+        self.__class__, 'successful_pages')
+    self.empty_pages_counter = metrics.Metrics.counter(
+        self.__class__, 'empty_pages')
+    self.total_patches_counter = metrics.Metrics.counter(
+        self.__class__, 'total_patches')
+    self.emitted_patches_counter = metrics.Metrics.counter(
+        self.__class__, 'emitted_patches')
 
   def start_bundle(self):
     self.graph = tf.Graph()
     with self.graph.as_default():
       self.session = tf.Session()
-      with self.session:
+      with self.session.as_default():
         # Construct the graph.
         self.png_path = tf.placeholder(tf.string, shape=(), name='png_path')
         self.patches = pipeline_graph(self.png_path, self.patch_height,
                                       self.patch_width, self.num_stafflines)
 
   def process(self, png_path):
+    self.total_pages_counter.inc()
     basename = os.path.basename(png_path)
     run_options = tf.RunOptions(timeout_in_ms=self.timeout_ms)
     try:
@@ -108,7 +122,15 @@ class StafflinePatchesDoFn(beam.DoFn):
     # pylint: disable=broad-except
     except Exception:
       logging.exception('Skipping failed music score (%s)', png_path)
+      self.failed_pages_counter.inc()
       return
+
+    # len() is required for NumPy ndarrays.
+    # pylint: disable=g-explicit-length-test
+    if not len(patches):
+      self.empty_pages_counter.inc()
+    self.total_patches_counter.inc(len(patches))
+
     # Subsample patches.
     if 0 < self.max_patches_per_page < len(patches):
       patch_inds = random.sample(
@@ -124,6 +146,10 @@ class StafflinePatchesDoFn(beam.DoFn):
       example.features.feature['height'].int64_list.value.append(patch.shape[0])
       example.features.feature['width'].int64_list.value.append(patch.shape[1])
       yield example
+
+    self.successful_pages_counter.inc()
+    # Patches are sub-sampled by this point.
+    self.emitted_patches_counter.inc(len(patches))
 
   def finish_bundle(self):
     self.session.close()
