@@ -94,17 +94,33 @@ message Glyph {
     // No glyph at the given position. This is used for classification, where
     // we will evaluate every pixel as a possible center point for a glyph.
     NONE = 1;
+    // G clef. Typically centered on the second line from the bottom of the
+    // staff (G4 in treble clef). May be shifted in other, uncommon clefs.
     CLEF_TREBLE = 2;
+    // F clef. Typically centered on the fourth line from the bottom of the
+    // staff (F3 in bass clef). May be shifted in other, uncommon clefs.
     CLEF_BASS = 3;
+    // C clef is the clef symbol used for alto, tenor, and other clefs. In each
+    // such clef, the line that the C clef is centered on represents C4.
+    CLEF_C = 13;
     NOTEHEAD_FILLED = 4;
     NOTEHEAD_EMPTY = 5;
     NOTEHEAD_WHOLE = 6;
+    // Note that whole and half rests will likely not be labeled for the
+    // classifier. They can easily be detected as rectangular connected
+    // components after staff removal, and are distinguished by their absolute
+    // position on the staff. However, the two currently look identical on the
+    // extracted patches because we use staff removal.
+    REST_WHOLE = 14;
+    REST_HALF = 15;
     REST_QUARTER = 7;
     REST_EIGHTH = 8;
     REST_SIXTEENTH = 9;
     FLAT = 10;
     SHARP = 11;
+    DOUBLE_SHARP = 16;
     NATURAL = 12;
+    // Next tag: 17
   }
 }
 
