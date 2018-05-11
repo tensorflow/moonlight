@@ -32,6 +32,15 @@ from moonlight.staves import staffline_extractor
 from moonlight.util import patches
 
 
+_SIGNATURE_KEYS = [
+    # Created if the ServingInputReceiver has 'patch' in
+    # receiver_tensors_alternatives.
+    'patch:predict',
+    # Seems to only be created if receiver_tensors_alternatives is not set.
+    tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY,
+]
+
+
 class SavedConvolutional1DClassifier(
     convolutional.Convolutional1DGlyphClassifier):
   """Holds a saved glyph classifier model.
@@ -64,8 +73,18 @@ class SavedConvolutional1DClassifier(
     sess = tf.get_default_session()
     graph_def = tf.saved_model.loader.load(
         sess, [tf.saved_model.tag_constants.SERVING], saved_model_dir)
-    signature = graph_def.signature_def[
-        tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY]
+
+    signature = None
+    for key in _SIGNATURE_KEYS:
+      if key in graph_def.signature_def:
+        signature = graph_def.signature_def[key]
+        break
+    else:
+      # for/else is only executed if the loop completes without breaking.
+      raise ValueError(
+          'One of the following signatures must be present: %s' %
+          _SIGNATURE_DEFS)
+
     input_info = signature.inputs['input']
     if not (len(input_info.tensor_shape.dim) == 3 and
             input_info.tensor_shape.dim[1].size > 0 and
