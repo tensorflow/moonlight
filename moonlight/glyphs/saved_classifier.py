@@ -83,7 +83,7 @@ class SavedConvolutional1DClassifier(
       # for/else is only executed if the loop completes without breaking.
       raise ValueError(
           'One of the following signatures must be present: %s' %
-          _SIGNATURE_DEFS)
+          _SIGNATURE_KEYS)
 
     input_info = signature.inputs['input']
     if not (len(input_info.tensor_shape.dim) == 3 and
