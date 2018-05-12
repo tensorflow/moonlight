@@ -35,6 +35,7 @@ def create_estimator():
   return tf.estimator.DNNClassifier(
       FLAGS.layer_dims,
       feature_columns=[glyph_patches.create_patch_feature_column()],
+      weight_column=glyph_patches.WEIGHT_COLUMN_NAME,
       n_classes=len(musicscore_pb2.Glyph.Type.keys()),
       optimizer=tf.train.FtrlOptimizer(
           learning_rate=FLAGS.learning_rate,

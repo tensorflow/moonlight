@@ -13,6 +13,7 @@ py_library(
     srcs_version = "PY2AND3",
     deps = [
         # absl dep
+        "//moonlight/protobuf:protobuf_py_pb2",
         # tensorflow dep
     ],
 )
