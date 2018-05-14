@@ -37,27 +37,17 @@ FLAGS = flags.FLAGS
 
 class OmrRegressionTest(absltest.TestCase):
 
-  def testIMSLP00304_038_MultipleStaffSizes(self):
-    # Image has staff systems with different numbers of staves, some of which
-    # contain staves slightly smaller than the others.
-    page = engine.OMREngine().run(_get_imslp_path('IMSLP00304-038.png')).page[0]
+  def testIMSLP01963_106_multipleStaffSizes(self):
+    page = engine.OMREngine().run(
+        _get_imslp_path('IMSLP01963-106.png')).page[0]
     self.assertEqual(len(page.system), 3)
 
-    self.assertEqual(len(page.system[0].staff), 4)
-    self.assertEqual(page.system[0].staff[0].staffline_distance, 19)
-    self.assertEqual(page.system[0].staff[1].staffline_distance, 19)
-    self.assertEqual(page.system[0].staff[2].staffline_distance, 16)
-    self.assertEqual(page.system[0].staff[3].staffline_distance, 16)
-
-    self.assertEqual(len(page.system[1].staff), 2)
-    self.assertEqual(page.system[1].staff[0].staffline_distance, 19)
-    self.assertEqual(page.system[1].staff[1].staffline_distance, 19)
-
-    self.assertEqual(len(page.system[2].staff), 4)
-    self.assertEqual(page.system[2].staff[0].staffline_distance, 19)
-    self.assertEqual(page.system[2].staff[1].staffline_distance, 19)
-    self.assertEqual(page.system[2].staff[2].staffline_distance, 16)
-    self.assertEqual(page.system[2].staff[3].staffline_distance, 16)
+    for system in page.system:
+      self.assertEqual(len(system.staff), 4)
+      self.assertEqual(system.staff[0].staffline_distance, 14)
+      self.assertEqual(system.staff[1].staffline_distance, 14)
+      self.assertEqual(system.staff[2].staffline_distance, 22)
+      self.assertEqual(system.staff[3].staffline_distance, 22)
 
   def testIMSLP00823_000_structure(self):
     page = engine.OMREngine().run(_get_imslp_path('IMSLP00823-000.png')).page[0]
