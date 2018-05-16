@@ -52,8 +52,8 @@ process of renaming stafflines in this context to staff positions.
 ## Glyphs
 
 Glyphs are defined in
-[<code>musicscore.proto</code>](../moonlight/protobuf/musicscore.proto).
-Each glyph has an x coordinate on the original image, and a y position (staff
+[<code>musicscore.proto</code>](../moonlight/protobuf/musicscore.proto). Each
+glyph has an x coordinate on the original image, and a y position (staff
 position). The staff position determines the pitch of the glyph, if applicable.
 If the glyph is especially large (e.g. clefs) or is not centered on a particular
 vertical position, we choose a *canonical* staff position (e.g. the G line for
