@@ -70,9 +70,10 @@ py_test(
     name = "omr_regression_test",
     size = "large",
     srcs = ["omr_regression_test.py"],
+    args = ["--corpus_dir=../omr_regression_test_data"],
+    data = ["@omr_regression_test_data"],
     shard_count = 4,
     srcs_version = "PY2AND3",
-    tags = ["manual"],
     deps = [
         ":engine",
         "//moonlight/protobuf:protobuf_py_pb2",

@@ -25,3 +25,17 @@ new_http_archive(
     sha256 = "931fb7b57714d667db618b0c31db1444e44baab17865ad66b76fd24d9e20ad6d",
     build_file_content = "",
 )
+
+new_http_archive(
+    name = "omr_regression_test_data",
+    strip_prefix = "omr_regression_test_data_20180516",
+    url = "https://github.com/tensorflow/moonlight/releases/download/v2018.05.16-data/omr_regression_test_data_20180516.tar.gz",
+    sha256 = "b47577ee6b359c2cbbcdb8064c6bd463692c728c55ec5c0ab78139165ba8f35a",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+filegroup(
+    name = "omr_regression_test_data",
+    srcs = glob(["**/*.png"]),
+)
+""",
+)
