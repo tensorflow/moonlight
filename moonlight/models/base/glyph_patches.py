@@ -23,18 +23,27 @@ multi-class classifier using the normalized patches as input.
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-
 from absl import flags
+from moonlight.models.base import batches
+from moonlight.protobuf import musicscore_pb2
 import tensorflow as tf
 from tensorflow.python.lib.io import file_io
 from tensorflow.python.lib.io import tf_record
+
+WEIGHT_COLUMN_NAME = 'weight'
 
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('input_patches', None, 'Glob of labeled patch TFRecords')
 flags.DEFINE_string('model_dir', None, 'Output trained model directory')
-flags.DEFINE_integer(
-    'num_epochs', 1, 'Number of passes to take over all patches')
+flags.DEFINE_float(
+    'none_label_weight', 1.,
+    'Weight of examples with the NONE label. Examples with a non-NONE label'
+    ' will always have a weight of 1.')
+flags.DEFINE_boolean(
+    'use_included_label_weight', False,
+    'Whether to multiply a "label_weight" feature included in the example by'
+    ' the weight determined by the "label" value.')
 
 
 def read_patch_dimensions():
@@ -71,21 +80,39 @@ def input_fn():
       file_io.get_matching_files(FLAGS.input_patches))
 
   def parser(record):
-    features = tf.parse_single_example(
-        record, {
-            'patch':
-                tf.FixedLenFeature((patch_height, patch_width), tf.float32),
-            'label':
-                tf.FixedLenFeature((), tf.int64)
-        })
-    return {'patch': features['patch']}, features['label']
+    """Dataset parser function.
 
-  dataset = dataset.map(parser)
-  dataset = dataset.shuffle(buffer_size=10000)
-  dataset = dataset.batch(32)
-  dataset = dataset.repeat(FLAGS.num_epochs)
-  iterator = dataset.make_one_shot_iterator()
-  return iterator.get_next()
+    Args:
+      record: A single serialized Example proto tensor.
+
+    Returns:
+      A tuple of:
+      * A dict of features ('patch' and 'weight')
+      * A label tensor (int64 scalar).
+    """
+    feature_types = {
+        'patch':
+            tf.FixedLenFeature((patch_height, patch_width), tf.float32),
+        'label':
+            tf.FixedLenFeature((), tf.int64),
+    }
+    if FLAGS.use_included_label_weight:
+      feature_types['label_weight'] = tf.FixedLenFeature((), tf.float32)
+    features = tf.parse_single_example(record, feature_types)
+
+    label = features['label']
+    weight = _example_weight(label)
+    if FLAGS.use_included_label_weight:
+      weight *= features['label_weight']
+    return {'patch': features['patch'], WEIGHT_COLUMN_NAME: weight}, label
+
+  return batches.get_batched_tensor(dataset.map(parser))
+
+
+def _example_weight(label):
+  return tf.where(
+      tf.equal(label, musicscore_pb2.Glyph.NONE),
+      tf.constant(FLAGS.none_label_weight), tf.constant(1.))
 
 
 def serving_fn():
@@ -115,7 +142,7 @@ def create_patch_feature_column():
       'patch', shape=read_patch_dimensions())
 
 
-# TODO(ringw): Evaluation.
+# TODO(ringwalt): Evaluation.
 def train_and_export(estimator):
   estimator.train(input_fn)
   estimator.export_savedmodel(FLAGS.model_dir, serving_fn)
