@@ -25,9 +25,12 @@ from __future__ import division
 from __future__ import print_function
 
 from absl import flags
+from moonlight.protobuf import musicscore_pb2
 import tensorflow as tf
 from tensorflow.python.lib.io import file_io
 from tensorflow.python.lib.io import tf_record
+
+WEIGHT_COLUMN_NAME = 'weight'
 
 FLAGS = flags.FLAGS
 
@@ -35,6 +38,10 @@ flags.DEFINE_string('input_patches', None, 'Glob of labeled patch TFRecords')
 flags.DEFINE_string('model_dir', None, 'Output trained model directory')
 flags.DEFINE_integer(
     'num_epochs', 1, 'Number of passes to take over all patches')
+flags.DEFINE_float(
+    'none_example_weight', 1.,
+    'Weight of examples with the NONE label. Examples with a non-NONE label'
+    ' will always have a weight of 1.')
 
 
 def read_patch_dimensions():
@@ -78,7 +85,8 @@ def input_fn():
             'label':
                 tf.FixedLenFeature((), tf.int64)
         })
-    return {'patch': features['patch']}, features['label']
+    label = features['label']
+    return {'patch': features['patch'], 'weight': _example_weight(label)}, label
 
   dataset = dataset.map(parser)
   dataset = dataset.shuffle(buffer_size=10000)
@@ -86,6 +94,12 @@ def input_fn():
   dataset = dataset.repeat(FLAGS.num_epochs)
   iterator = dataset.make_one_shot_iterator()
   return iterator.get_next()
+
+
+def _example_weight(label):
+  return tf.where(tf.equal(label, musicscore_pb2.Glyph.NONE),
+                  tf.constant(FLAGS.none_example_weight),
+                  tf.constant(1.))
 
 
 def serving_fn():
