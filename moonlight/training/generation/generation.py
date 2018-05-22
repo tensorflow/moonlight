@@ -97,7 +97,9 @@ class PageGenerationDoFn(beam.DoFn):
     for page in self.get_pages_for_batch(batch_num, self.num_pages_per_batch):
       staff = musicscore_pb2.Staff()
       text_format.Parse(page['page'], staff)
-      yield self._svg_to_png(page['svg']), staff
+      # TODO(ringw): Fix the internal proto pickling issue so that we don't
+      # have to serialize the staff here.
+      yield self._svg_to_png(page['svg']), staff.SerializeToString()
 
   def get_pages_for_batch(self, batch_num, num_pages_per_batch):
     """Generates the music score pages in a single batch.
@@ -169,6 +171,7 @@ class PatchExampleDoFn(beam.DoFn):
 
   def process(self, item):
     png_contents, staff_message = item
+    staff_message = musicscore_pb2.Staff.FromString(staff_message)
     with tf.Session(graph=self.omr.graph) as sess:
       # Load the image, then feed it in to apply noise.
       # Randomly rotate the image and apply noise, then dump it back out as a
