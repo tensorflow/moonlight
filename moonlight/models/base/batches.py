@@ -26,11 +26,9 @@ flags.DEFINE_integer('dataset_shuffle_buffer_size', 10000,
                      ' shuffling.')
 flags.DEFINE_integer(
     'dataset_limit_size', None,
-    'Only take this many entries in the dataset (before repeating by'
-    ' num_epochs).'
-)
+    'Only take this many entries in the dataset (which may be repeated for some'
+    ' number of training steps).')
 flags.DEFINE_integer('dataset_batch_size', 32, 'Resulting batch size.')
-flags.DEFINE_integer('num_epochs', 1, 'Repeat the dataset by this number.')
 
 
 def get_batched_tensor(dataset):
@@ -51,6 +49,5 @@ def get_batched_tensor(dataset):
   if FLAGS.dataset_limit_size:
     dataset = dataset.take(FLAGS.dataset_limit_size)
   dataset = dataset.batch(FLAGS.dataset_batch_size)
-  dataset = dataset.repeat(FLAGS.num_epochs)
   iterator = dataset.make_one_shot_iterator()
   return iterator.get_next()
