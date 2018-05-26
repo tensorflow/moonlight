@@ -1,3 +1,6 @@
+<img align="center" width="400" height="94,358" src="https://user-images.githubusercontent.com/34600369/40580500-74088e4a-6137-11e8-9705-ecac1499b1ce.png">
+
+
 # Moonlight Optical Music Recognition (OMR) [![Build Status](https://travis-ci.org/tensorflow/moonlight.svg?branch=master)](https://travis-ci.org/tensorflow/moonlight)
 
 An experimental [optical music
