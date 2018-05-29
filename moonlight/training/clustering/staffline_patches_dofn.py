@@ -136,9 +136,13 @@ class StafflinePatchesDoFn(beam.DoFn):
       patch_inds = random.sample(
           xrange(len(patches)), self.max_patches_per_page)
       patches = patches[patch_inds]
-    # Serialize each patch as an Example.
-    for i, patch in enumerate(patches):
-      patch_name = (basename + '#' + str(i)).encode('utf-8')
+    else:
+      # Patches numbered 0 through n - 1.
+      patch_inds = range(len(patches))
+    # Serialize each patch as an Example. The index uniquely identifies the
+    # patch.
+    for ind, patch in zip(patch_inds, patches):
+      patch_name = (basename + '#' + str(ind)).encode('utf-8')
       example = tf.train.Example()
       example.features.feature['name'].bytes_list.value.append(patch_name)
       example.features.feature['features'].float_list.value.extend(
