@@ -17,6 +17,8 @@ Moonlight is not an officially supported Google product.
 
 ### Usage
 
+    # You may want to run this inside a virtualenv.
+    pip install -r requirements.txt
     # Build the OMR command-line tool.
     bazel build moonlight:omr
     # Prints a Score message.
