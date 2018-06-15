@@ -53,5 +53,13 @@ class StafflineExtractorTest(tf.test.TestCase):
     assert np.array_equal(stafflines[0, 3], image[3:9] / 255.0)
 
 
+class StafflinePatchExtractorTest(tf.test.TestCase):
+
+  def testCreateExtractor(self):
+    """Ensures that we can initialize the extractor without errors."""
+    # TODO(ringwalt): Test a real image.
+    staffline_extractor.StafflinePatchExtractor()
+
+
 if __name__ == '__main__':
   tf.test.main()

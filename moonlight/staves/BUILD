@@ -108,6 +108,9 @@ py_library(
     srcs = ["staffline_extractor.py"],
     srcs_version = "PY2AND3",
     deps = [
+        ":removal",
+        ":staves",
+        "//moonlight:image",
         # enum34 dep
         # tensorflow dep
     ],
