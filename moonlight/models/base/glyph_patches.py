@@ -23,6 +23,9 @@ multi-class classifier using the normalized patches as input.
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
+import math
+
 from absl import flags
 from moonlight.models.base import batches
 from moonlight.protobuf import musicscore_pb2
@@ -44,6 +47,15 @@ flags.DEFINE_boolean(
     'use_included_label_weight', False,
     'Whether to multiply a "label_weight" feature included in the example by'
     ' the weight determined by the "label" value.')
+flags.DEFINE_float(
+    'augmentation_x_shift_probability', 0.5,
+    'Probability of shifting the patch left or right by one pixel. The edge is'
+    ' filled using the adjacent column. It is equally likely that the patch is'
+    ' shifted left or right.')
+flags.DEFINE_float(
+    'augmentation_max_rotation_degrees', 2.,
+    'Max rotation of the patch, in degrees. The rotation is selected uniformly'
+    ' randomly from the range +- this value. A value of 0 implies no rotation.')
 
 
 def read_patch_dimensions():
@@ -104,7 +116,8 @@ def input_fn():
     weight = _example_weight(label)
     if FLAGS.use_included_label_weight:
       weight *= features['label_weight']
-    return {'patch': features['patch'], WEIGHT_COLUMN_NAME: weight}, label
+    patch = _augment(features['patch'])
+    return {'patch': patch, WEIGHT_COLUMN_NAME: weight}, label
 
   return batches.get_batched_tensor(dataset.map(parser))
 
@@ -113,6 +126,48 @@ def _example_weight(label):
   return tf.where(
       tf.equal(label, musicscore_pb2.Glyph.NONE),
       tf.constant(FLAGS.none_label_weight), tf.constant(1.))
+
+
+def _augment(patch):
+  """Performs multiple augmentations on the patch, helping to generalize."""
+  return _augment_rotation(_augment_shift(patch))
+
+
+def _augment_shift(patch):
+  """Augments the patch by possibly shifting it 1 pixel horizontally."""
+  with tf.name_scope('augment_shift'):
+    rand = tf.random_uniform(())
+    def shift_left():
+      return _shift_left(patch)
+    def shift_right():
+      return _shift_right(patch)
+    def identity():
+      return patch
+    shift_prob = min(1., FLAGS.augmentation_x_shift_probability)
+    return tf.cond(rand < shift_prob / 2,
+                   shift_left,
+                   lambda: tf.cond(rand < shift_prob, shift_right, identity))
+
+
+def _shift_left(patch):
+  patch = tf.convert_to_tensor(patch)
+  return tf.concat([patch[:, 1:], patch[:, -1:]], axis=1)
+
+
+def _shift_right(patch):
+  patch = tf.convert_to_tensor(patch)
+  return tf.concat([patch[:, :1], patch[:, :-1]], axis=1)
+
+
+def _augment_rotation(patch):
+  """Augments the patch by rotating it by a small amount."""
+  max_rotation_radians = math.radians(FLAGS.augmentation_max_rotation_degrees)
+  rotation = tf.random_uniform(
+      (), minval=-max_rotation_radians, maxval=max_rotation_radians)
+  # Background is white (1.0) but tf.contrib.image.rotate currently always fills
+  # the edges with black (0). Invert the patch before rotating.
+  return 1. - tf.contrib.image.rotate(
+      1. - patch, rotation, interpolation='BILINEAR')
 
 
 def serving_fn():
