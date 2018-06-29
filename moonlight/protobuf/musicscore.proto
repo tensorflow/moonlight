@@ -116,6 +116,13 @@ message Glyph {
     // C clef is the clef symbol used for alto, tenor, and other clefs. In each
     // such clef, the line that the C clef is centered on represents C4.
     CLEF_C = 13;
+    // "Common time" is a stylized "c" which is equivalent to a 4/4 time
+    // signature. Note that numeral time signatures are not detected here. They
+    // will need to be detected in a post-processing step using OCR.
+    TIME_COMMON = 18;
+    // "Cut time" has a vertical line through the "common time" symbol, and is
+    // equivalent to 2/2 time.
+    TIME_CUT = 19;
     NOTEHEAD_FILLED = 4;
     NOTEHEAD_EMPTY = 5;
     NOTEHEAD_WHOLE = 6;
@@ -137,7 +144,7 @@ message Glyph {
     SHARP = 11;
     DOUBLE_SHARP = 16;
     NATURAL = 12;
-    // Next tag: 18
+    // Next tag: 20
   }
 }
 
