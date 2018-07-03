@@ -31,6 +31,8 @@ class GlyphPatchesTest(tf.test.TestCase):
   def testInputFn(self):
     with tempfile.NamedTemporaryFile() as records_file:
       with tf_record.TFRecordWriter(records_file.name) as records_writer:
+        flags.FLAGS.augmentation_x_shift_probability = 0
+        flags.FLAGS.augmentation_max_rotation_degrees = 0
         example = tf.train.Example()
         height = 5
         width = 3
@@ -54,6 +56,28 @@ class GlyphPatchesTest(tf.test.TestCase):
             np.arange(height * width).reshape((1, height, width)).repeat(
                 3, axis=0))
         self.assertAllEqual(batch[1], [label, label, label])
+
+  def testShiftLeft(self):
+    with self.test_session():
+      self.assertAllEqual(
+          # pyformat: disable
+          glyph_patches._shift_left([[0, 1, 2, 3],
+                                     [4, 5, 6, 7],
+                                     [8, 9, 10, 11]]).eval(),
+          [[1, 2, 3, 3],
+           [5, 6, 7, 7],
+           [9, 10, 11, 11]])
+
+  def testShiftRight(self):
+    with self.test_session():
+      self.assertAllEqual(
+          # pyformat: disable
+          glyph_patches._shift_right([[0, 1, 2, 3],
+                                      [4, 5, 6, 7],
+                                      [8, 9, 10, 11]]).eval(),
+          [[0, 0, 1, 2],
+           [4, 4, 5, 6],
+           [8, 8, 9, 10]])
 
 
 if __name__ == '__main__':
