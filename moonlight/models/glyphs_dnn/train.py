@@ -21,12 +21,14 @@ from absl import app
 from absl import flags
 from moonlight.models.base import glyph_patches
 from moonlight.models.glyphs_dnn import model
+import tensorflow as tf
 
 FLAGS = flags.FLAGS
 
 
 def main(_):
-  glyph_patches.train_and_export(model.create_estimator())
+  tf.logging.set_verbosity(tf.logging.INFO)
+  glyph_patches.train_and_evaluate(model.create_estimator())
 
 
 if __name__ == '__main__':

@@ -29,6 +29,7 @@ import math
 from absl import flags
 from moonlight.models.base import batches
 from moonlight.protobuf import musicscore_pb2
+from moonlight.util import memoize
 import tensorflow as tf
 from tensorflow.python.lib.io import file_io
 from tensorflow.python.lib.io import tf_record
@@ -37,7 +38,10 @@ WEIGHT_COLUMN_NAME = 'weight'
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string('input_patches', None, 'Glob of labeled patch TFRecords')
+flags.DEFINE_string(
+    'train_input_patches', None, 'Glob of labeled patch TFRecords for training')
+flags.DEFINE_string(
+    'eval_input_patches', None, 'Glob of labeled patch TFRecords for eval')
 flags.DEFINE_string('model_dir', None, 'Output trained model directory')
 flags.DEFINE_float(
     'none_label_weight', 1.,
@@ -56,8 +60,15 @@ flags.DEFINE_float(
     'augmentation_max_rotation_degrees', 2.,
     'Max rotation of the patch, in degrees. The rotation is selected uniformly'
     ' randomly from the range +- this value. A value of 0 implies no rotation.')
+flags.DEFINE_integer(
+    'eval_throttle_secs', 60, 'Evaluate at at most this interval, in seconds.')
+flags.DEFINE_integer(
+    'train_max_steps', 100000,
+    'Max steps for training. If 0, will train until the process is'
+    ' interrupted.')
 
 
+@memoize.MemoizedFunction
 def read_patch_dimensions():
   """Reads the dimensions of the input patches from disk.
 
@@ -66,9 +77,9 @@ def read_patch_dimensions():
 
   Returns:
     Tuple of (height, width) read from disk, using the glob passed to
-    --input_patches.
+    --train_input_patches.
   """
-  for filename in file_io.get_matching_files(FLAGS.input_patches):
+  for filename in file_io.get_matching_files(FLAGS.train_input_patches):
     # If one matching file is empty, go on to the next file.
     for record in tf_record.tf_record_iterator(filename):
       example = tf.train.Example.FromString(record)
@@ -79,8 +90,11 @@ def read_patch_dimensions():
       return patch_height, patch_width
 
 
-def input_fn():
+def input_fn(input_patches):
   """Defines the estimator input function.
+
+  Args:
+    input_patches: The input patches TFRecords pattern.
 
   Returns:
     A callable. Each invocation returns a tuple containing:
@@ -88,8 +102,7 @@ def input_fn():
     * A scalar tensor with the patch label, as an integer.
   """
   patch_height, patch_width = read_patch_dimensions()
-  dataset = tf.data.TFRecordDataset(
-      file_io.get_matching_files(FLAGS.input_patches))
+  dataset = tf.data.TFRecordDataset(file_io.get_matching_files(input_patches))
 
   def parser(record):
     """Dataset parser function.
@@ -197,7 +210,15 @@ def create_patch_feature_column():
       'patch', shape=read_patch_dimensions())
 
 
-# TODO(ringwalt): Evaluation.
-def train_and_export(estimator):
-  estimator.train(input_fn)
-  estimator.export_savedmodel(FLAGS.model_dir, serving_fn)
+def train_and_evaluate(estimator):
+  tf.estimator.train_and_evaluate(
+      estimator,
+      tf.estimator.TrainSpec(
+          input_fn=lambda: input_fn(FLAGS.train_input_patches),
+          max_steps=FLAGS.train_max_steps),
+      tf.estimator.EvalSpec(
+          input_fn=lambda: input_fn(FLAGS.eval_input_patches),
+          start_delay_secs=0, throttle_secs=FLAGS.eval_throttle_secs,
+          exporters=[
+              tf.estimator.LatestExporter('exporter', serving_fn),
+          ]))

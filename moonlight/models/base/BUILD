@@ -34,6 +34,7 @@ py_library(
     deps = [
         ":batches",
         "//moonlight/protobuf:protobuf_py_pb2",
+        "//moonlight/util:memoize",
         # absl dep
         # tensorflow dep
     ],

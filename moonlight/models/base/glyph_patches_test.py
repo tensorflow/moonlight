@@ -45,8 +45,8 @@ class GlyphPatchesTest(tf.test.TestCase):
         for _ in range(3):
           records_writer.write(example.SerializeToString())
 
-      flags.FLAGS.input_patches = records_file.name
-      batch_tensors = glyph_patches.input_fn()
+      flags.FLAGS.train_input_patches = records_file.name
+      batch_tensors = glyph_patches.input_fn(records_file.name)
 
       with self.test_session() as sess:
         batch = sess.run(batch_tensors)
