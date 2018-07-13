@@ -18,6 +18,7 @@ py_library(
         "//moonlight/staves:staffline_extractor",
         "//moonlight/util:patches",
         # apache-beam dep
+        # six dep
         # tensorflow dep
     ],
 )
@@ -33,6 +34,7 @@ py_test(
         ":staffline_patches_dofn",
         # absl/testing dep
         # apache-beam dep
+        # six dep
         # tensorflow dep
     ],
 )

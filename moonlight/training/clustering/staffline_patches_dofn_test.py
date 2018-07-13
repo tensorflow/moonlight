@@ -22,6 +22,7 @@ import tempfile
 
 from absl.testing import absltest
 import apache_beam as beam
+from six import moves
 import tensorflow as tf
 from tensorflow.python.lib.io import tf_record
 
@@ -63,7 +64,7 @@ class StafflinePatchesDoFnTest(absltest.TestCase):
       # patches from the pipeline.
       for staff in stafflines:
         for staffline in staff:
-          for i in xrange(staffline.shape[1] - PATCH_WIDTH + 1):
+          for i in moves.range(staffline.shape[1] - PATCH_WIDTH + 1):
             patch = staffline[:, i:i + PATCH_WIDTH]
             expected_patches.append(tuple(patch.ravel()))
       for example_bytes in tf_record.tf_record_iterator(output_examples.name):

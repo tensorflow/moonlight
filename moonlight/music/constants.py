@@ -31,5 +31,5 @@ CIRCLE_OF_FIFTHS = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5]
 # from:
 # CIRCLE_OF_FIFTHS = [
 #     (i * NUM_SEMITONES_IN_PERFECT_FIFTH) % NUM_SEMITONES_PER_OCTAVE
-#     for i in xrange(NUM_SEMITONES_PER_OCTAVE)
+#     for i in range(NUM_SEMITONES_PER_OCTAVE)
 # ]
