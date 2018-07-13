@@ -19,6 +19,7 @@ from __future__ import print_function
 
 from absl import flags
 from moonlight.models.base import glyph_patches
+from moonlight.models.base import hyperparameters
 from moonlight.protobuf import musicscore_pb2
 import tensorflow as tf
 
@@ -35,7 +36,7 @@ flags.DEFINE_string(
 flags.DEFINE_float('learning_rate', 0.1, 'FTRL learning rate')
 flags.DEFINE_float('l1_regularization_strength', 0.01, 'L1 penalty')
 flags.DEFINE_float('l2_regularization_strength', 0, 'L2 penalty')
-flags.DEFINE_float('dropout', None, 'Dropout to apply to all hidden nodes.')
+flags.DEFINE_float('dropout', 0, 'Dropout to apply to all hidden nodes.')
 
 
 def _custom_metrics(features, labels, predictions):
@@ -51,35 +52,60 @@ def _custom_metrics(features, labels, predictions):
   }
 
 
-def create_estimator():
-  """Returns the DNNClassifier estimator based on the command-line flags.
+def get_flag_params():
+  """Returns the hyperparameters specified by flags.
 
   Returns:
-    A DNNClassifier instance.
+    A dict of hyperparameter names and values.
   """
   layer_dims = FLAGS.layer_dims
   if not any(layer_dims):
     # Must pass a single layer of size 0 on the command line to indicate
     # logistic regression (no hidden dims).
     layer_dims = []
-  if not layer_dims and FLAGS.activation_fn != 'sigmoid':
+  return {
+      'model_name': 'glyphs_dnn',
+      'layer_dims': layer_dims,
+      'activation_fn': FLAGS.activation_fn,
+      'learning_rate': FLAGS.learning_rate,
+      'l1_regularization_strength': FLAGS.l1_regularization_strength,
+      'l2_regularization_strength': FLAGS.l2_regularization_strength,
+      'dropout': FLAGS.dropout,
+      'none_label_weight': FLAGS.none_label_weight,
+      'use_included_label_weight': FLAGS.use_included_label_weight,
+  }
+
+
+def create_estimator(params=None):
+  """Returns the glyphs DNNClassifier estimator.
+
+  Args:
+    params: Optional hyperparameters, defaulting to command-line values.
+
+  Returns:
+    A DNNClassifier instance.
+  """
+  params = params or get_flag_params()
+  if not params['layer_dims'] and params['activation_fn'] != 'sigmoid':
     tf.logging.warning(
         'activation_fn should be sigmoid for logistic regression. Got: %s',
-        FLAGS.activation_fn)
+        params['activation_fn'])
 
-  activation_fn = getattr(tf.nn, FLAGS.activation_fn)
+  activation_fn = getattr(tf.nn, params['activation_fn'])
   estimator = tf.estimator.DNNClassifier(
-      layer_dims,
+      params['layer_dims'],
       feature_columns=[glyph_patches.create_patch_feature_column()],
       weight_column=glyph_patches.WEIGHT_COLUMN_NAME,
       n_classes=len(musicscore_pb2.Glyph.Type.keys()),
       optimizer=tf.train.FtrlOptimizer(
-          learning_rate=FLAGS.learning_rate,
-          l1_regularization_strength=FLAGS.l1_regularization_strength,
-          l2_regularization_strength=FLAGS.l2_regularization_strength,
+          learning_rate=params['learning_rate'],
+          l1_regularization_strength=params['l1_regularization_strength'],
+          l2_regularization_strength=params['l2_regularization_strength'],
       ),
       activation_fn=activation_fn,
       dropout=FLAGS.dropout,
       model_dir=glyph_patches.FLAGS.model_dir,
   )
-  return tf.contrib.estimator.add_metrics(estimator, _custom_metrics)
+  return hyperparameters.estimator_with_saved_params(
+      tf.contrib.estimator.add_metrics(estimator, _custom_metrics),
+      params)
