@@ -26,6 +26,7 @@ py_library(
     srcs = ["reader.py"],
     deps = [
         ":measures",
+        # absl dep
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/score/elements:clef",
         "//moonlight/score/state",

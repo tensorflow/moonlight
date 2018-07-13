@@ -17,6 +17,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from absl import logging
 from moonlight.protobuf import musicscore_pb2
 from moonlight.score import measures
 from moonlight.score import state
@@ -92,6 +93,12 @@ class ScoreReader(object):
       self.score_state.add_measure()
 
   def _read_glyph(self, glyph, staff_state):
+    if glyph.type not in ScoreReader.GLYPH_HANDLERS_:
+      logging.warning(
+          'Handler not implemented: %s',
+          musicscore_pb2.Glyph.Type.Name(glyph.type))
+      return
+
     ScoreReader.GLYPH_HANDLERS_[glyph.type](self, staff_state, glyph)
 
   def _read_clef(self, staff_state, glyph):
