@@ -7,6 +7,8 @@ enum34
 # dependency in numba.
 librosa<=0.4.0
 lxml
+# TODO(ringw): joblib 0.12.0 breaks all current versions of librosa on py2.
+joblib<=0.11.0
 Mako
 numpy>=1.14.2
 pandas
