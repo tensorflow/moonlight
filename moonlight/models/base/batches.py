@@ -48,6 +48,8 @@ def get_batched_tensor(dataset):
     dataset = dataset.shuffle(buffer_size=FLAGS.dataset_shuffle_buffer_size)
   if FLAGS.dataset_limit_size:
     dataset = dataset.take(FLAGS.dataset_limit_size)
-  dataset = dataset.batch(FLAGS.dataset_batch_size)
+  # Run through batches for multiple epochs, until the max num of train steps is
+  # exhausted.
+  dataset = dataset.batch(FLAGS.dataset_batch_size).repeat()
   iterator = dataset.make_one_shot_iterator()
   return iterator.get_next()
