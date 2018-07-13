@@ -29,6 +29,7 @@ import random
 
 import apache_beam as beam
 from apache_beam import metrics
+from six import moves
 import tensorflow as tf
 
 from moonlight import image
@@ -134,7 +135,7 @@ class StafflinePatchesDoFn(beam.DoFn):
     # Subsample patches.
     if 0 < self.max_patches_per_page < len(patches):
       patch_inds = random.sample(
-          xrange(len(patches)), self.max_patches_per_page)
+          moves.range(len(patches)), self.max_patches_per_page)
       patches = patches[patch_inds]
     else:
       # Patches numbered 0 through n - 1.
