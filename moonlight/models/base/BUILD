@@ -50,3 +50,24 @@ py_test(
         # tensorflow dep
     ],
 )
+
+py_library(
+    name = "hyperparameters",
+    srcs = ["hyperparameters.py"],
+    srcs_version = "PY2AND3",
+    deps = [
+        # six dep
+        # tensorflow dep
+    ],
+)
+
+py_test(
+    name = "hyperparameters_test",
+    srcs = ["hyperparameters_test.py"],
+    srcs_version = "PY2AND3",
+    deps = [
+        ":hyperparameters",
+        # numpy dep
+        # tensorflow dep
+    ],
+)

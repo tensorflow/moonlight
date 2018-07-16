@@ -14,6 +14,7 @@ py_library(
     deps = [
         # absl dep
         "//moonlight/models/base:glyph_patches",
+        "//moonlight/models/base:hyperparameters",
         "//moonlight/protobuf:protobuf_py_pb2",
     ],
 )
