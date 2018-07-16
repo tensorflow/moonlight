@@ -1,5 +1,3 @@
-load("//javascript/tools/nodejs:nodejs_rules.bzl", "nodejs_binary")
-
 # Description:
 # Generated training data for OMR.
 package(default_visibility = ["//moonlight:__subpackages__"])
