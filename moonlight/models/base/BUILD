@@ -33,9 +33,9 @@ py_library(
     srcs_version = "PY2AND3",
     deps = [
         ":batches",
+        # absl dep
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/util:memoize",
-        # absl dep
         # tensorflow dep
     ],
 )

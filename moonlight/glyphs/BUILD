@@ -38,8 +38,8 @@ py_library(
     srcs = ["base.py"],
     srcs_version = "PY2AND3",
     deps = [
-        "//moonlight/protobuf:protobuf_py_pb2",
         # enum34 dep
+        "//moonlight/protobuf:protobuf_py_pb2",
         # numpy dep
     ],
 )
@@ -162,10 +162,10 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":saved_classifier",
+        # backports.tempfile dep
         "//moonlight:image",
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/structure",
-        # backports.tempfile dep
         # tensorflow dep
     ],
 )

@@ -7,8 +7,8 @@ py_binary(
     srcs = ["gen_structure_test_case.py"],
     srcs_version = "PY2AND3",
     deps = [
-        "//moonlight:engine",
         # absl dep
+        "//moonlight:engine",
     ],
 )
 
@@ -18,9 +18,9 @@ py_binary(
     data = ["//moonlight/testdata:images"],
     srcs_version = "PY2AND3",
     deps = [
+        # absl dep
         "//moonlight/glyphs:corpus",
         "//moonlight/glyphs:knn_model",
-        # absl dep
         # tensorflow dep
     ],
 )
@@ -37,9 +37,9 @@ py_test(
     ],
     deps = [
         ":export_kmeans_centroids",
+        # backports.tempfile dep
         "//moonlight:engine",
         "//moonlight/glyphs:saved_classifier",
-        # backports.tempfile dep
         # tensorflow dep
     ],
 )

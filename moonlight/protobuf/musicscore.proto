@@ -15,7 +15,7 @@ syntax = "proto2";
 
 package tensorflow.moonlight;
 
-// TODO(ringwalt): Fix python import issue, then load magenta with a prefix of
+// TODO(ringw): Fix python import issue, then load magenta with a prefix of
 // "magenta" instead of "magenta/magenta". The import here should be
 // "magenta/protobuf/music.proto".
 import "protobuf/music.proto";

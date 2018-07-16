@@ -55,9 +55,9 @@ py_test(
         ":components",
         ":structure",
         ":verticals",
+        # absl/testing dep
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/staves:base",
-        # absl/testing dep
         # numpy dep
     ],
 )
@@ -139,9 +139,9 @@ py_test(
         ":stems",
         ":structure",
         ":verticals",
+        # absl/testing dep
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/staves:base",
-        # absl/testing dep
         # numpy dep
     ],
 )

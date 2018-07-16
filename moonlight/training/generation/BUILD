@@ -1,3 +1,5 @@
+load("//javascript/tools/nodejs:nodejs_rules.bzl", "nodejs_binary")
+
 # Description:
 # Generated training data for OMR.
 package(default_visibility = ["//moonlight:__subpackages__"])
@@ -7,15 +9,15 @@ licenses(["notice"])  # Apache 2.0
 py_library(
     name = "generation",
     srcs = ["generation.py"],
-    srcs_version = "PY2ONLY",
     data = ["vexflow_generator.js"],
+    srcs_version = "PY2ONLY",
     deps = [
+        "@com_google_protobuf//:protobuf_python",
+        # apache-beam dep
         "//moonlight:engine",
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/staves:staffline_distance",
         "//moonlight/staves:staffline_extractor",
-        "@com_google_protobuf//:protobuf_python",
-        # apache-beam dep
         # numpy dep
         # tensorflow dep
     ],
@@ -47,9 +49,9 @@ py_binary(
     deps = [
         ":generation",
         ":image_noise",
-        "//moonlight/pipeline:pipeline_flags",
         # absl dep
         # apache-beam dep
+        "//moonlight/pipeline:pipeline_flags",
         # tensorflow dep
     ],
 )

@@ -94,11 +94,11 @@ py_test(
     deps = [
         ":staff_processor",
         ":testing",
+        # absl/testing dep
         "//moonlight:engine",
         "//moonlight/glyphs:testing",
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/structure",
-        # absl/testing dep
         # numpy dep
     ],
 )

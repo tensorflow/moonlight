@@ -38,10 +38,10 @@ py_binary(
     srcs_version = "PY2AND3",
     deps = [
         ":engine",
-        "//moonlight/conversions",
-        "//moonlight/glyphs:saved_classifier_fn",
         "@com_google_protobuf//:protobuf_python",
         # absl dep
+        "//moonlight/conversions",
+        "//moonlight/glyphs:saved_classifier_fn",
         # tensorflow dep
     ],
 )
@@ -55,12 +55,12 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":engine",
-        "//moonlight/conversions",
         "@magenta//protobuf:music_py_pb2",
         # pillow dep
         # absl/testing dep
         # librosa dep
         # lxml dep
+        "//moonlight/conversions",
         # numpy dep
         # tensorflow dep
     ],
@@ -76,9 +76,9 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":engine",
+        # absl/testing dep
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/score:reader",
-        # absl/testing dep
     ],
 )
 

@@ -24,10 +24,10 @@ py_library(
     srcs = ["measure.py"],
     srcs_version = "PY2AND3",
     deps = [
-        "//moonlight/protobuf:protobuf_py_pb2",
-        "//moonlight/score/elements:key_signature",
         "@magenta//protobuf:music_py_pb2",
         # enum34 dep
+        "//moonlight/protobuf:protobuf_py_pb2",
+        "//moonlight/score/elements:key_signature",
     ],
 )
 

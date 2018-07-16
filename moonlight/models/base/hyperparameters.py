@@ -68,7 +68,7 @@ def estimator_with_saved_params(estimator, params):
       for name, value in six.iteritems(params):
         tf.add_to_collection('params', tf.constant(name=name, value=value))
 
-    # TODO(ringwalt): Some estimators may want the params. However, we currently
+    # TODO(ringw): Some estimators may want the params. However, we currently
     # only use the DNNClassifier estimator, which does not use the params in its
     # model_fn. Therefore, we only pass the params into the model at all in
     # order to encode them here, and they are otherwise only used outside of the

@@ -38,10 +38,10 @@ py_test(
     srcs = ["reader_test.py"],
     deps = [
         ":reader",
-        "//moonlight/conversions",
-        "//moonlight/protobuf:protobuf_py_pb2",
         "@magenta//protobuf:music_py_pb2",
         # absl/testing dep
         # librosa dep
+        "//moonlight/conversions",
+        "//moonlight/protobuf:protobuf_py_pb2",
     ],
 )

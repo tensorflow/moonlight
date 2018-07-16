@@ -11,9 +11,9 @@ py_library(
     name = "clef",
     srcs = ["clef.py"],
     deps = [
+        # librosa dep
         "//moonlight/music:constants",
         "//moonlight/protobuf:protobuf_py_pb2",
-        # librosa dep
     ],
 )
 
@@ -32,9 +32,9 @@ py_library(
     srcs = ["key_signature.py"],
     deps = [
         ":clef",
+        # librosa dep
         "//moonlight/music:constants",
         "//moonlight/protobuf:protobuf_py_pb2",
-        # librosa dep
     ],
 )
 
@@ -44,7 +44,7 @@ py_test(
     deps = [
         ":clef",
         ":key_signature",
-        "//moonlight/protobuf:protobuf_py_pb2",
         # absl/testing dep
+        "//moonlight/protobuf:protobuf_py_pb2",
     ],
 )

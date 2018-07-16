@@ -21,23 +21,23 @@ py_binary(
     srcs_version = "PY2AND3",
     deps = [
         ":musicxml",
+        "@com_google_protobuf//:protobuf_python",
         "//moonlight:engine",
         "//moonlight/conversions",
         "//moonlight/protobuf:protobuf_py_pb2",
-        "@com_google_protobuf//:protobuf_python",
         # tensorflow dep
     ],
 )
 
 py_test(
     name = "evaluator_endtoend_test",
+    size = "large",
     srcs = ["evaluator_endtoend_test.py"],
     data = [
         "//moonlight/testdata:images",
         "//moonlight/testdata:musicxml",
     ],
     srcs_version = "PY2AND3",
-    size = "large",
     deps = [
         ":evaluator",
         "//moonlight/protobuf:protobuf_py_pb2",
@@ -50,8 +50,8 @@ py_library(
     srcs = ["musicxml.py"],
     srcs_version = "PY2AND3",
     deps = [
-        "//moonlight/music:constants",
         # lxml dep
+        "//moonlight/music:constants",
         # pandas dep
         # six dep
     ],

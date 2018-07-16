@@ -68,7 +68,7 @@ def main(_):
             svg_to_png_command=FLAGS.svg_to_png_command))
 
     def noise_fn(image):
-      # TODO(ringwalt): Add better noise, maybe using generative adversarial
+      # TODO(ringw): Add better noise, maybe using generative adversarial
       # networks trained on real scores from IMSLP.
       return image_noise.gaussian_noise(image_noise.random_rotation(image))
 
