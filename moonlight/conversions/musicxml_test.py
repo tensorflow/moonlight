@@ -62,6 +62,20 @@ class MusicXMLTest(absltest.TestCase):
                         note=music_pb2.NoteSequence.Note(
                             start_time=4, end_time=4.25, pitch=60)),
                 ]),
+                musicscore_pb2.Staff(glyph=[
+                    musicscore_pb2.Glyph(
+                        type=musicscore_pb2.Glyph.NOTEHEAD_FILLED,
+                        x=10,
+                        y_position=2,
+                        note=music_pb2.NoteSequence.Note(
+                            start_time=0, end_time=4, pitch=50)),
+                    musicscore_pb2.Glyph(
+                        type=musicscore_pb2.Glyph.NOTEHEAD_FILLED,
+                        x=10,
+                        y_position=-4,
+                        note=music_pb2.NoteSequence.Note(
+                            start_time=0, end_time=4, pitch=60)),
+                ]),
             ]),
         ]),
     ])
@@ -78,6 +92,9 @@ class MusicXMLTest(absltest.TestCase):
     </score-part>
     <score-part id="P2">
       <part-name>Part 2</part-name>
+    </score-part>
+    <score-part id="P3">
+      <part-name>Part 3</part-name>
     </score-part>
   </part-list>
   <part id="P1">
@@ -134,6 +151,38 @@ class MusicXMLTest(absltest.TestCase):
         <voice>1</voice>
         <type>16th</type>
         <duration>256</duration>
+        <pitch>
+          <step>C</step>
+          <alter>0</alter>
+          <octave>4</octave>
+        </pitch>
+      </note>
+    </measure>
+  </part>
+  <part id="P3">
+    <measure number="1">
+      <attributes>
+        <divisions>1024</divisions>
+        <time symbol="common">
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+        </time>
+      </attributes>
+      <note>
+        <voice>1</voice>
+        <type>quarter</type>
+        <duration>4096</duration>
+        <pitch>
+          <step>D</step>
+          <alter>0</alter>
+          <octave>3</octave>
+        </pitch>
+      </note>
+      <note>
+        <voice>1</voice>
+        <type>quarter</type>
+        <duration>4096</duration>
+        <chord/>
         <pitch>
           <step>C</step>
           <alter>0</alter>
