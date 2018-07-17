@@ -68,11 +68,10 @@ def estimator_with_saved_params(estimator, params):
       for name, value in six.iteritems(params):
         tf.add_to_collection('params', tf.constant(name=name, value=value))
 
-    # TODO(ringw): Some estimators may want the params. However, we currently
-    # only use the DNNClassifier estimator, which does not use the params in its
-    # model_fn. Therefore, we only pass the params into the model at all in
-    # order to encode them here, and they are otherwise only used outside of the
-    # model_fn when constructing the estimator.
+    # The Estimator model_fn property always returns a wrapped "public"
+    # model_fn. The public wrapper doesn't take "params", and passes the params
+    # from the Estimator constructor into the internal model_fn. Therefore, it
+    # only matters that we pass the params to the Estimator below.
     return estimator.model_fn(features, labels, mode, config)
 
   return tf.estimator.Estimator(
