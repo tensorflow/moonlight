@@ -64,15 +64,30 @@ def get_flag_params():
     # logistic regression (no hidden dims).
     layer_dims = []
   return {
-      'model_name': 'glyphs_dnn',
-      'layer_dims': layer_dims,
-      'activation_fn': FLAGS.activation_fn,
-      'learning_rate': FLAGS.learning_rate,
-      'l1_regularization_strength': FLAGS.l1_regularization_strength,
-      'l2_regularization_strength': FLAGS.l2_regularization_strength,
-      'dropout': FLAGS.dropout,
-      'none_label_weight': FLAGS.none_label_weight,
-      'use_included_label_weight': FLAGS.use_included_label_weight,
+      'model_name':
+          'glyphs_dnn',
+      'layer_dims':
+          layer_dims,
+      'activation_fn':
+          FLAGS.activation_fn,
+      'learning_rate':
+          FLAGS.learning_rate,
+      'l1_regularization_strength':
+          FLAGS.l1_regularization_strength,
+      'l2_regularization_strength':
+          FLAGS.l2_regularization_strength,
+      'dropout':
+          FLAGS.dropout,
+      'none_label_weight':
+          FLAGS.none_label_weight,
+      'use_included_label_weight':
+          FLAGS.use_included_label_weight,
+
+      # Declared in glyph_patches.py.
+      'augmentation_x_shift_probability':
+          FLAGS.augmentation_x_shift_probability,
+      'augmentation_max_rotation_degrees':
+          FLAGS.augmentation_max_rotation_degrees,
   }
 
 
