@@ -25,10 +25,12 @@ from moonlight.protobuf import musicscore_pb2
 from moonlight.score.elements import key_signature as key_signature_module
 
 ACCIDENTAL_PITCH_SHIFT_ = {
+    # TODO(ringw): Detect 2 adjacent flats as a double flat.
     musicscore_pb2.Glyph.FLAT: -1,
     musicscore_pb2.Glyph.NATURAL: 0,
     musicscore_pb2.Glyph.NONE: 0,
-    musicscore_pb2.Glyph.SHARP: 1,
+    musicscore_pb2.Glyph.SHARP: +1,
+    musicscore_pb2.Glyph.DOUBLE_SHARP: +2,
 }
 
 
