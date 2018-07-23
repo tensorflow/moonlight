@@ -40,6 +40,8 @@ _SIGNATURE_KEYS = [
     tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY,
 ]
 
+_RUN_MIN_LENGTH_CONSTANT_NAME = 'runtime_params/run_min_length:0'
+
 
 class SavedConvolutional1DClassifier(
     convolutional.Convolutional1DGlyphClassifier):
@@ -143,6 +145,25 @@ class SavedConvolutional1DClassifier(
               tf.ones(pad_shape_after, tf.int64),
           ],
           axis=-1)
+
+    # run_min_length can be set on the saved model to tweak its behavior, but
+    # should be overridden by the keyword argument.
+    if 'run_min_length' not in kwargs:
+      try:
+        # Try to read the run min length from the saved model. This is tweaked
+        # on a per-model basis.
+        run_min_length_t = sess.graph.get_tensor_by_name(
+            _RUN_MIN_LENGTH_CONSTANT_NAME)
+        run_min_length = tf.contrib.util.constant_value(run_min_length_t)
+        # Implicit comparison is invalid on a NumPy array.
+        # pylint: disable=g-explicit-bool-comparison
+        if run_min_length is None or run_min_length.shape != ():
+          raise ValueError('Bad run_min_length: {}'.format(run_min_length))
+        # Overwrite the property after the Convolutional1DGlyphClassifier
+        # constructor completes.
+        self.run_min_length = int(run_min_length)
+      except KeyError:
+        pass  # No run_min_length tensor in the saved model.
 
   @property
   def staffline_predictions(self):
