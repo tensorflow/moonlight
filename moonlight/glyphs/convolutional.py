@@ -30,11 +30,13 @@ import tensorflow as tf
 from moonlight.glyphs import base
 from moonlight.protobuf import musicscore_pb2
 
+DEFAULT_RUN_MIN_LENGTH = 3
+
 
 class Convolutional1DGlyphClassifier(base.BaseGlyphClassifier):
   """The base 1D convolutional glyph classifier model."""
 
-  def __init__(self, run_min_length=3):
+  def __init__(self, run_min_length=DEFAULT_RUN_MIN_LENGTH):
     """Base classifier model.
 
     Args:

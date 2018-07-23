@@ -25,6 +25,7 @@ import tensorflow as tf
 
 from moonlight import image
 from moonlight import structure
+from moonlight.glyphs import convolutional
 from moonlight.glyphs import saved_classifier
 from moonlight.protobuf import musicscore_pb2
 
@@ -61,6 +62,9 @@ class SavedClassifierTest(tf.test.TestCase):
         page = image.decode_music_score_png(tf.read_file(filename))
         clazz = saved_classifier.SavedConvolutional1DClassifier(
             structure.create_structure(page), export_dir)
+        # Run min length should be the default.
+        self.assertEqual(
+            clazz.run_min_length, convolutional.DEFAULT_RUN_MIN_LENGTH)
         predictions = clazz.staffline_predictions.eval()
         self.assertEqual(predictions.ndim, 3)  # Staff, staff position, x
         self.assertGreater(predictions.size, 0)
