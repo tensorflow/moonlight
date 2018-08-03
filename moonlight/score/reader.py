@@ -147,6 +147,7 @@ class ScoreReader(object):
       musicscore_pb2.Glyph.REST_EIGHTH: _read_rest,
       musicscore_pb2.Glyph.REST_SIXTEENTH: _read_rest,
       musicscore_pb2.Glyph.FLAT: _read_accidental,
-      musicscore_pb2.Glyph.SHARP: _read_accidental,
       musicscore_pb2.Glyph.NATURAL: _read_accidental,
+      musicscore_pb2.Glyph.SHARP: _read_accidental,
+      musicscore_pb2.Glyph.DOUBLE_SHARP: _read_accidental,
   }
