@@ -125,7 +125,8 @@ def input_fn(input_patches):
     label = features['label']
     weight = label_weights.weights_from_labels(label)
     if FLAGS.use_included_label_weight:
-      weight *= features['label_weight']
+      # Both operands must be the same type (float32).
+      weight = tf.to_float(weight) * tf.to_float(features['label_weight'])
     patch = _augment(features['patch'])
     return {'patch': patch, WEIGHT_COLUMN_NAME: weight}, label
 
