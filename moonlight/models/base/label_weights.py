@@ -77,6 +77,7 @@ def parse_label_weights_array(weights_str=None):
 
 def weights_from_labels(labels, weights_str=None):
   """Determines the example weights from a tensor of example labels."""
-  weights = tf.constant(
-      parse_label_weights_array(weights_str), name='label_weights')
-  return tf.gather(weights, labels)
+  with tf.name_scope('weights_from_labels'):
+    weights = tf.constant(
+        parse_label_weights_array(weights_str), name='label_weights')
+    return tf.gather(weights, labels, name='label_weights_lookup')
