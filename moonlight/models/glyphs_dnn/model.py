@@ -20,6 +20,7 @@ from __future__ import print_function
 from absl import flags
 from moonlight.models.base import glyph_patches
 from moonlight.models.base import hyperparameters
+from moonlight.models.base import label_weights
 from moonlight.protobuf import musicscore_pb2
 import tensorflow as tf
 
@@ -78,16 +79,16 @@ def get_flag_params():
           FLAGS.l2_regularization_strength,
       'dropout':
           FLAGS.dropout,
-      'none_label_weight':
-          FLAGS.none_label_weight,
-      'use_included_label_weight':
-          FLAGS.use_included_label_weight,
+      'label_weights':
+          label_weights.parse_label_weights_array(),
 
       # Declared in glyph_patches.py.
       'augmentation_x_shift_probability':
           FLAGS.augmentation_x_shift_probability,
       'augmentation_max_rotation_degrees':
           FLAGS.augmentation_max_rotation_degrees,
+      'use_included_label_weight':
+          FLAGS.use_included_label_weight,
   }
 
 

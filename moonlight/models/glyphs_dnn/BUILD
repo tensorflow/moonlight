@@ -15,6 +15,7 @@ py_library(
         # absl dep
         "//moonlight/models/base:glyph_patches",
         "//moonlight/models/base:hyperparameters",
+        "//moonlight/models/base:label_weights",
         "//moonlight/protobuf:protobuf_py_pb2",
     ],
 )
