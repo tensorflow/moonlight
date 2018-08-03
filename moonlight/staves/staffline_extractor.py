@@ -20,10 +20,13 @@ from __future__ import division
 from __future__ import print_function
 
 import enum
+from moonlight import image as image_module
+from moonlight import staves as staves_module
+from moonlight.staves import removal
 import tensorflow as tf
 
 DEFAULT_TARGET_HEIGHT = 18
-DEFAULT_NUM_SECTIONS = 9
+DEFAULT_NUM_SECTIONS = 19
 DEFAULT_STAFFLINE_DISTANCE_MULTIPLE = 3
 
 
@@ -208,3 +211,99 @@ class StafflineExtractor(object):
 
   def _get_staffline_window_size(self, staffline_distance):
     return staffline_distance * self.staffline_distance_multiple
+
+
+class StafflinePatchExtractor(object):
+  """Wraps the OMR TensorFlow graph and performs staff patch extraction.
+
+  Extracts a single patch from an image, to be used for training.
+  """
+
+  def __init__(self, num_sections=DEFAULT_NUM_SECTIONS, patch_height=15,
+               patch_width=12):
+    self.num_sections = num_sections
+    self.patch_height = patch_height
+    self.patch_width = patch_width
+
+    self.graph = tf.Graph()
+    with self.graph.as_default():
+      # Identifying information for the patch.
+      self.filename = tf.placeholder(tf.string)
+      self.staff_index = tf.placeholder(tf.int64)
+      self.y_position = tf.placeholder(tf.int64)
+
+      image = image_module.decode_music_score_png(tf.read_file(self.filename))
+      staff_detector = staves_module.StaffDetector(image)
+      staff_remover = removal.StaffRemover(staff_detector)
+      extractor = StafflineExtractor(
+          staff_remover.remove_staves,
+          staff_detector,
+          num_sections=num_sections,
+          target_height=patch_height)
+      # Index into the staff strips array, where a y position of 0 is the center
+      # element. Positive positions count up (towards higher notes, towards the
+      # top of the image, and smaller indices into the array).
+      position_index = num_sections // 2 - self.y_position
+      # The entire extracted horizontal strip of the image.
+      self.staffline = extractor.extract_staves()[self.staff_index,
+                                                  position_index]
+
+      # Determine the scale for converting image x coordinates to the scaled
+      # staff strip from which the patch is extracted.
+      extracted_staff_strip_height = tf.shape(self.staffline)[0]
+      staffline_distance = staff_detector.staffline_distance[self.staff_index]
+      unscaled_staff_strip_height = tf.multiply(
+          DEFAULT_STAFFLINE_DISTANCE_MULTIPLE, staffline_distance)
+      self.staffline_scale = tf.divide(
+          tf.to_float(extracted_staff_strip_height),
+          tf.to_float(unscaled_staff_strip_height))
+
+  def extract_staff_strip(self, filename, staff_index, y_position):
+    """Extracts an entire horizontal strip from the image.
+
+    Args:
+      filename: The absolute filename of the image.
+      staff_index: Index of the staff out of all staves on the page.
+      y_position: Note y position on the staff, on which to extract the strip.
+          The position starts out 0 for the staff center line, and grows more
+          positive for higher notes.
+
+    Returns:
+      A tuple of:
+        A wide strip of the image as a NumPy array.
+        The scale factor from the original image scale to the normalized staff
+            strip scale.
+    """
+    return tf.get_default_session().run(
+        [self.staffline, self.staffline_scale],
+        feed_dict={
+            self.filename: filename,
+            self.staff_index: staff_index,
+            self.y_position: y_position,
+        })
+
+  def extract_staff_patch(self, filename, staff_index, y_position, image_x):
+    """Extracts a rectangular patch to be labeled.
+
+    Args:
+      filename: The absolute filename of the image.
+      staff_index: Index of the staff out of all staves on the page.
+      y_position: Note y position on the staff, on which to extract the strip.
+      image_x: The coordinate of the patch center x, in image coordinates.
+
+    Returns:
+      The rectangular NumPy array for the patch.
+
+    Raises:
+      ValueError: If the x coordinate is too close to the left or right edge of
+          the image to extract a full patch.
+    """
+    staffline, scale = self.extract_staff_strip(filename, staff_index,
+                                                y_position)
+    staffline_x = int(round(image_x * scale))
+    patch_x_start = staffline_x + (-self.patch_width // 2)
+    patch_x_stop = staffline_x + self.patch_width // 2
+    if not (self.patch_width // 2 <= staffline_x <
+            staffline.shape[1] - self.patch_width // 2):
+      raise ValueError('image_x too close to bounds of image')
+    return staffline[:, patch_x_start:patch_x_stop]
