@@ -219,7 +219,9 @@ class StafflinePatchExtractor(object):
   Extracts a single patch from an image, to be used for training.
   """
 
-  def __init__(self, num_sections=DEFAULT_NUM_SECTIONS, patch_height=15,
+  def __init__(self,
+               num_sections=DEFAULT_NUM_SECTIONS,
+               patch_height=15,
                patch_width=12):
     self.num_sections = num_sections
     self.patch_height = patch_height
