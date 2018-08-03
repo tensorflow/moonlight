@@ -63,6 +63,10 @@ flags.DEFINE_integer(
     'Max steps for training. If 0, will train until the process is'
     ' interrupted.')
 flags.DEFINE_integer('eval_steps', 500, 'Num steps to evaluate the model.')
+flags.DEFINE_integer(
+    'exports_to_keep', 10,
+    'Keep the last N saved models (exported on each eval) before deleting'
+    ' previous exports.')
 
 
 @memoize.MemoizedFunction
@@ -210,8 +214,11 @@ def train_and_evaluate(estimator):
           max_steps=FLAGS.train_max_steps),
       tf.estimator.EvalSpec(
           input_fn=lambda: input_fn(FLAGS.eval_input_patches),
-          start_delay_secs=0, throttle_secs=FLAGS.eval_throttle_secs,
+          start_delay_secs=0,
+          throttle_secs=FLAGS.eval_throttle_secs,
           steps=FLAGS.eval_steps,
           exporters=[
-              tf.estimator.LatestExporter('exporter', serving_fn),
+              tf.estimator.LatestExporter(
+                  'exporter', serving_fn,
+                  exports_to_keep=FLAGS.exports_to_keep),
           ]))
