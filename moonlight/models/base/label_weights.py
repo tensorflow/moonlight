@@ -29,6 +29,7 @@ from __future__ import print_function
 from absl import flags
 from moonlight.protobuf import musicscore_pb2
 import numpy as np
+import six
 import tensorflow as tf
 
 FLAGS = flags.FLAGS
@@ -70,7 +71,7 @@ def parse_label_weights_array(weights_str=None):
       raise ValueError('Duplicate weight: {}'.format(name))
     weights[name] = float(glyph_weight_str)
 
-  for name, weight in weights.iteritems():
+  for name, weight in six.iteritems(weights):
     weights_array[musicscore_pb2.Glyph.Type.Value(name)] = weight
   return weights_array
 

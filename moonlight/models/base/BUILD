@@ -78,6 +78,7 @@ py_library(
     deps = [
         # absl dep
         "//moonlight/protobuf:protobuf_py_pb2",
+        # six dep
         # tensorflow dep
     ],
 )
