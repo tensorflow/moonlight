@@ -28,7 +28,7 @@ import math
 
 from absl import flags
 from moonlight.models.base import batches
-from moonlight.protobuf import musicscore_pb2
+from moonlight.models.base import label_weights
 from moonlight.util import memoize
 import tensorflow as tf
 from tensorflow.python.lib.io import file_io
@@ -43,10 +43,6 @@ flags.DEFINE_string(
 flags.DEFINE_string(
     'eval_input_patches', None, 'Glob of labeled patch TFRecords for eval')
 flags.DEFINE_string('model_dir', None, 'Output trained model directory')
-flags.DEFINE_float(
-    'none_label_weight', 1.,
-    'Weight of examples with the NONE label. Examples with a non-NONE label'
-    ' will always have a weight of 1.')
 flags.DEFINE_boolean(
     'use_included_label_weight', False,
     'Whether to multiply a "label_weight" feature included in the example by'
@@ -66,6 +62,11 @@ flags.DEFINE_integer(
     'train_max_steps', 100000,
     'Max steps for training. If 0, will train until the process is'
     ' interrupted.')
+flags.DEFINE_integer('eval_steps', 500, 'Num steps to evaluate the model.')
+flags.DEFINE_integer(
+    'exports_to_keep', 10,
+    'Keep the last N saved models (exported on each eval) before deleting'
+    ' previous exports.')
 
 
 @memoize.MemoizedFunction
@@ -126,19 +127,14 @@ def input_fn(input_patches):
     features = tf.parse_single_example(record, feature_types)
 
     label = features['label']
-    weight = _example_weight(label)
+    weight = label_weights.weights_from_labels(label)
     if FLAGS.use_included_label_weight:
-      weight *= features['label_weight']
+      # Both operands must be the same type (float32).
+      weight = tf.to_float(weight) * tf.to_float(features['label_weight'])
     patch = _augment(features['patch'])
     return {'patch': patch, WEIGHT_COLUMN_NAME: weight}, label
 
   return batches.get_batched_tensor(dataset.map(parser))
-
-
-def _example_weight(label):
-  return tf.where(
-      tf.equal(label, musicscore_pb2.Glyph.NONE),
-      tf.constant(FLAGS.none_label_weight), tf.constant(1.))
 
 
 def _augment(patch):
@@ -218,7 +214,11 @@ def train_and_evaluate(estimator):
           max_steps=FLAGS.train_max_steps),
       tf.estimator.EvalSpec(
           input_fn=lambda: input_fn(FLAGS.eval_input_patches),
-          start_delay_secs=0, throttle_secs=FLAGS.eval_throttle_secs,
+          start_delay_secs=0,
+          throttle_secs=FLAGS.eval_throttle_secs,
+          steps=FLAGS.eval_steps,
           exporters=[
-              tf.estimator.LatestExporter('exporter', serving_fn),
+              tf.estimator.LatestExporter(
+                  'exporter', serving_fn,
+                  exports_to_keep=FLAGS.exports_to_keep),
           ]))

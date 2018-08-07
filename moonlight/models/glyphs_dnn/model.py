@@ -78,16 +78,18 @@ def get_flag_params():
           FLAGS.l2_regularization_strength,
       'dropout':
           FLAGS.dropout,
-      'none_label_weight':
-          FLAGS.none_label_weight,
-      'use_included_label_weight':
-          FLAGS.use_included_label_weight,
 
       # Declared in glyph_patches.py.
       'augmentation_x_shift_probability':
           FLAGS.augmentation_x_shift_probability,
       'augmentation_max_rotation_degrees':
           FLAGS.augmentation_max_rotation_degrees,
+      'use_included_label_weight':
+          FLAGS.use_included_label_weight,
+
+      # Declared in label_weights.py.
+      'label_weights':
+          FLAGS.label_weights,
   }
 
 

@@ -33,8 +33,8 @@ py_library(
     srcs_version = "PY2AND3",
     deps = [
         ":batches",
+        ":label_weights",
         # absl dep
-        "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/util:memoize",
         # tensorflow dep
     ],
@@ -68,6 +68,27 @@ py_test(
     deps = [
         ":hyperparameters",
         # numpy dep
+    ],
+)
+
+py_library(
+    name = "label_weights",
+    srcs = ["label_weights.py"],
+    srcs_version = "PY2AND3",
+    deps = [
+        # absl dep
+        "//moonlight/protobuf:protobuf_py_pb2",
+        # six dep
+        # tensorflow dep
+    ],
+)
+
+py_test(
+    name = "label_weights_test",
+    srcs = ["label_weights_test.py"],
+    srcs_version = "PY2AND3",
+    deps = [
+        ":label_weights",
         # tensorflow dep
     ],
 )
