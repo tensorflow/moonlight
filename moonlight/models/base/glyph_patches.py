@@ -29,6 +29,7 @@ import math
 from absl import flags
 from moonlight.models.base import batches
 from moonlight.models.base import label_weights
+from moonlight.protobuf import musicscore_pb2
 from moonlight.util import memoize
 import tensorflow as tf
 from tensorflow.python.lib.io import file_io
@@ -67,6 +68,11 @@ flags.DEFINE_integer(
     'exports_to_keep', 10,
     'Keep the last N saved models (exported on each eval) before deleting'
     ' previous exports.')
+
+flags.DEFINE_multi_string('classes_for_metrics', [
+    'NONE', 'CLEF_TREBLE', 'CLEF_BASS', 'NOTEHEAD_FILLED', 'NOTEHEAD_EMPTY',
+    'NOTEHEAD_WHOLE', 'SHARP', 'FLAT', 'NATURAL',
+], 'Generate accuracy metrics for these class names.')
 
 
 @memoize.MemoizedFunction
@@ -206,9 +212,51 @@ def create_patch_feature_column():
       'patch', shape=read_patch_dimensions())
 
 
+def multiclass_binary_metric(class_number, binary_metric, labels, predictions):
+  """Wraps a binary metric for detecting a certain class (glyph type)."""
+  # Convert multiclass (integer) labels and predictions to booleans (for
+  # whether or not they are equal to the given class).
+  label_positive = tf.equal(labels, class_number)
+  predicted_positive = tf.equal(predictions['class_ids'], class_number)
+  return binary_metric(labels=label_positive, predictions=predicted_positive)
+
+
+def metrics_fn(features, labels, predictions):
+  """Metrics to be computed on every evaluation run, viewable in TensorBoard.
+
+  This function has the expected signature of a callable to be passed to
+  `tf.contrib.estimator.add_metrics`.
+
+  Args:
+    features: Dict of feature tensors.
+    labels: A tensor of example labels (ints).
+    predictions: Dict of prediction types. Has an entry "class_ids" which is
+      comparable to the ground truth in `labels`.
+
+  Returns:
+    A dict from metric name to TF metric.
+  """
+  del features  # Unused.
+  metrics = {
+      'mean_per_class_accuracy':
+      tf.metrics.mean_per_class_accuracy(
+          labels=labels,
+          predictions=predictions['class_ids'],
+          num_classes=len(musicscore_pb2.Glyph.Type.keys()),
+      ),
+  }
+  for class_name in FLAGS.classes_for_metrics:
+    class_number = musicscore_pb2.Glyph.Type.Value(class_name)
+    metrics['class/{}_precision'.format(class_name)] = multiclass_binary_metric(
+        class_number, tf.metrics.precision, labels, predictions)
+    metrics['class/{}_recall'.format(class_name)] = multiclass_binary_metric(
+        class_number, tf.metrics.recall, labels, predictions)
+  return metrics
+
+
 def train_and_evaluate(estimator):
   tf.estimator.train_and_evaluate(
-      estimator,
+      tf.contrib.estimator.add_metrics(estimator, metrics_fn),
       tf.estimator.TrainSpec(
           input_fn=lambda: input_fn(FLAGS.train_input_patches),
           max_steps=FLAGS.train_max_steps),

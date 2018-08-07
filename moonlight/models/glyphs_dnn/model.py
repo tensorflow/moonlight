@@ -39,19 +39,6 @@ flags.DEFINE_float('l2_regularization_strength', 0, 'L2 penalty')
 flags.DEFINE_float('dropout', 0, 'Dropout to apply to all hidden nodes.')
 
 
-def _custom_metrics(features, labels, predictions):
-  """Metrics to be computed on every evaluation run, viewable in TensorBoard."""
-  del features  # Unused.
-  return {
-      'mean_per_class_accuracy':
-      tf.metrics.mean_per_class_accuracy(
-          labels=labels,
-          predictions=predictions['class_ids'][:, 0],
-          num_classes=len(musicscore_pb2.Glyph.Type.keys()),
-      ),
-  }
-
-
 def get_flag_params():
   """Returns the hyperparameters specified by flags.
 
@@ -123,6 +110,4 @@ def create_estimator(params=None):
       dropout=FLAGS.dropout,
       model_dir=glyph_patches.FLAGS.model_dir,
   )
-  return hyperparameters.estimator_with_saved_params(
-      tf.contrib.estimator.add_metrics(estimator, _custom_metrics),
-      params)
+  return hyperparameters.estimator_with_saved_params(estimator, params)

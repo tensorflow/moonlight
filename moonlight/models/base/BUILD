@@ -35,6 +35,7 @@ py_library(
         ":batches",
         ":label_weights",
         # absl dep
+        "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/util:memoize",
         # tensorflow dep
     ],
