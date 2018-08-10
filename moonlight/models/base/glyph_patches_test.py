@@ -79,6 +79,38 @@ class GlyphPatchesTest(tf.test.TestCase):
            [4, 4, 5, 6],
            [8, 8, 9, 10]])
 
+  def testMulticlassBinaryMetric(self):
+    # pyformat: disable
+    # pylint: disable=bad-whitespace
+    labels =                     tf.constant([1, 1, 3, 2, 2, 2, 2])
+    predictions = dict(class_ids=tf.constant([1, 3, 2, 2, 4, 3, 2]))
+    _, precision_1 = glyph_patches.multiclass_binary_metric(
+        1, tf.metrics.precision, labels, predictions)
+    _, recall_1 = glyph_patches.multiclass_binary_metric(
+        1, tf.metrics.recall, labels, predictions)
+    _, precision_2 = glyph_patches.multiclass_binary_metric(
+        2, tf.metrics.precision, labels, predictions)
+    _, recall_2 = glyph_patches.multiclass_binary_metric(
+        2, tf.metrics.recall, labels, predictions)
+    _, precision_3 = glyph_patches.multiclass_binary_metric(
+        3, tf.metrics.precision, labels, predictions)
+    _, recall_3 = glyph_patches.multiclass_binary_metric(
+        3, tf.metrics.recall, labels, predictions)
+
+    with self.test_session() as sess:
+      sess.run(tf.local_variables_initializer())
+      # For class 1: 1 true positive and no false positives
+      self.assertEqual(1.0, precision_1.eval())
+      # For class 1: 1 true positive and 1 false negative
+      self.assertEqual(0.5, recall_1.eval())
+      # For class 2: 2 true positives and 1 false positive
+      self.assertAlmostEqual(2 / 3, precision_2.eval(), places=5)
+      # For class 2: 2 true positives and 2 false negatives
+      self.assertEqual(0.5, recall_2.eval())
+      # For class 3: No true positives
+      self.assertEqual(0, precision_3.eval())
+      self.assertEqual(0, recall_3.eval())
+
 
 if __name__ == '__main__':
   tf.test.main()
