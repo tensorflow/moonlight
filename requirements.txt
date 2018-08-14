@@ -1,6 +1,6 @@
 # List of all packages used by Moonlight.
 absl-py
-apache_beam==2.5.0
+apache_beam==2.5.0; python_version < '3.0'
 backports.tempfile
 enum34
 librosa==0.4.0
