@@ -1,18 +1,15 @@
 # List of all packages used by Moonlight.
 absl-py
-apache_beam
+apache_beam==2.5.0
 backports.tempfile
 enum34
-# TODO(ringw): librosa > 0.4.0 currently can't be installed due to a bad
-# dependency in numba.
-librosa<=0.4.0
+librosa==0.4.0
 lxml
-# TODO(ringw): joblib 0.12.0 breaks all current versions of librosa on py2.
-joblib<=0.11.0
+joblib==0.11.0
 Mako
 numpy>=1.14.2
 pandas
 Pillow
 protobuf
 scipy
-tensorflow>=1.6.0
+tensorflow==1.9.0
