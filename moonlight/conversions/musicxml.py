@@ -69,6 +69,9 @@ def score_to_musicxml(score):
   """
   musicxml = MusicXMLScore(score)
   measure_num = 0
+  previous_note_start_time = 0
+  previous_note_end_time = 0
+
   for page in score.page:
     for system in page.system:
       system_measures = measures.Measures(system)
@@ -87,6 +90,13 @@ def score_to_musicxml(score):
                 attributes.append(clef)
               note = _glyph_to_note(glyph)
               if note is not None:
+                if (glyph.note.start_time == previous_note_start_time
+                    and glyph.note.end_time == previous_note_end_time):
+                  position = note.index(note.find('pitch'))
+                  chord = etree.Element('chord')
+                  note.insert(position, chord)
+                previous_note_start_time = glyph.note.start_time
+                previous_note_end_time = glyph.note.end_time
                 measure.append(note)
         measure_num += 1
   # Add <divisions> and <time> to each part.
