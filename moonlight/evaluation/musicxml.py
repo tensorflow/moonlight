@@ -85,9 +85,13 @@ def musicxml_similarity(a, b):
              1          1.000
       total             0.875
   """
-  if isinstance(a, six.string_types):
+  if isinstance(a, six.text_type):
+    a = a.encode('utf-8')
+  if isinstance(a, bytes):
     a = etree.fromstring(a)
-  if isinstance(b, six.string_types):
+  if isinstance(b, six.text_type):
+    b = b.encode('utf-8')
+  if isinstance(b, bytes):
     b = etree.fromstring(b)
 
   a = PartStaves(a)

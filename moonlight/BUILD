@@ -11,7 +11,6 @@ licenses(["notice"])  # Apache 2.0
 py_library(
     name = "engine",
     srcs = ["engine.py"],
-    data = ["//moonlight/data/knn_saved_model_20170514"],
     srcs_version = "PY2AND3",
     deps = [
         ":image",

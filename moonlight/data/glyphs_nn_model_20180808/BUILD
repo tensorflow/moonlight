@@ -5,6 +5,6 @@ package(
 licenses(["notice"])  # Apache 2.0
 
 filegroup(
-    name = "knn_saved_model_20170514",
-    srcs = ["saved_model.pb"],
+    name = "glyphs_nn_model_20180808",
+    srcs = glob(["**/*"]),
 )

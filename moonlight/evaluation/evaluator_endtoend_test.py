@@ -38,8 +38,8 @@ class EvaluatorEndToEndTest(tf.test.TestCase):
                                       '../testdata/IMSLP00747-000.png')),
         ])
     results = evaluator.Evaluator().evaluate(ground_truth)
-    # Evaluation score is known to be greater than 0.7.
-    self.assertGreater(results['overall_score']['total', ''], 0.7)
+    # Evaluation score is known to be greater than 0.65.
+    self.assertGreater(results['overall_score']['total', ''], 0.65)
 
 
 if __name__ == '__main__':

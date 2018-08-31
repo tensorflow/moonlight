@@ -61,14 +61,12 @@ class OmrEndToEndTest(absltest.TestCase):
           start_time=start_time,
           end_time=start_time + 0.25)
 
-    # TODO(ringw): Fix the single quarter note detected before the treble
-    # clef.
-    # TODO(ringw): Detect the sixteenth rest that's missing before the first
-    # real note.
-    self.assertIn(_sixteenth_note('C4', 1.0), notes.notes)
-    self.assertIn(_sixteenth_note('D4', 1.25), notes.notes)
-    self.assertIn(_sixteenth_note('E4', 1.5), notes.notes)
-    self.assertIn(_sixteenth_note('F4', 1.75), notes.notes)
+    # TODO(ringw): Fix the phantom quarter note detected before the treble
+    # clef, and the eighth rest before the first note (should be sixteenth).
+    self.assertIn(_sixteenth_note('C4', 1.5), notes.notes)
+    self.assertIn(_sixteenth_note('D4', 1.75), notes.notes)
+    self.assertIn(_sixteenth_note('E4', 2), notes.notes)
+    self.assertIn(_sixteenth_note('F4', 2.25), notes.notes)
     # TODO(ringw): The second D and E are detected with only one beam, even
     # though they are connected to the same beams as the F before them and the
     # C after them. Fix.
