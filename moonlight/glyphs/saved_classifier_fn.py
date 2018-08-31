@@ -29,12 +29,11 @@ from __future__ import print_function
 
 import os.path
 
-# internal imports
 import tensorflow as tf
 
 from moonlight.glyphs import saved_classifier
 
-_SAVED_MODEL_PATH = '../data/knn_saved_model_20170514'
+_SAVED_MODEL_PATH = '../data/glyphs_nn_model_20180808'
 
 
 def build_classifier_fn(saved_model=None):
