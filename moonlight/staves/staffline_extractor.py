@@ -210,7 +210,10 @@ class StafflineExtractor(object):
         tf.int32)
 
   def _get_staffline_window_size(self, staffline_distance):
-    return staffline_distance * self.staffline_distance_multiple
+    return tf.to_int32(
+        tf.round(
+            tf.to_float(staffline_distance) * tf.to_float(
+                self.staffline_distance_multiple)))
 
 
 class StafflinePatchExtractor(object):
