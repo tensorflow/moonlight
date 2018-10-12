@@ -23,59 +23,20 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import itertools
 import logging
-import os.path
-import random
 
 import apache_beam as beam
 from apache_beam import metrics
-from six import moves
+from moonlight.staves import staffline_extractor
+from moonlight.util import more_iter_tools
+import numpy as np
 import tensorflow as tf
 
-from moonlight import image
-from moonlight import staves
-from moonlight.staves import removal
-from moonlight.staves import staffline_extractor
-from moonlight.util import patches as util_patches
 
-
-def pipeline_graph(png_path, staffline_height, patch_width, num_stafflines):
-  """Constructs the graph for the staffline patches pipeline.
-
-  Args:
-    png_path: Path to the input png. String scalar tensor.
-    staffline_height: Height of a staffline. int.
-    patch_width: Width of a patch. int.
-    num_stafflines: Number of stafflines to extract around each staff. int.
-
-  Returns:
-    A tensor representing the staffline patches. float32 with shape
-        (num_patches, staffline_height, patch_width).
-  """
-  image_t = image.decode_music_score_png(tf.read_file(png_path))
-  staff_detector = staves.StaffDetector(image_t)
-  staff_remover = removal.StaffRemover(staff_detector)
-  stafflines = tf.identity(
-      staffline_extractor.StafflineExtractor(
-          staff_remover.remove_staves,
-          staff_detector,
-          target_height=staffline_height,
-          num_sections=num_stafflines).extract_staves(),
-      name='stafflines')
-  return _extract_patches(stafflines, patch_width)
-
-
-def _extract_patches(stafflines, patch_width, min_num_dark_pixels=10):
-  patches = util_patches.patches_1d(stafflines, patch_width)
-  # Limit to patches that have min_num_dark_pixels.
-  num_dark_pixels = tf.reduce_sum(
-      tf.where(
-          tf.less(patches, 0.5),
-          tf.ones_like(patches, dtype=tf.int32),
-          tf.zeros_like(patches, dtype=tf.int32)),
-      axis=[-2, -1])
-  return tf.boolean_mask(patches,
-                         tf.greater_equal(num_dark_pixels, min_num_dark_pixels))
+def _filter_patch(patch, min_num_dark_pixels=10):
+  unused_patch_name, patch = patch
+  return np.greater_equal(np.sum(np.less(patch, 0.5)), min_num_dark_pixels)
 
 
 class StafflinePatchesDoFn(beam.DoFn):
@@ -102,48 +63,36 @@ class StafflinePatchesDoFn(beam.DoFn):
         self.__class__, 'emitted_patches')
 
   def start_bundle(self):
-    self.graph = tf.Graph()
-    with self.graph.as_default():
-      self.session = tf.Session()
-      with self.session.as_default():
-        # Construct the graph.
-        self.png_path = tf.placeholder(tf.string, shape=(), name='png_path')
-        self.patches = pipeline_graph(self.png_path, self.patch_height,
-                                      self.patch_width, self.num_stafflines)
+    self.extractor = staffline_extractor.StafflinePatchExtractor(
+        patch_height=self.patch_height, patch_width=self.patch_width,
+        run_options=tf.RunOptions(timeout_in_ms=self.timeout_ms))
+    self.session = tf.Session(graph=self.extractor.graph)
 
   def process(self, png_path):
     self.total_pages_counter.inc()
-    basename = os.path.basename(png_path)
-    run_options = tf.RunOptions(timeout_in_ms=self.timeout_ms)
     try:
-      patches = self.session.run(
-          self.patches,
-          feed_dict={self.png_path: png_path},
-          options=run_options)
+      with self.session.as_default():
+        patches_iter = self.extractor.page_patch_iterator(png_path)
     # pylint: disable=broad-except
     except Exception:
       logging.exception('Skipping failed music score (%s)', png_path)
       self.failed_pages_counter.inc()
       return
+    patches_iter = itertools.ifilter(_filter_patch, patches_iter)
 
-    # len() is required for NumPy ndarrays.
-    # pylint: disable=g-explicit-length-test
-    if not len(patches):
+    if 0 < self.max_patches_per_page:
+      # Subsample patches.
+      patches = more_iter_tools.iter_sample(
+          patches_iter, self.max_patches_per_page)
+    else:
+      patches = list(patches_iter)
+
+    if not patches:
       self.empty_pages_counter.inc()
     self.total_patches_counter.inc(len(patches))
 
-    # Subsample patches.
-    if 0 < self.max_patches_per_page < len(patches):
-      patch_inds = random.sample(
-          moves.range(len(patches)), self.max_patches_per_page)
-      patches = patches[patch_inds]
-    else:
-      # Patches numbered 0 through n - 1.
-      patch_inds = range(len(patches))
-    # Serialize each patch as an Example. The index uniquely identifies the
-    # patch.
-    for ind, patch in zip(patch_inds, patches):
-      patch_name = (basename + '#' + str(ind)).encode('utf-8')
+    # Serialize each patch as an Example.
+    for patch_name, patch in patches:
       example = tf.train.Example()
       example.features.feature['name'].bytes_list.value.append(patch_name)
       example.features.feature['features'].float_list.value.extend(
@@ -158,4 +107,5 @@ class StafflinePatchesDoFn(beam.DoFn):
 
   def finish_bundle(self):
     self.session.close()
+    del self.extractor
     del self.session

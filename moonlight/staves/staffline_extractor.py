@@ -19,10 +19,13 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os.path
+
 import enum
 from moonlight import image as image_module
 from moonlight import staves as staves_module
 from moonlight.staves import removal
+from six import moves
 import tensorflow as tf
 
 DEFAULT_TARGET_HEIGHT = 18
@@ -78,6 +81,9 @@ class StafflineExtractor(object):
   The slice is scaled proportionally to the staffline distance, making the
   output height equal to target_height, so that the glyph classifier is
   scale-invariant.
+
+  This class is used in inference as part of a larger TF graph. See
+  StafflinePatchExtractor for training.
   """
 
   def __init__(self, image, staves,
@@ -219,23 +225,29 @@ class StafflineExtractor(object):
 class StafflinePatchExtractor(object):
   """Wraps the OMR TensorFlow graph and performs staff patch extraction.
 
-  Extracts a single patch from an image, to be used for training.
+  While inference uses StafflineExtractor/Convolutional1DGlyphClassifier to
+  efficiently extract patches within the TF graph, StafflinePatchExtractor
+  encapsulates the TF graph necessary for extraction. Therefore, it is to be
+  used for training example extraction, where only staff detection and staffline
+  extraction are run in TF.
   """
 
   def __init__(self,
                num_sections=DEFAULT_NUM_SECTIONS,
                patch_height=15,
-               patch_width=12):
+               patch_width=12,
+               run_options=None):
     self.num_sections = num_sections
     self.patch_height = patch_height
     self.patch_width = patch_width
+    self.run_options = run_options
 
     self.graph = tf.Graph()
     with self.graph.as_default():
       # Identifying information for the patch.
-      self.filename = tf.placeholder(tf.string)
-      self.staff_index = tf.placeholder(tf.int64)
-      self.y_position = tf.placeholder(tf.int64)
+      self.filename = tf.placeholder(tf.string, name='filename')
+      self.staff_index = tf.placeholder(tf.int64, name='staff_index')
+      self.y_position = tf.placeholder(tf.int64, name='y_position')
 
       image = image_module.decode_music_score_png(tf.read_file(self.filename))
       staff_detector = staves_module.StaffDetector(image)
@@ -249,19 +261,20 @@ class StafflinePatchExtractor(object):
       # element. Positive positions count up (towards higher notes, towards the
       # top of the image, and smaller indices into the array).
       position_index = num_sections // 2 - self.y_position
+      self.all_stafflines = extractor.extract_staves()
       # The entire extracted horizontal strip of the image.
-      self.staffline = extractor.extract_staves()[self.staff_index,
-                                                  position_index]
+      self.staffline = self.all_stafflines[self.staff_index, position_index]
 
       # Determine the scale for converting image x coordinates to the scaled
       # staff strip from which the patch is extracted.
-      extracted_staff_strip_height = tf.shape(self.staffline)[0]
-      staffline_distance = staff_detector.staffline_distance[self.staff_index]
-      unscaled_staff_strip_height = tf.multiply(
-          DEFAULT_STAFFLINE_DISTANCE_MULTIPLE, staffline_distance)
-      self.staffline_scale = tf.divide(
+      extracted_staff_strip_height = tf.shape(self.all_stafflines)[2]
+      unscaled_staff_strip_heights = tf.multiply(
+          DEFAULT_STAFFLINE_DISTANCE_MULTIPLE,
+          staff_detector.staffline_distance)
+      self.all_staffline_scales = tf.divide(
           tf.to_float(extracted_staff_strip_height),
-          tf.to_float(unscaled_staff_strip_height))
+          tf.to_float(unscaled_staff_strip_heights))
+      self.staffline_scale = self.all_staffline_scales[self.staff_index]
 
   def extract_staff_strip(self, filename, staff_index, y_position):
     """Extracts an entire horizontal strip from the image.
@@ -285,7 +298,8 @@ class StafflinePatchExtractor(object):
             self.filename: filename,
             self.staff_index: staff_index,
             self.y_position: y_position,
-        })
+        },
+        options=self.run_options)
 
   def extract_staff_patch(self, filename, staff_index, y_position, image_x):
     """Extracts a rectangular patch to be labeled.
@@ -312,3 +326,51 @@ class StafflinePatchExtractor(object):
             staffline.shape[1] - self.patch_width // 2):
       raise ValueError('image_x too close to bounds of image')
     return staffline[:, patch_x_start:patch_x_stop]
+
+  def page_patch_iterator(self, filename):
+    """Iterates over every patch on every staff.
+
+    Args:
+      filename: Path to a PNG file.
+
+    Returns:
+      A generator yielding pairs of patch id (with coordinates) and 2D
+      `np.ndarray` with the patch contents.
+    """
+    all_stafflines, scales = tf.get_default_session().run(
+        [self.all_stafflines, self.all_staffline_scales],
+        feed_dict={self.filename: filename}, options=self.run_options)
+
+    def generator():
+      """The patch generator.
+
+      Yields:
+        Every extracted patch, as a logical id and patch ndarray.
+      """
+      for staff_index, staff in enumerate(all_stafflines):
+        scale = scales[staff_index]
+        for staffline_index, staffline in enumerate(staff):
+          y_position = self.num_sections // 2 - staffline_index
+          prev_image_x = None
+
+          for staffline_x_start in moves.xrange(
+              staffline.shape[1] - self.patch_width):
+            image_x = int(
+                round((staffline_x_start + self.patch_width // 2) / scale))
+            if image_x != prev_image_x:
+              patch_id = StafflinePatchExtractor.make_patch_id(
+                  filename, staff_index, y_position, image_x)
+              patch = staffline[
+                  :, staffline_x_start:staffline_x_start + self.patch_width]
+              yield patch_id, patch
+              prev_image_x = image_x
+
+    return generator()
+
+  @staticmethod
+  def make_patch_id(filename, staff_index, y_position, image_x):
+    """Formats the short id uniquely identifying a patch in the training set."""
+    short_filename, _ = os.path.splitext(os.path.basename(filename))
+    # Format y_position as e.g. +2, +0, or -3.
+    return '{},{},{:+d},{}'.format(
+        short_filename, staff_index, y_position, image_x)

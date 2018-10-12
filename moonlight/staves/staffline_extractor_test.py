@@ -17,6 +17,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os.path
+
 import numpy as np
 import tensorflow as tf
 
@@ -93,10 +95,25 @@ class StafflineExtractorTest(tf.test.TestCase):
 
 class StafflinePatchExtractorTest(tf.test.TestCase):
 
-  def testCreateExtractor(self):
-    """Ensures that we can initialize the extractor without errors."""
-    # TODO(ringwalt): Test a real image.
-    staffline_extractor.StafflinePatchExtractor()
+  def testCompareIteratorWithSinglePatch(self):
+    # Patches from the iterator should be exactly equal to the patch when the
+    # coordinates from the id are given.
+    filename = os.path.join(tf.resource_loader.get_data_files_path(),
+                            '../testdata/IMSLP00747-000.png')
+
+    extractor = staffline_extractor.StafflinePatchExtractor()
+    with self.test_session(graph=extractor.graph):
+      single_patch = extractor.extract_staff_patch(filename, 3, 4, 800)
+      # Unwrap the single patch with the matching id in the iterator.
+      patch_from_iterator, = (
+          patch
+          for patch_id, patch in extractor.page_patch_iterator(filename)
+          if patch_id == 'IMSLP00747-000,3,+4,800'
+      )
+    self.assertAllClose(single_patch, patch_from_iterator)
+    # Patch contains some content.
+    self.assertAlmostEqual(single_patch.min(), 0, places=5)
+    self.assertAlmostEqual(single_patch.max(), 1, places=5)
 
 
 if __name__ == '__main__':
