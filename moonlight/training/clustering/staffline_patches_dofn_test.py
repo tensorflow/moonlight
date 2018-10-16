@@ -22,10 +22,10 @@ import tempfile
 
 from absl.testing import absltest
 import apache_beam as beam
-from six import moves
 import tensorflow as tf
 from tensorflow.python.lib.io import tf_record
 
+from moonlight.staves import staffline_extractor
 from moonlight.training.clustering import staffline_patches_dofn
 
 PATCH_HEIGHT = 9
@@ -53,26 +53,20 @@ class StafflinePatchesDoFnTest(absltest.TestCase):
              beam.coders.ProtoCoder(tf.train.Example),
              shard_name_template=''))
       # Get the staffline images from a local TensorFlow session.
-      with tf.Session() as sess:
-        png_path = tf.constant(filename)
-        staffline_patches_dofn.pipeline_graph(
-            png_path, PATCH_HEIGHT, PATCH_WIDTH, NUM_STAFFLINES)
-        stafflines_t = tf.get_default_graph().get_tensor_by_name('stafflines:0')
-        stafflines = sess.run(stafflines_t)
-      expected_patches = []
-      # We should be able to create all possible patches in Python and test the
-      # patches from the pipeline.
-      for staff in stafflines:
-        for staffline in staff:
-          for i in moves.range(staffline.shape[1] - PATCH_WIDTH + 1):
-            patch = staffline[:, i:i + PATCH_WIDTH]
-            expected_patches.append(tuple(patch.ravel()))
+      extractor = staffline_extractor.StafflinePatchExtractor(
+          staffline_extractor.DEFAULT_NUM_SECTIONS, PATCH_HEIGHT, PATCH_WIDTH)
+      with tf.Session(graph=extractor.graph):
+        expected_patches = [
+            tuple(patch.ravel())
+            for unused_key, patch in extractor.page_patch_iterator(filename)
+        ]
       for example_bytes in tf_record.tf_record_iterator(output_examples.name):
         example = tf.train.Example()
         example.ParseFromString(example_bytes)
         patch_pixels = tuple(
             example.features.feature['features'].float_list.value)
-        self.assertTrue(patch_pixels in expected_patches)
+        if patch_pixels not in expected_patches:
+          self.fail('Missing patch {}'.format(patch_pixels))
 
 
 if __name__ == '__main__':

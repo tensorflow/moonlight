@@ -13,12 +13,9 @@ py_library(
     srcs_version = "PY2AND3",
     deps = [
         # apache-beam dep
-        "//moonlight:image",
-        "//moonlight/staves",
-        "//moonlight/staves:removal",
         "//moonlight/staves:staffline_extractor",
-        "//moonlight/util:patches",
-        # six dep
+        "//moonlight/util:more_iter_tools",
+        # numpy dep
         # tensorflow dep
     ],
 )
@@ -34,7 +31,6 @@ py_test(
         ":staffline_patches_dofn",
         # absl/testing dep
         # apache-beam dep
-        # six dep
         # tensorflow dep
     ],
 )

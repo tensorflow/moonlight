@@ -11,6 +11,7 @@ py_library(
     deps = [
         ":functional_ops",
         ":memoize",
+        ":more_iter_tools",
         ":patches",
         ":run_length",
         ":segments",
@@ -38,6 +39,25 @@ py_library(
     name = "memoize",
     srcs = ["memoize.py"],
     srcs_version = "PY2AND3",
+)
+
+py_library(
+    name = "more_iter_tools",
+    srcs = ["more_iter_tools.py"],
+    srcs_version = "PY2AND3",
+)
+
+py_test(
+    name = "more_iter_tools_test",
+    srcs = ["more_iter_tools_test.py"],
+    srcs_version = "PY2AND3",
+    deps = [
+        ":more_iter_tools",
+        # absl dep
+        # absl/testing dep
+        # numpy dep
+        # six dep
+    ],
 )
 
 py_library(
