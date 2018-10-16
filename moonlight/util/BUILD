@@ -54,6 +54,7 @@ py_test(
     deps = [
         ":more_iter_tools",
         # absl dep
+        # absl/testing dep
         # numpy dep
         # six dep
     ],

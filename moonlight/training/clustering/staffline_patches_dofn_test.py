@@ -53,7 +53,8 @@ class StafflinePatchesDoFnTest(absltest.TestCase):
              beam.coders.ProtoCoder(tf.train.Example),
              shard_name_template=''))
       # Get the staffline images from a local TensorFlow session.
-      extractor = staffline_extractor.StafflinePatchExtractor()
+      extractor = staffline_extractor.StafflinePatchExtractor(
+          staffline_extractor.DEFAULT_NUM_SECTIONS, PATCH_HEIGHT, PATCH_WIDTH)
       with tf.Session(graph=extractor.graph):
         expected_patches = [
             tuple(patch.ravel())
@@ -64,7 +65,8 @@ class StafflinePatchesDoFnTest(absltest.TestCase):
         example.ParseFromString(example_bytes)
         patch_pixels = tuple(
             example.features.feature['features'].float_list.value)
-        self.assertIn(patch_pixels, expected_patches)
+        if patch_pixels not in expected_patches:
+          self.fail('Missing patch {}'.format(patch_pixels))
 
 
 if __name__ == '__main__':
