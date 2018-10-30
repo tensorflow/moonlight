@@ -68,7 +68,7 @@ class OmrRegressionTest(absltest.TestCase):
     self.assertEqual(len(page.system[3].bar), 6)
 
     self.assertEqual(len(page.system[4].staff), 2)
-    # TODO(ringwalt): Fix barline detection here.
+    # TODO(ringw): Fix barline detection here.
     # self.assertEqual(len(page.system[4].bar), 6)
 
     self.assertEqual(len(page.system[5].staff), 2)
@@ -79,7 +79,7 @@ class OmrRegressionTest(absltest.TestCase):
     self.assertEqual(len(page.system), 6)
 
     self.assertEqual(len(page.system[0].staff), 2)
-    # TODO(ringwalt): Fix barline detection here.
+    # TODO(ringw): Fix barline detection here.
     # self.assertEqual(len(page.system[0].bar), 6)
 
     self.assertEqual(len(page.system[1].staff), 2)
@@ -93,7 +93,7 @@ class OmrRegressionTest(absltest.TestCase):
 
     self.assertEqual(len(page.system[4].staff), 2)
     self.assertEqual(len(page.system[4].bar), 6)
-    # TODO(ringwalt): Detect BEGIN_REPEAT_BAR here.
+    # TODO(ringw): Detect BEGIN_REPEAT_BAR here.
     self.assertEqual(page.system[4].bar[0].type,
                      musicscore_pb2.StaffSystem.Bar.END_BAR)
     self.assertEqual(page.system[4].bar[1].type,
@@ -112,7 +112,7 @@ class OmrRegressionTest(absltest.TestCase):
     self.assertEqual(len(treble_sig), 4)
     bass_sig = score_reader.score_state.staves[1].get_key_signature()
     self.assertEqual(bass_sig.get_type(), musicscore_pb2.Glyph.SHARP)
-    # TODO(ringwalt): Get glyphs detected correctly in the bass signature.
+    # TODO(ringw): Get glyphs detected correctly in the bass signature.
     # self.assertEqual(len(bass_sig), 4)
 
   def testIMSLP00023_015_doubleNoteDots(self):
@@ -143,7 +143,7 @@ class OmrRegressionTest(absltest.TestCase):
         set(double_dotted_note_ys).issubset([-6, -3, -1, +3, +4]),
         'No unexpected double-dotted noteheads')
 
-    # TODO(ringwalt): Notehead at +4 picks up extra dots (4 total). The dots
+    # TODO(ringw): Notehead at +4 picks up extra dots (4 total). The dots
     # should be in a horizontal line, and we should discard other dots.
     # There should only be one notehead at +4 with 2 or more dots.
     self.assertEqual(
@@ -161,7 +161,7 @@ class OmrRegressionTest(absltest.TestCase):
     ]
     for note in single_dotted_notes:
       if note.y_position == +2:
-        # TODO(ringwalt): Detect the beam for this notehead. Its stem is too
+        # TODO(ringw): Detect the beam for this notehead. Its stem is too
         # short.
         continue
       self.assertEqual(len(note.beam), 1)
@@ -172,7 +172,7 @@ class OmrRegressionTest(absltest.TestCase):
     self.assertIn(-3, single_dotted_note_ys)
     self.assertIn(0, single_dotted_note_ys)
     self.assertIn(+2, single_dotted_note_ys)
-    # TODO(ringwalt): Detect the dot for the note at y position +4.
+    # TODO(ringw): Detect the dot for the note at y position +4.
     self.assertTrue(set(single_dotted_note_ys).issubset([-5, -3, 0, +2, +4]))
 
 

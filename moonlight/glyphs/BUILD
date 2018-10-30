@@ -173,8 +173,8 @@ py_test(
 py_library(
     name = "saved_classifier_fn",
     srcs = ["saved_classifier_fn.py"],
-    srcs_version = "PY2AND3",
     data = ["//moonlight/data/glyphs_nn_model_20180808"],
+    srcs_version = "PY2AND3",
     deps = [":saved_classifier"],
 )
 
