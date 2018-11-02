@@ -14,6 +14,7 @@ py_library(
     deps = [
         ":beams",
         ":components",
+        ":time_signature",
         ":verticals",
         "//moonlight/staves",
         "//moonlight/staves:base",
@@ -53,6 +54,7 @@ py_test(
         ":barlines",
         ":beams",
         ":components",
+        ":time_signature",
         ":structure",
         ":verticals",
         # absl/testing dep
@@ -138,11 +140,21 @@ py_test(
         ":components",
         ":stems",
         ":structure",
+        ":time_signature",
         ":verticals",
         # absl/testing dep
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/staves:base",
         # numpy dep
+    ],
+)
+
+py_library(
+    name = "time_signature",
+    srcs = ["time_signature.py"],
+    srcs_version = "PY2AND3",
+    deps = [
+        "//moonlight/staves:staffline_extractor",
     ],
 )
 
