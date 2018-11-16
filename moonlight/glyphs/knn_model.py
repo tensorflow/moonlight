@@ -18,7 +18,7 @@ from __future__ import print_function
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.python.estimator.canned import prediction_keys
+from tensorflow_estimator.python.estimator.canned import prediction_keys
 
 from moonlight.protobuf import musicscore_pb2
 

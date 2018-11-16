@@ -110,8 +110,8 @@ py_library(
     deps = [
         ":removal",
         ":staves",
-        "//moonlight:image",
         # enum34 dep
+        "//moonlight:image",
         # six dep
         # tensorflow dep
     ],
@@ -121,8 +121,8 @@ py_test(
     name = "staffline_extractor_test",
     size = "small",
     srcs = ["staffline_extractor_test.py"],
-    srcs_version = "PY2AND3",
     data = ["//moonlight/testdata:images"],
+    srcs_version = "PY2AND3",
     deps = [
         ":staffline_extractor",
         ":staves",

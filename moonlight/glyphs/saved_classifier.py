@@ -25,7 +25,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-from tensorflow.python.estimator.canned import prediction_keys
+from tensorflow_estimator.python.estimator.canned import prediction_keys
 
 from moonlight.glyphs import convolutional
 from moonlight.staves import staffline_extractor
