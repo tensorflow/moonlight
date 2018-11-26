@@ -63,10 +63,10 @@ def hough_peaks(hough_bins, thetas, minval=0, invalidate_distance=0):
     thetas: Angles; argument given to `hough_lines`.
     minval: Minimum vote count for a Hough bin to be considered. int or float.
     invalidate_distance: When selecting a line `(rho, theta)`, invalidate all
-        lines with the same theta and `+- invalidate_distance` from `rho`.
+      lines with the same theta and `+- invalidate_distance` from `rho`.
         int32. Caveat: this should only be used if all theta values are similar.
-        If thetas cover a wide range, this will invalidate lines that might not
-        even intersect.
+          If thetas cover a wide range, this will invalidate lines that might
+          not even intersect.
 
   Returns:
     Tensor of peak rho indices (int32).
@@ -82,13 +82,13 @@ def hough_peaks(hough_bins, thetas, minval=0, invalidate_distance=0):
   # Choose the theta with the highest bin value for each rho.
   selected_theta_ind = tf.argmax(hough_bins, axis=0)
   # Take the Hough bin value for each rho and the selected theta.
-  hough_bins = tf.gather_nd(hough_bins,
-                            tf.stack(
-                                [
-                                    tf.cast(selected_theta_ind, tf.int32),
-                                    tf.range(tf.shape(hough_bins)[1])
-                                ],
-                                axis=1))
+  hough_bins = tf.gather_nd(
+      hough_bins,
+      tf.stack([
+          tf.cast(selected_theta_ind, tf.int32),
+          tf.range(tf.shape(hough_bins)[1])
+      ],
+               axis=1))
   # hough_bins are integers. Subtract a penalty (< 1) for lines that are not
   # horizontal or vertical, so that we break ties in favor of the more
   # horizontal or vertical line.
@@ -118,7 +118,7 @@ def _bincount_2d(values, num_values):
   Args:
     values: The values to bincount. 2D integer tensor.
     num_values: The number of columns of the output. Entries in `values` that
-        are `>= num_values` will be ignored.
+      are `>= num_values` will be ignored.
 
   Returns:
     The bin counts. Shape `(values.shape[0], num_values)`. The `i`th row

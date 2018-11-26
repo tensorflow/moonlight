@@ -29,8 +29,8 @@ def patches_1d(images, patch_width):
 
   Args:
     images: The image(s) to extract patches from. Shape at least 2D, with shape
-        images_shape + (height, width). The image height and width must be
-        statically known (set on `images.get_shape()`).
+      images_shape + (height, width). The image height and width must be
+      statically known (set on `images.get_shape()`).
     patch_width: Width of a patch. int or long (must be statically known).
 
   Returns:
@@ -54,9 +54,8 @@ def patches_1d(images, patch_width):
     """Returns the image patches, assuming images.shape[0] > 0."""
     # patch_width must be an int, not a Tensor.
     # Reshape to (num_images, height, width, channels).
-    images_nhwc = tf.reshape(images,
-                             tf.stack(
-                                 [num_images, image_height, image_width, 1]))
+    images_nhwc = tf.reshape(
+        images, tf.stack([num_images, image_height, image_width, 1]))
     patches = tf.extract_image_patches(
         images_nhwc, [1, image_height, patch_width, 1],
         strides=[1, 1, 1, 1],
@@ -72,5 +71,4 @@ def patches_1d(images, patch_width):
         tf.concat([images_shape, [0, image_height, patch_width]], axis=0),
         images.dtype)
 
-  return tf.cond(
-      tf.greater(num_images, 0), do_extract_patches, empty_patches)
+  return tf.cond(tf.greater(num_images, 0), do_extract_patches, empty_patches)

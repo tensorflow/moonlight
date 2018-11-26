@@ -41,8 +41,8 @@ class LabelerHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
   """The HTTP request handler for the k-means labeler server.
 
   Attributes:
-    clusters: NumPy array of clusters. Shape
-        (num_clusters, patch_height, patch_width).
+    clusters: NumPy array of clusters. Shape (num_clusters, patch_height,
+      patch_width).
     output_path: Path to write the TFRecords.
   """
 
@@ -141,8 +141,10 @@ def create_highlighted_image(cluster, enlarge_ratio=10):
   # Enlarge the image, and repeat on the 3rd axis to get RGB channels.
   image_arr = np.repeat(
       np.repeat(
-          np.repeat((cluster * 255).astype(np.uint8)[:, :, None], enlarge_ratio,
-                    axis=0),
+          np.repeat(
+              (cluster * 255).astype(np.uint8)[:, :, None],
+              enlarge_ratio,
+              axis=0),
           enlarge_ratio,
           axis=1),
       3,
@@ -170,7 +172,7 @@ def create_examples(clusters, labels):
   Args:
     clusters: NumPy array of shape (num_clusters, patch_height, patch_width).
     labels: List of string labels, which are names in musicscore_pb2.Glyph.Type.
-        Length `num_clusters`.
+      Length `num_clusters`.
 
   Returns:
     A list of Example protos of length `num_clusters`.

@@ -47,8 +47,8 @@ def staff_center_filter(image,
     image: The 2D tensor image.
     staffline_distance: The estimated staffline distance. Scalar tensor.
     staffline_thickness: The estimated staffline thickness. Scalar tensor.
-    threshold: Scalar tensor. Pixels below the threshold are black
-        (possible stafflines).
+    threshold: Scalar tensor. Pixels below the threshold are black (possible
+      stafflines).
 
   Returns:
     A boolean tensor of the same shape as image. The candidate center staff
@@ -107,15 +107,13 @@ def _shift_y(image, y_offset):
     # y_offset is positive
     sliced = image[y_offset:]
     return tf.concat(
-        [sliced, tf.zeros(
-            [y_offset, width], dtype=image.dtype)], axis=0)
+        [sliced, tf.zeros([y_offset, width], dtype=image.dtype)], axis=0)
 
   def shift_down():
     # y_offset is negative
     sliced = image[:y_offset]
-    return tf.concat(
-        [tf.zeros(
-            [-y_offset, width], dtype=image.dtype), sliced], axis=0)
+    return tf.concat([tf.zeros([-y_offset, width], dtype=image.dtype), sliced],
+                     axis=0)
 
   return tf.cond(height <= tf.abs(y_offset), invalid,
                  lambda: tf.cond(y_offset >= 0, shift_up, shift_down))

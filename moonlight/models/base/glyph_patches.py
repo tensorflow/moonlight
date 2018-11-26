@@ -39,10 +39,10 @@ WEIGHT_COLUMN_NAME = 'weight'
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string(
-    'train_input_patches', None, 'Glob of labeled patch TFRecords for training')
-flags.DEFINE_string(
-    'eval_input_patches', None, 'Glob of labeled patch TFRecords for eval')
+flags.DEFINE_string('train_input_patches', None,
+                    'Glob of labeled patch TFRecords for training')
+flags.DEFINE_string('eval_input_patches', None,
+                    'Glob of labeled patch TFRecords for eval')
 flags.DEFINE_string('model_dir', None, 'Output trained model directory')
 flags.DEFINE_boolean(
     'use_included_label_weight', False,
@@ -57,8 +57,8 @@ flags.DEFINE_float(
     'augmentation_max_rotation_degrees', 2.,
     'Max rotation of the patch, in degrees. The rotation is selected uniformly'
     ' randomly from the range +- this value. A value of 0 implies no rotation.')
-flags.DEFINE_integer(
-    'eval_throttle_secs', 60, 'Evaluate at at most this interval, in seconds.')
+flags.DEFINE_integer('eval_throttle_secs', 60,
+                     'Evaluate at at most this interval, in seconds.')
 flags.DEFINE_integer(
     'train_max_steps', 100000,
     'Max steps for training. If 0, will train until the process is'
@@ -70,8 +70,15 @@ flags.DEFINE_integer(
     ' previous exports.')
 
 flags.DEFINE_multi_string('classes_for_metrics', [
-    'NONE', 'CLEF_TREBLE', 'CLEF_BASS', 'NOTEHEAD_FILLED', 'NOTEHEAD_EMPTY',
-    'NOTEHEAD_WHOLE', 'SHARP', 'FLAT', 'NATURAL',
+    'NONE',
+    'CLEF_TREBLE',
+    'CLEF_BASS',
+    'NOTEHEAD_FILLED',
+    'NOTEHEAD_EMPTY',
+    'NOTEHEAD_WHOLE',
+    'SHARP',
+    'FLAT',
+    'NATURAL',
 ], 'Generate accuracy metrics for these class names.')
 
 
@@ -123,10 +130,8 @@ def input_fn(input_patches):
       * A label tensor (int64 scalar).
     """
     feature_types = {
-        'patch':
-            tf.FixedLenFeature((patch_height, patch_width), tf.float32),
-        'label':
-            tf.FixedLenFeature((), tf.int64),
+        'patch': tf.FixedLenFeature((patch_height, patch_width), tf.float32),
+        'label': tf.FixedLenFeature((), tf.int64),
     }
     if FLAGS.use_included_label_weight:
       feature_types['label_weight'] = tf.FixedLenFeature((), tf.float32)
@@ -152,15 +157,18 @@ def _augment_shift(patch):
   """Augments the patch by possibly shifting it 1 pixel horizontally."""
   with tf.name_scope('augment_shift'):
     rand = tf.random_uniform(())
+
     def shift_left():
       return _shift_left(patch)
+
     def shift_right():
       return _shift_right(patch)
+
     def identity():
       return patch
+
     shift_prob = min(1., FLAGS.augmentation_x_shift_probability)
-    return tf.cond(rand < shift_prob / 2,
-                   shift_left,
+    return tf.cond(rand < shift_prob / 2, shift_left,
                    lambda: tf.cond(rand < shift_prob, shift_right, identity))
 
 
@@ -177,8 +185,9 @@ def _shift_right(patch):
 def _augment_rotation(patch):
   """Augments the patch by rotating it by a small amount."""
   max_rotation_radians = math.radians(FLAGS.augmentation_max_rotation_degrees)
-  rotation = tf.random_uniform(
-      (), minval=-max_rotation_radians, maxval=max_rotation_radians)
+  rotation = tf.random_uniform((),
+                               minval=-max_rotation_radians,
+                               maxval=max_rotation_radians)
   # Background is white (1.0) but tf.contrib.image.rotate currently always fills
   # the edges with black (0). Invert the patch before rotating.
   return 1. - tf.contrib.image.rotate(
@@ -239,11 +248,11 @@ def metrics_fn(features, labels, predictions):
   del features  # Unused.
   metrics = {
       'mean_per_class_accuracy':
-      tf.metrics.mean_per_class_accuracy(
-          labels=labels,
-          predictions=predictions['class_ids'],
-          num_classes=len(musicscore_pb2.Glyph.Type.keys()),
-      ),
+          tf.metrics.mean_per_class_accuracy(
+              labels=labels,
+              predictions=predictions['class_ids'],
+              num_classes=len(musicscore_pb2.Glyph.Type.keys()),
+          ),
   }
   for class_name in FLAGS.classes_for_metrics:
     class_number = musicscore_pb2.Glyph.Type.Value(class_name)

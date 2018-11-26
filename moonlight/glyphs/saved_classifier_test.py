@@ -49,8 +49,8 @@ class SavedClassifierTest(tf.test.TestCase):
         builder.add_meta_graph_and_variables(
             sess, ['serve'],
             signature_def_map={
-                tf.saved_model.signature_constants.
-                DEFAULT_SERVING_SIGNATURE_DEF_KEY:
+                tf.saved_model.signature_constants
+                .DEFAULT_SERVING_SIGNATURE_DEF_KEY:
                     signature
             })
         builder.save()
@@ -63,15 +63,15 @@ class SavedClassifierTest(tf.test.TestCase):
         clazz = saved_classifier.SavedConvolutional1DClassifier(
             structure.create_structure(page), export_dir)
         # Run min length should be the default.
-        self.assertEqual(
-            clazz.run_min_length, convolutional.DEFAULT_RUN_MIN_LENGTH)
+        self.assertEqual(clazz.run_min_length,
+                         convolutional.DEFAULT_RUN_MIN_LENGTH)
         predictions = clazz.staffline_predictions.eval()
         self.assertEqual(predictions.ndim, 3)  # Staff, staff position, x
         self.assertGreater(predictions.size, 0)
         # Predictions are all musicscore_pb2.Glyph.NONE.
-        self.assertAllEqual(predictions,
-                            np.full(predictions.shape,
-                                    musicscore_pb2.Glyph.NONE, np.int32))
+        self.assertAllEqual(
+            predictions,
+            np.full(predictions.shape, musicscore_pb2.Glyph.NONE, np.int32))
 
 
 if __name__ == '__main__':

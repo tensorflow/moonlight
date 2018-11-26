@@ -23,7 +23,6 @@ import tensorflow as tf
 from moonlight.glyphs import convolutional
 from moonlight.protobuf import musicscore_pb2
 
-
 # Sample glyph predictions.
 # Shape (num_staves, num_stafflines, width).
 PREDICTIONS = np.asarray(

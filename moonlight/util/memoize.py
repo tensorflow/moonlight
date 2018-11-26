@@ -37,7 +37,7 @@ class MemoizedFunction(object):
 
     Args:
       *args: The args to pass through to the function. Keyword arguments are not
-          supported.
+        supported.
 
     Raises:
       TypeError if an argument is unhashable.

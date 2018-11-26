@@ -41,7 +41,7 @@ class Convolutional1DGlyphClassifier(base.BaseGlyphClassifier):
 
     Args:
       run_min_length: Must have this many consecutive pixels with the same
-          non-NONE predicted glyph to emit the glyph.
+        non-NONE predicted glyph to emit the glyph.
     """
     super(Convolutional1DGlyphClassifier, self).__init__()
     self.run_min_length = run_min_length
@@ -68,7 +68,7 @@ class Convolutional1DGlyphClassifier(base.BaseGlyphClassifier):
 
     Args:
       predictions_arr: A NumPy array with the result of `staffline_predictions`.
-          Shape (num_staves, num_stafflines, width).
+        Shape (num_staves, num_stafflines, width).
 
     Returns:
       A 2D array of the glyph coordinates. Shape (num_glyphs, 4) with columns

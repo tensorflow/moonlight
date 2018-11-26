@@ -26,11 +26,11 @@ class FakeStaves(base.BaseStaffDetector):
   Attributes:
     image: The image.
     staves_t: The staves given to the constructor. None may be given if the
-        staves are never checked (only the staffline distance).
+      staves are never checked (only the staffline distance).
     staffline_distance_t: The estimated staffline distance. 1D tensor (values
-        for each staff) or None.
+      for each staff) or None.
     staffline_thickness_t: The estimated staffline thickness. Scalar tensor or
-        None.
+      None.
   """
 
   def __init__(self,

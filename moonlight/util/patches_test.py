@@ -32,8 +32,8 @@ class PatchesTest(tf.test.TestCase):
     patches_t = patches.patches_1d(image_t, patch_width)
     with self.test_session() as sess:
       image_arr, patches_arr = sess.run((image_t, patches_t))
-      self.assertEqual(patches_arr.shape, (200 - patch_width + 1, 100,
-                                           patch_width))
+      self.assertEqual(patches_arr.shape,
+                       (200 - patch_width + 1, 100, patch_width))
       for i in moves.xrange(patches_arr.shape[0]):
         self.assertAllEqual(patches_arr[i], image_arr[:, i:i + patch_width])
 
@@ -46,8 +46,8 @@ class PatchesTest(tf.test.TestCase):
     patches_t = patches.patches_1d(image_t, patch_width)
     with self.test_session() as sess:
       image_arr, patches_arr = sess.run((image_t, patches_t))
-      self.assertEqual(patches_arr.shape, (4, 8, width - patch_width + 1,
-                                           height, patch_width))
+      self.assertEqual(patches_arr.shape,
+                       (4, 8, width - patch_width + 1, height, patch_width))
       for i in moves.xrange(patches_arr.shape[0]):
         for j in moves.xrange(patches_arr.shape[1]):
           for k in moves.xrange(patches_arr.shape[2]):

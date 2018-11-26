@@ -46,10 +46,10 @@ def get_staffline(y_position, extracted_staff_arr):
 
   Args:
     y_position: The staffline position--the relative number of notes from the
-        3rd line on the staff.
+      3rd line on the staff.
     extracted_staff_arr: An extracted staff NumPy array, e.g.
-        `StafflineExtractor.extract_staves()[0].eval()` (`StafflineExtractor`
-        returns multiple staves).
+      `StafflineExtractor.extract_staves()[0].eval()` (`StafflineExtractor`
+      returns multiple staves).
 
   Returns:
     The correct staffline from `extracted_staff_arr`, with shape
@@ -86,7 +86,9 @@ class StafflineExtractor(object):
   StafflinePatchExtractor for training.
   """
 
-  def __init__(self, image, staves,
+  def __init__(self,
+               image,
+               staves,
                target_height=DEFAULT_TARGET_HEIGHT,
                num_sections=DEFAULT_NUM_SECTIONS,
                staffline_distance_multiple=DEFAULT_STAFFLINE_DISTANCE_MULTIPLE):
@@ -94,15 +96,15 @@ class StafflineExtractor(object):
 
     Args:
       image: A uint8 tensor of shape (height, width). The background (usually
-          white) must have a value of 0.
+        white) must have a value of 0.
       staves: An instance of base.BaseStaffDetector.
       target_height: The height of the scaled output windows.
       num_sections: The number of stafflines to extract.
       staffline_distance_multiple: The height of the extracted staffline, in
-          multiples of the staffline distance. For example, a notehead should
-          fit in a staffline distance multiple of 1, because it starts and ends
-          vertically on a staff line. However, other glyphs may need more space
-          above and below to classify accurately.
+        multiples of the staffline distance. For example, a notehead should fit
+        in a staffline distance multiple of 1, because it starts and ends
+        vertically on a staff line. However, other glyphs may need more space
+        above and below to classify accurately.
     """
     self.float_image = tf.cast(image, tf.float32) / 255.
     self.staves = staves
@@ -123,6 +125,7 @@ class StafflineExtractor(object):
       distance is inconsistent between staves, smaller staves will be padded
       on the right with zeros.
     """
+
     # Only map if we have any staves, otherwise return an empty array with the
     # correct dimensionality.
     def do_extract_staves():
@@ -134,9 +137,11 @@ class StafflineExtractor(object):
       staff_ys = self.staves.staves_interpolated_y
 
       def extract_staff(i):
+
         def extract_staffline_by_index(j):
-          return self._extract_staffline(
-              staff_ys[i], self.staves.staffline_distance[i], j)
+          return self._extract_staffline(staff_ys[i],
+                                         self.staves.staffline_distance[i], j)
+
         return tf.map_fn(
             extract_staffline_by_index,
             tf.range(-(self.num_sections // 2), self.num_sections // 2 + 1),
@@ -172,7 +177,8 @@ class StafflineExtractor(object):
     # Note: tf.meshgrid uses xs before ys by default, but y is the 0th axis
     # for indexing.
     xs, ys = tf.meshgrid(
-        tf.range(width), tf.range(staff_window) - (staff_window // 2))
+        tf.range(width),
+        tf.range(staff_window) - (staff_window // 2))
     # ys are centered around 0. Add the staff_y, repeating along the
     # 0th axis.
     ys += tf.tile(staff_y[None, :], [staff_window, 1])
@@ -183,8 +189,8 @@ class StafflineExtractor(object):
     ys += tf.cast(
         tf.ceil(tf.truediv(staffline_num * staffline_distance, 2)), tf.int32)
 
-    invalid = tf.logical_not(
-        (0 <= ys) & (ys < height) & (0 <= xs) & (xs < width))
+    invalid = tf.logical_not((0 <= ys) & (ys < height) & (0 <= xs) &
+                             (xs < width))
     # Use a coordinate of (0, 0) for pixels outside of the original image.
     # We will then fill in those pixels with zeros.
     ys = tf.where(invalid, tf.zeros_like(ys), ys)
@@ -192,8 +198,8 @@ class StafflineExtractor(object):
     inds = tf.stack([ys, xs], axis=2)
     staffline_image = tf.gather_nd(self.float_image, inds)
     # Fill the pixels outside of the original image with zeros.
-    staffline_image = tf.where(
-        invalid, tf.zeros_like(staffline_image), staffline_image)
+    staffline_image = tf.where(invalid, tf.zeros_like(staffline_image),
+                               staffline_image)
 
     # Calculate the proportional width after scaling the height to
     # self.target_height.
@@ -283,8 +289,8 @@ class StafflinePatchExtractor(object):
       filename: The absolute filename of the image.
       staff_index: Index of the staff out of all staves on the page.
       y_position: Note y position on the staff, on which to extract the strip.
-          The position starts out 0 for the staff center line, and grows more
-          positive for higher notes.
+        The position starts out 0 for the staff center line, and grows more
+        positive for higher notes.
 
     Returns:
       A tuple of:
@@ -339,7 +345,8 @@ class StafflinePatchExtractor(object):
     """
     all_stafflines, scales = tf.get_default_session().run(
         [self.all_stafflines, self.all_staffline_scales],
-        feed_dict={self.filename: filename}, options=self.run_options)
+        feed_dict={self.filename: filename},
+        options=self.run_options)
 
     def generator():
       """The patch generator.
@@ -353,15 +360,15 @@ class StafflinePatchExtractor(object):
           y_position = self.num_sections // 2 - staffline_index
           prev_image_x = None
 
-          for staffline_x_start in moves.xrange(
-              staffline.shape[1] - self.patch_width):
+          for staffline_x_start in moves.xrange(staffline.shape[1] -
+                                                self.patch_width):
             image_x = int(
                 round((staffline_x_start + self.patch_width // 2) / scale))
             if image_x != prev_image_x:
               patch_id = StafflinePatchExtractor.make_patch_id(
                   filename, staff_index, y_position, image_x)
-              patch = staffline[
-                  :, staffline_x_start:staffline_x_start + self.patch_width]
+              patch = staffline[:, staffline_x_start:staffline_x_start +
+                                self.patch_width]
               yield patch_id, patch
               prev_image_x = image_x
 
@@ -372,5 +379,5 @@ class StafflinePatchExtractor(object):
     """Formats the short id uniquely identifying a patch in the training set."""
     short_filename, _ = os.path.splitext(os.path.basename(filename))
     # Format y_position as e.g. +2, +0, or -3.
-    return '{},{},{:+d},{}'.format(
-        short_filename, staff_index, y_position, image_x)
+    return '{},{},{:+d},{}'.format(short_filename, staff_index, y_position,
+                                   image_x)

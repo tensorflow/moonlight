@@ -62,10 +62,11 @@ def parse_corpus(corpus_file, height, width):
   sess = tf.get_default_session()
   producer = tf.train.string_input_producer([corpus_file], num_epochs=1)
   unused_keys, examples = tf.TFRecordReader().read_up_to(producer, 10000)
-  parsed_examples = tf.parse_example(examples, {
-      'patch': tf.FixedLenFeature((height, width), tf.float32),
-      'label': tf.FixedLenFeature((), tf.int64)
-  })
+  parsed_examples = tf.parse_example(
+      examples, {
+          'patch': tf.FixedLenFeature((height, width), tf.float32),
+          'label': tf.FixedLenFeature((), tf.int64)
+      })
   sess.run(tf.local_variables_initializer())  # initialize num_epochs
   coord = tf.train.Coordinator()
   queue_runners = tf.train.start_queue_runners(start=True, coord=coord)

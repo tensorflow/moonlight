@@ -115,11 +115,10 @@ def musicxml_similarity(a, b):
       columns=[OVERALL_SCORE],
       index=pd.MultiIndex.from_tuples(index, names=['staff', 'measure']))
   return df.append(
-      pd.DataFrame(
-          [df[OVERALL_SCORE].mean()],
-          columns=[OVERALL_SCORE],
-          index=pd.MultiIndex.from_tuples(
-              [('total', '')], names=['staff', 'measure'])))
+      pd.DataFrame([df[OVERALL_SCORE].mean()],
+                   columns=[OVERALL_SCORE],
+                   index=pd.MultiIndex.from_tuples([('total', '')],
+                                                   names=['staff', 'measure'])))
 
 
 def _not_similar():
@@ -127,8 +126,9 @@ def _not_similar():
   return pd.DataFrame(
       [[0]],
       columns=[OVERALL_SCORE],
-      index=pd.MultiIndex.from_product(
-          [('total',), ('',)], names=['staff', 'measure']),)
+      index=pd.MultiIndex.from_product([('total',), ('',)],
+                                       names=['staff', 'measure']),
+  )
 
 
 def _index(num_staves, num_measures):
@@ -418,7 +418,7 @@ def levenshtein(s1, s2, distance=_note_distance):
     s1: A sequence.
     s2: A sequence.
     distance: A callable that accepts an element from each of s1 and s2, and
-        returns a float distance metric between 0 and 1.
+      returns a float distance metric between 0 and 1.
 
   Returns:
     The Levenshtein distance between the two sequences.

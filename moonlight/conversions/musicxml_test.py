@@ -192,8 +192,7 @@ class MusicXMLTest(absltest.TestCase):
     </measure>
   </part>
 </score-partwise>
-""",
-        musicxml.score_to_musicxml(score))
+""", musicxml.score_to_musicxml(score))
 
 
 if __name__ == '__main__':

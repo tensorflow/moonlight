@@ -149,8 +149,8 @@ class KeySignature(_BaseAccidentals):
       accidental = six.next(iter(values))
       # The pitch class must match exactly one of the 7 y positions that are
       # allowed for this key signature.
-      for y_position in _KEY_SIGNATURE_Y_POSITION_RANGES[self.clef.glyph,
-                                                         accidental]:
+      for y_position in _KEY_SIGNATURE_Y_POSITION_RANGES[self.clef
+                                                         .glyph, accidental]:
         if (self.clef.y_position_to_midi(y_position) %
             constants.NUM_SEMITONES_PER_OCTAVE) == next_pitch_class:
           return y_position, accidental

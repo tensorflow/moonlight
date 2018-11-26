@@ -40,8 +40,7 @@ FLAGS = flags.FLAGS
 class OmrRegressionTest(absltest.TestCase):
 
   def testIMSLP01963_106_multipleStaffSizes(self):
-    page = engine.OMREngine().run(
-        _get_imslp_path('IMSLP01963-106.png')).page[0]
+    page = engine.OMREngine().run(_get_imslp_path('IMSLP01963-106.png')).page[0]
     self.assertEqual(len(page.system), 3)
 
     for system in page.system:

@@ -78,12 +78,12 @@ class MusicXMLTest(absltest.TestCase):
 
     pd_testing.assert_frame_equal(
         musicxml.musicxml_similarity(a, b),
-        pd.DataFrame(
-            [0.0, 1.0, 0.0, 0.0, 0.25],
-            columns=[musicxml.OVERALL_SCORE],
-            index=pd.MultiIndex.from_tuples(
-                [(0, 0), (0, 1), (1, 0), (1, 1), ('total', '')],
-                names=['staff', 'measure'])))
+        pd.DataFrame([0.0, 1.0, 0.0, 0.0, 0.25],
+                     columns=[musicxml.OVERALL_SCORE],
+                     index=pd.MultiIndex.from_tuples([(0, 0), (0, 1), (1, 0),
+                                                      (1, 1), ('total', '')],
+                                                     names=['staff',
+                                                            'measure'])))
 
   def testIdentical(self):
     filename = six.text_type(

@@ -50,7 +50,7 @@ def parse_label_weights_array(weights_str=None):
 
   Args:
     weights_str: String of label name-weight pairs, separated by commas.
-        Defaults to the command-line flag.
+      Defaults to the command-line flag.
 
   Returns:
     A NumPy array large enough to hold all of the glyph enum types. At the index

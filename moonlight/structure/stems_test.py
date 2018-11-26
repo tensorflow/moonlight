@@ -81,10 +81,10 @@ class StemsTest(absltest.TestCase):
     page = stems.apply(input_page)
     self.assertFalse(page.system[0].staff[0].glyph[0].HasField("stem"))
     self.assertTrue(page.system[0].staff[0].glyph[1].HasField("stem"))
-    self.assertEquals(page.system[0].staff[0].glyph[1].stem,
-                      musicscore_pb2.LineSegment(
-                          start=Point(x=20, y=38),
-                          end=Point(x=20, y=38 + 12 * 4)))
+    self.assertEquals(
+        page.system[0].staff[0].glyph[1].stem,
+        musicscore_pb2.LineSegment(
+            start=Point(x=20, y=38), end=Point(x=20, y=38 + 12 * 4)))
     self.assertFalse(page.system[0].staff[0].glyph[2].HasField("stem"))
     self.assertFalse(page.system[0].staff[0].glyph[3].HasField("stem"))
 

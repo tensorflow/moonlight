@@ -45,8 +45,8 @@ class ReaderTest(absltest.TestCase):
             Glyph(type=Glyph.NOTEHEAD_FILLED, x=10, y_position=0),
         ])
     notes = conversions.page_to_notesequence(reader.ScoreReader().read_page(
-        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(staff=[staff])
-                                   ])))
+        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(
+            staff=[staff])])))
     self.assertEqual(
         notes,
         music_pb2.NoteSequence(notes=[
@@ -65,8 +65,8 @@ class ReaderTest(absltest.TestCase):
             Glyph(type=Glyph.NOTEHEAD_FILLED, x=10, y_position=0),
         ])
     notes = conversions.page_to_notesequence(reader.ScoreReader().read_page(
-        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(staff=[staff])
-                                   ])))
+        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(
+            staff=[staff])])))
     self.assertEqual(
         notes,
         music_pb2.NoteSequence(notes=[
@@ -151,8 +151,8 @@ class ReaderTest(absltest.TestCase):
             Glyph(type=Glyph.NOTEHEAD_FILLED, x=60, y_position=4, stem=stem_2),
         ])
     notes = conversions.page_to_notesequence(reader.ScoreReader().read_page(
-        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(staff=[staff])
-                                   ])))
+        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(
+            staff=[staff])])))
     self.assertEqual(
         notes,
         music_pb2.NoteSequence(notes=[
@@ -204,8 +204,8 @@ class ReaderTest(absltest.TestCase):
                 beam=[beam_2, beam_3]),
         ])
     notes = conversions.page_to_notesequence(reader.ScoreReader().read_page(
-        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(staff=[staff])
-                                   ])))
+        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(
+            staff=[staff])])))
     self.assertEqual(
         notes,
         music_pb2.NoteSequence(notes=[
@@ -232,8 +232,8 @@ class ReaderTest(absltest.TestCase):
             Glyph(type=Glyph.NOTEHEAD_WHOLE, x=10, y_position=-6),
         ])
     notes = conversions.page_to_notesequence(reader.ScoreReader().read_page(
-        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(staff=[staff])
-                                   ])))
+        musicscore_pb2.Page(system=[musicscore_pb2.StaffSystem(
+            staff=[staff])])))
     self.assertEqual(
         notes,
         music_pb2.NoteSequence(notes=[
@@ -332,7 +332,6 @@ class ReaderTest(absltest.TestCase):
                 y_position=reader.TREBLE_CLEF_EXPECTED_Y),
             # Key signature.
             Glyph(type=Glyph.SHARP, x=10, y_position=+4),
-
             Glyph(type=Glyph.NOTEHEAD_FILLED, x=20, y_position=-2),
 
             # Accidental.
@@ -395,36 +394,37 @@ class ReaderTest(absltest.TestCase):
 
   def testKeySignatures(self):
     # One staff per system, two systems.
-    staff_1 = musicscore_pb2.Staff(
-        glyph=[
-            Glyph(type=Glyph.CLEF_TREBLE, x=5,
-                  y_position=reader.TREBLE_CLEF_EXPECTED_Y),
-            # D major key signature.
-            Glyph(type=Glyph.SHARP, x=15, y_position=+4),
-            Glyph(type=Glyph.SHARP, x=25, y_position=+1),
+    staff_1 = musicscore_pb2.Staff(glyph=[
+        Glyph(
+            type=Glyph.CLEF_TREBLE,
+            x=5,
+            y_position=reader.TREBLE_CLEF_EXPECTED_Y),
+        # D major key signature.
+        Glyph(type=Glyph.SHARP, x=15, y_position=+4),
+        Glyph(type=Glyph.SHARP, x=25, y_position=+1),
 
-            # Accidental which cannot be interpreted as part of the key
-            # signature.
-            Glyph(type=Glyph.SHARP, x=35, y_position=+2),
-            Glyph(type=Glyph.NOTEHEAD_FILLED, x=45, y_position=+2),  # D#5
+        # Accidental which cannot be interpreted as part of the key
+        # signature.
+        Glyph(type=Glyph.SHARP, x=35, y_position=+2),
+        Glyph(type=Glyph.NOTEHEAD_FILLED, x=45, y_position=+2),  # D#5
+        Glyph(type=Glyph.NOTEHEAD_EMPTY, x=55, y_position=+1),  # C#5
+        Glyph(type=Glyph.NOTEHEAD_FILLED, x=65, y_position=-3),  # F#4
 
-            Glyph(type=Glyph.NOTEHEAD_EMPTY, x=55, y_position=+1),  # C#5
-            Glyph(type=Glyph.NOTEHEAD_FILLED, x=65, y_position=-3),  # F#4
-
-            # New measure. The key signature should be retained.
-            Glyph(type=Glyph.NOTEHEAD_EMPTY, x=105, y_position=-3),  # F#4
-            Glyph(type=Glyph.NOTEHEAD_FILLED, x=125, y_position=+1),  # C#5
-            # Accidental is not retained.
-            Glyph(type=Glyph.NOTEHEAD_FILLED, x=145, y_position=+2),  # D5
-        ])
-    staff_2 = musicscore_pb2.Staff(
-        glyph=[
-            Glyph(type=Glyph.CLEF_TREBLE, x=5,
-                  y_position=reader.TREBLE_CLEF_EXPECTED_Y),
-            # No key signature on this line. No accidentals.
-            Glyph(type=Glyph.NOTEHEAD_EMPTY, x=25, y_position=-3),  # F4
-            Glyph(type=Glyph.NOTEHEAD_EMPTY, x=45, y_position=+1),  # C5
-        ])
+        # New measure. The key signature should be retained.
+        Glyph(type=Glyph.NOTEHEAD_EMPTY, x=105, y_position=-3),  # F#4
+        Glyph(type=Glyph.NOTEHEAD_FILLED, x=125, y_position=+1),  # C#5
+        # Accidental is not retained.
+        Glyph(type=Glyph.NOTEHEAD_FILLED, x=145, y_position=+2),  # D5
+    ])
+    staff_2 = musicscore_pb2.Staff(glyph=[
+        Glyph(
+            type=Glyph.CLEF_TREBLE,
+            x=5,
+            y_position=reader.TREBLE_CLEF_EXPECTED_Y),
+        # No key signature on this line. No accidentals.
+        Glyph(type=Glyph.NOTEHEAD_EMPTY, x=25, y_position=-3),  # F4
+        Glyph(type=Glyph.NOTEHEAD_EMPTY, x=45, y_position=+1),  # C5
+    ])
     notes = conversions.page_to_notesequence(reader.ScoreReader().read_page(
         musicscore_pb2.Page(system=[
             musicscore_pb2.StaffSystem(

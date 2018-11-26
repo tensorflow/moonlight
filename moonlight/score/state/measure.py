@@ -26,11 +26,16 @@ from moonlight.score.elements import key_signature as key_signature_module
 
 ACCIDENTAL_PITCH_SHIFT_ = {
     # TODO(ringw): Detect 2 adjacent flats as a double flat.
-    musicscore_pb2.Glyph.FLAT: -1,
-    musicscore_pb2.Glyph.NATURAL: 0,
-    musicscore_pb2.Glyph.NONE: 0,
-    musicscore_pb2.Glyph.SHARP: +1,
-    musicscore_pb2.Glyph.DOUBLE_SHARP: +2,
+    musicscore_pb2.Glyph.FLAT:
+        -1,
+    musicscore_pb2.Glyph.NATURAL:
+        0,
+    musicscore_pb2.Glyph.NONE:
+        0,
+    musicscore_pb2.Glyph.SHARP:
+        +1,
+    musicscore_pb2.Glyph.DOUBLE_SHARP:
+        +2,
 }
 
 
@@ -47,10 +52,10 @@ class MeasureState(object):
     clef: The current clef.
     key_signature: The current `KeySignature`.
     chords: A map from stem (tuple `((x0, y0), (x1, y1))`) to the first note
-        that was read and is attached to the stem. Subsequent notes attached to
-        the same stem will read their start and end time from the first note.
+      that was read and is attached to the stem. Subsequent notes attached to
+      the same stem will read their start and end time from the first note.
     time: The current time in the measure. Absolute time relative to the start
-        of the score. float.
+      of the score. float.
   """
 
   def __init__(self, start_time, clef, key_signature=None):
@@ -60,11 +65,11 @@ class MeasureState(object):
       start_time: The start time (in quarter notes) of the measure.
       clef: A `Clef`.
       key_signature: The previously detected key signature (optional). If
-          present, do not detect a key signature in this measure. This should be
-          taken from the previously measure on this staff if this is not the
-          first measure. It should not be propagated from one staff to the next,
-          because we expect the key signature to be repeated on each staff and
-          we will re-detect it.
+        present, do not detect a key signature in this measure. This should be
+        taken from the previously measure on this staff if this is not the first
+        measure. It should not be propagated from one staff to the next, because
+        we expect the key signature to be repeated on each staff and we will
+        re-detect it.
     """
     self.time = start_time
     self.clef = clef

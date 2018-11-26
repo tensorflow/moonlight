@@ -44,8 +44,7 @@ class Barlines(object):
     """Splits the staves in the page into systems with barlines."""
     assert len(page.system) == 1
     systems_map = dict(
-        (i, (i, i)) for i in moves.xrange(len(page.system[0].staff))
-    )
+        (i, (i, i)) for i in moves.xrange(len(page.system[0].staff)))
     for start, end in zip(self.barline_staff_start, self.barline_staff_end):
       for staff in moves.xrange(start, end + 1):
         start = min(start, systems_map[staff][0])
@@ -82,8 +81,8 @@ class Barlines(object):
           # barline that they are probably a duplicate.
           close_barlines = [
               other_barline for other_barline in selected_barlines
-              if abs(self.barlines[other_barline, 0, 0] - barline_x) <
-              self.close_barline_threshold
+              if abs(self.barlines[other_barline, 0, 0] -
+                     barline_x) < self.close_barline_threshold
           ]
 
           def get_span(barline):
@@ -103,8 +102,8 @@ class Barlines(object):
                   for other_barline in close_barlines)):
             selected_barlines.difference_update(close_barlines)
             selected_barlines.add(i)
-      barline_xs = sorted(self.barlines[barline, 0, 0]
-                          for barline in selected_barlines)
+      barline_xs = sorted(
+          self.barlines[barline, 0, 0] for barline in selected_barlines)
       system.bar.extend(
           musicscore_pb2.StaffSystem.Bar(
               x=x, type=musicscore_pb2.StaffSystem.Bar.STANDARD_BAR)
@@ -171,8 +170,8 @@ def assign_barlines_to_staves(barline_x, barline_y0, barline_y1,
   staff_starts = (
       staff_detector.staves_interpolated_y -
       2 * staff_detector.staffline_distance[:, None])
-  barline_staff_start_distance = np.abs(
-      barline_y0[None, :] - staff_starts[:, barline_x])
+  barline_staff_start_distance = np.abs(barline_y0[None, :] -
+                                        staff_starts[:, barline_x])
   barline_staff_start = np.argmin(barline_staff_start_distance, axis=0)
 
   # Barlines must be at most a single staffline distance away from the

@@ -129,8 +129,8 @@ class PageGenerationDoFn(beam.DoFn):
 
     seeds = ','.join(map(str, seeds))
     return json.loads(
-        subprocess.check_output(
-            vexflow_generator_command + ['--random_seeds=' + seeds]))
+        subprocess.check_output(vexflow_generator_command +
+                                ['--random_seeds=' + seeds]))
 
   def _svg_to_png(self, svg):
     svg_to_png_command = list(self.svg_to_png_command)
@@ -194,9 +194,7 @@ class PatchExampleDoFn(beam.DoFn):
               self.omr.glyph_classifier.staffline_extractor.extract_staves(),
               self.omr.structure.staff_detector.staffline_distance[0]
           ],
-          feed_dict={
-              self.omr.image: noisy_image
-          })
+          feed_dict={self.omr.image: noisy_image})
     if stafflines.shape[0] != 1:
       raise ValueError('Image should have one detected staff, got shape: ' +
                        str(stafflines.shape))
@@ -208,8 +206,8 @@ class PatchExampleDoFn(beam.DoFn):
     negative_example_overlap_from_end = max(self.negative_example_distance,
                                             self.patch_width // 2)
     negative_example_whitelist[:, :negative_example_overlap_from_end] = False
-    negative_example_whitelist[:,
-                               -negative_example_overlap_from_end - 1:] = False
+    negative_example_whitelist[:, -negative_example_overlap_from_end -
+                               1:] = False
     all_positive_examples = []
     for glyph in staff_message.glyph:
       staffline = staffline_extractor.get_staffline(glyph.y_position,
@@ -217,8 +215,8 @@ class PatchExampleDoFn(beam.DoFn):
       glyph_x = int(
           round(glyph.x *
                 self.omr.glyph_classifier.staffline_extractor.target_height /
-                (image_staffline_distance * self.omr.glyph_classifier.
-                 staffline_extractor.staffline_distance_multiple)))
+                (image_staffline_distance * self.omr.glyph_classifier
+                 .staffline_extractor.staffline_distance_multiple)))
       example = self._create_example(staffline, glyph_x, glyph.type)
       if example:
         staffline_index = staffline_extractor.y_position_to_index(
@@ -226,9 +224,9 @@ class PatchExampleDoFn(beam.DoFn):
             stafflines.shape[staffline_extractor.Axes.POSITION])
         # Blacklist the area adjacent to the glyph, even if it is not selected
         # as a positive example below.
-        negative_example_whitelist[
-            staffline_index, glyph_x - self.negative_example_distance + 1:
-            glyph_x + self.negative_example_distance] = False
+        negative_example_whitelist[staffline_index, glyph_x -
+                                   self.negative_example_distance + 1:glyph_x +
+                                   self.negative_example_distance] = False
         all_positive_examples.append(example)
         positive_example_count += 1
 

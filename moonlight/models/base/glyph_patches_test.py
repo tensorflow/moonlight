@@ -61,23 +61,17 @@ class GlyphPatchesTest(tf.test.TestCase):
     with self.test_session():
       self.assertAllEqual(
           # pyformat: disable
-          glyph_patches._shift_left([[0, 1, 2, 3],
-                                     [4, 5, 6, 7],
-                                     [8, 9, 10, 11]]).eval(),
-          [[1, 2, 3, 3],
-           [5, 6, 7, 7],
-           [9, 10, 11, 11]])
+          glyph_patches._shift_left([[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10,
+                                                                  11]]).eval(),
+          [[1, 2, 3, 3], [5, 6, 7, 7], [9, 10, 11, 11]])
 
   def testShiftRight(self):
     with self.test_session():
       self.assertAllEqual(
           # pyformat: disable
-          glyph_patches._shift_right([[0, 1, 2, 3],
-                                      [4, 5, 6, 7],
+          glyph_patches._shift_right([[0, 1, 2, 3], [4, 5, 6, 7],
                                       [8, 9, 10, 11]]).eval(),
-          [[0, 0, 1, 2],
-           [4, 4, 5, 6],
-           [8, 8, 9, 10]])
+          [[0, 0, 1, 2], [4, 4, 5, 6], [8, 8, 9, 10]])
 
   def testMulticlassBinaryMetric(self):
     # pyformat: disable

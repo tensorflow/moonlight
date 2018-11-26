@@ -53,8 +53,10 @@ class BaseStaffDetector(object):
     Returns:
       A list of Tensors.
     """
-    return [self.staves, self.staffline_distance, self.staffline_thickness,
-            self.staves_interpolated_y]
+    return [
+        self.staves, self.staffline_distance, self.staffline_thickness,
+        self.staves_interpolated_y
+    ]
 
   @property
   @memoize.MemoizedFunction
@@ -77,7 +79,7 @@ class BaseStaffDetector(object):
 
       Args:
         staff: The sequence of (x, y) coordinates for the staff center line.
-            int32 tensor of shape (num_points, 2).
+          int32 tensor of shape (num_points, 2).
 
       Returns:
         The array of y position values.
@@ -85,7 +87,8 @@ class BaseStaffDetector(object):
       staff = tf.convert_to_tensor(staff, dtype=tf.int32)
       input_validation = [
           tf.Assert(
-              tf.greater_equal(tf.shape(staff)[0], 2), [staff, tf.shape(staff)],
+              tf.greater_equal(tf.shape(staff)[0], 2),
+              [staff, tf.shape(staff)],
               name="at_least_2_points"),
           tf.Assert(
               tf.equal(tf.shape(staff)[1], 2), [staff, tf.shape(staff)],
@@ -104,6 +107,7 @@ class BaseStaffDetector(object):
       # The segments cover left of the staff, each consecutive pair of points,
       # and right of the staff.
       num_segments = num_points + 1
+
       def loop_body(i, ys_array):
         """Executes on each iteration of the TF while loop."""
         # Interpolate the y coordinates of the line between staff points i - 1
@@ -113,10 +117,11 @@ class BaseStaffDetector(object):
         y0 = staff[i - 1, 1]
         x1 = staff[i, 0]
         y1 = staff[i, 1]
-        segment_ys = (tf.cast(
-            tf.round(
-                tf.cast(y1 - y0, tf.float32) * tf.linspace(
-                    0., 1., x1 - x0 + 1)[:-1]), tf.int32) + y0)
+        segment_ys = (
+            tf.cast(
+                tf.round(
+                    tf.cast(y1 - y0, tf.float32) * tf.linspace(
+                        0., 1., x1 - x0 + 1)[:-1]), tf.int32) + y0)
         # Update the loop variables. Increment i, and write the current segment
         # ys to the array.
         return i + 1, ys_array.write(i, segment_ys)
@@ -126,8 +131,8 @@ class BaseStaffDetector(object):
       all_ys_array = tf.TensorArray(
           tf.int32, infer_shape=False, size=num_segments)
       # The first segment covers [0, staff[0, 0]) (may be empty).
-      all_ys_array = all_ys_array.write(
-          0, tf.tile([staff[0, 1]], [staff[0, 0]]))
+      all_ys_array = all_ys_array.write(0, tf.tile([staff[0, 1]],
+                                                   [staff[0, 0]]))
       # Write the segments in the interval [1, num_segments - 2].
       unused_i, all_ys_array = tf.while_loop(
           lambda i, unused_ys: i < num_segments - 1, loop_body,
@@ -138,8 +143,9 @@ class BaseStaffDetector(object):
           tf.tile([staff[-1, 1]], [image_shape[1] - staff[-1, 0]]))
       all_ys = all_ys_array.concat()
       output_validation = [
-          tf.Assert(tf.equal(tf.shape(all_ys)[0], image_shape[1]),
-                    [tf.shape(all_ys), image_shape]),
+          tf.Assert(
+              tf.equal(tf.shape(all_ys)[0], image_shape[1]),
+              [tf.shape(all_ys), image_shape]),
       ]
       # Validate the output before returning. We need an actual op inside the
       # with statement (tf.identity).

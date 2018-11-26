@@ -39,9 +39,8 @@ class NearestNeighborGlyphClassifier(
     """Build a 1-nearest-neighbor classifier with labeled patches.
 
     Args:
-      corpus_file: Path to the TFRecords of Examples with patch (cluster)
-          values in the "patch" feature, and the glyph label in the "label"
-          feature.
+      corpus_file: Path to the TFRecords of Examples with patch (cluster) values
+        in the "patch" feature, and the glyph label in the "label" feature.
       staffline_extractor: The staffline extractor.
       **kwargs: Passed through to `Convolutional1DGlyphClassifier`.
     """
@@ -51,9 +50,9 @@ class NearestNeighborGlyphClassifier(
     centroids, labels = corpus.parse_corpus(corpus_file, patch_height,
                                             patch_width)
     centroids_shape = tf.shape(centroids)
-    flattened_centroids = tf.reshape(centroids, [
-        centroids_shape[0], centroids_shape[1] * centroids_shape[2]
-    ])
+    flattened_centroids = tf.reshape(
+        centroids,
+        [centroids_shape[0], centroids_shape[1] * centroids_shape[2]])
     self.staffline_extractor = staffline_extractor
     stafflines = staffline_extractor.extract_staves()
     # Collapse the stafflines per stave.
@@ -99,8 +98,8 @@ class NearestNeighborGlyphClassifier(
     # Pad the output.
     predictions_width = tf.shape(predictions)[-1]
     pad_before = (width - predictions_width) // 2
-    pad_shape_before = tf.concat(
-        [staffline_patches_shape[:2], [pad_before]], axis=0)
+    pad_shape_before = tf.concat([staffline_patches_shape[:2], [pad_before]],
+                                 axis=0)
     pad_shape_after = tf.concat(
         [staffline_patches_shape[:2], [width - predictions_width - pad_before]],
         axis=0)

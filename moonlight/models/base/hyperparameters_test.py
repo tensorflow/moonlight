@@ -32,10 +32,11 @@ class HyperparametersTest(tf.test.TestCase):
         params)
     with self.test_session():
       # Build the estimator model.
-      estimator.model_fn(features={'feature': tf.placeholder(tf.float32)},
-                         labels=tf.placeholder(tf.float32),
-                         mode='TRAIN',
-                         config=None)
+      estimator.model_fn(
+          features={'feature': tf.placeholder(tf.float32)},
+          labels=tf.placeholder(tf.float32),
+          mode='TRAIN',
+          config=None)
       # We should be able to pull hyperparameters out of the TensorFlow graph.
       # The entire graph will also be written to the saved model in training.
       self.assertEqual(

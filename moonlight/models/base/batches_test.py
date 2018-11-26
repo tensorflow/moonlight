@@ -29,9 +29,10 @@ class BatchesTest(tf.test.TestCase):
     all_as = np.random.rand(1000, 2, 3)
     all_bs = np.random.randint(0, 100, [1000], np.int32)
     all_labels = np.random.randint(0, 5, [1000], np.int32)
-    random_dataset = tf.data.Dataset.from_tensor_slices(
-        ({'a': tf.constant(all_as), 'b': tf.constant(all_bs)},
-         tf.constant(all_labels)))
+    random_dataset = tf.data.Dataset.from_tensor_slices(({
+        'a': tf.constant(all_as),
+        'b': tf.constant(all_bs)
+    }, tf.constant(all_labels)))
 
     flags.FLAGS.dataset_shuffle_buffer_size = 0
     batch_tensors = batches.get_batched_tensor(random_dataset)

@@ -21,9 +21,10 @@ from absl import flags
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_integer('dataset_shuffle_buffer_size', 10000,
-                     'Shuffles this many entries in the dataset. 0 indicates no'
-                     ' shuffling.')
+flags.DEFINE_integer(
+    'dataset_shuffle_buffer_size', 10000,
+    'Shuffles this many entries in the dataset. 0 indicates no'
+    ' shuffling.')
 flags.DEFINE_integer(
     'dataset_limit_size', None,
     'Only take this many entries in the dataset (which may be repeated for some'

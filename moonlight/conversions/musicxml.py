@@ -90,8 +90,8 @@ def score_to_musicxml(score):
                 attributes.append(clef)
               note = _glyph_to_note(glyph)
               if note is not None:
-                if (glyph.note.start_time == previous_note_start_time
-                    and glyph.note.end_time == previous_note_end_time):
+                if (glyph.note.start_time == previous_note_start_time and
+                    glyph.note.end_time == previous_note_end_time):
                   position = note.index(note.find('pitch'))
                   chord = etree.Element('chord')
                   note.insert(position, chord)
@@ -161,8 +161,8 @@ def _glyph_to_note(glyph):
   """Converts a `Glyph` message to a `<note>` tag.
 
   Args:
-    glyph: A `tensorflow.moonlight.Glyph` message. The glyph type should be
-        one of `NOTEHEAD_*`.
+    glyph: A `tensorflow.moonlight.Glyph` message. The glyph type should be one
+      of `NOTEHEAD_*`.
 
   Returns:
     An etree `<note>` tag, or `None` if the glyph is not a notehead.
@@ -190,8 +190,8 @@ def _glyph_to_note(glyph):
                          librosa.midi_to_note(glyph.note.pitch))
   pitch = etree.SubElement(note, 'pitch')
   etree.SubElement(pitch, 'step').text = pitch_match.group(1)
-  etree.SubElement(
-      pitch, 'alter').text = str(ACCIDENTAL_TO_ALTER[pitch_match.group(2)])
+  etree.SubElement(pitch, 'alter').text = str(
+      ACCIDENTAL_TO_ALTER[pitch_match.group(2)])
   etree.SubElement(pitch, 'octave').text = pitch_match.group(3)
   return note
 
@@ -204,9 +204,8 @@ class MusicXMLScore(object):
   """
 
   def __init__(self, omr_score):
-    num_parts = max(len(system.staff)
-                    for page in omr_score.page
-                    for system in page.system)
+    num_parts = max(
+        len(system.staff) for page in omr_score.page for system in page.system)
     part_list = _create_part_list(num_parts)
     self.score = etree.Element('score-partwise', version=MUSICXML_VERSION)
     self.score.append(part_list)

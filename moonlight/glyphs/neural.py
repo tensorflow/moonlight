@@ -45,28 +45,28 @@ class NeuralNetworkGlyphClassifier(object):
 
     Args:
       input_placeholder: A tf.placeholder representing the input staffline
-          image. Dtype float32 and shape (batch_size, target_height, None).
+        image. Dtype float32 and shape (batch_size, target_height, None).
       hidden_layer: An inner layer in the model. Should be the last layer in the
-          autoencoder model before reconstructing the input, and/or an
-          intermediate layer in the prediction network. self is intended to be
-          the last common ancestor of the reconstruction_layer output and the
-          prediction_layer output, if both are present.
+        autoencoder model before reconstructing the input, and/or an
+        intermediate layer in the prediction network. self is intended to be the
+        last common ancestor of the reconstruction_layer output and the
+        prediction_layer output, if both are present.
       reconstruction_layer: The reconstruction of the input, for an autoencoder
-          model. If non-None, should have the same shape as input_placeholder.
+        model. If non-None, should have the same shape as input_placeholder.
       autoencoder_vars: The variables for the autoencoder model (parameters
-          affecting hidden_layer and reconstruction_layer), or None. If
-          non-None, a dict mapping variable name to tf.Variable object.
+        affecting hidden_layer and reconstruction_layer), or None. If non-None,
+        a dict mapping variable name to tf.Variable object.
       labels_placeholder: The labels tensor. A placeholder will be created if
-          None is given. Dtype int32 and shape (batch_size, width). Values are
-          between 0 and NUM_GLYPHS - 1 (where each value is the Glyph.Type enum
-          value minus one, to skip UNKNOWN_TYPE).
+        None is given. Dtype int32 and shape (batch_size, width). Values are
+        between 0 and NUM_GLYPHS - 1 (where each value is the Glyph.Type enum
+        value minus one, to skip UNKNOWN_TYPE).
       prediction_layer: The logit probability of each glyph for each column.
-          Must be able to be passed to tf.nn.softmax to produce the probability
-          of each glyph. 2D (width, NUM_GLYPHS). May be None if the model is not
-          being used for classification.
+        Must be able to be passed to tf.nn.softmax to produce the probability of
+        each glyph. 2D (width, NUM_GLYPHS). May be None if the model is not
+        being used for classification.
       prediction_vars: The variables for the classification model (parameters
-          affecting hidden_layer and prediction_layer), or None. If non-None, a
-          dict mapping variable name to tf.Variable object.
+        affecting hidden_layer and prediction_layer), or None. If non-None, a
+        dict mapping variable name to tf.Variable object.
     """
     self.input_placeholder = input_placeholder
     self.hidden_layer = hidden_layer
@@ -75,21 +75,23 @@ class NeuralNetworkGlyphClassifier(object):
     # Calculate the loss that will be minimized for the autoencoder model.
     self.autoencoder_loss = None
     if self.reconstruction_layer is not None:
-      self.autoencoder_loss = (tf.reduce_mean(
-          tf.squared_difference(self.input_placeholder,
-                                self.reconstruction_layer)))
+      self.autoencoder_loss = (
+          tf.reduce_mean(
+              tf.squared_difference(self.input_placeholder,
+                                    self.reconstruction_layer)))
     self.prediction_layer = prediction_layer
     self.prediction_vars = prediction_vars or {}
-    self.labels_placeholder = (labels_placeholder
-                               if labels_placeholder is not None else
-                               tf.placeholder(tf.int32, (None, None)))
+    self.labels_placeholder = (
+        labels_placeholder if labels_placeholder is not None else
+        tf.placeholder(tf.int32, (None, None)))
     # Calculate the loss that will be minimized for the prediction model.
     self.prediction_loss = None
     if self.prediction_layer is not None:
-      self.prediction_loss = (tf.reduce_mean(
-          tf.nn.softmax_cross_entropy_with_logits(
-              logits=self.prediction_layer,
-              labels=tf.one_hot(self.labels_placeholder, NUM_GLYPHS))))
+      self.prediction_loss = (
+          tf.reduce_mean(
+              tf.nn.softmax_cross_entropy_with_logits(
+                  logits=self.prediction_layer,
+                  labels=tf.one_hot(self.labels_placeholder, NUM_GLYPHS))))
     # The probabilities of each glyph for each column.
     self.prediction = tf.nn.softmax(self.prediction_layer)
 
@@ -120,13 +122,13 @@ class NeuralNetworkGlyphClassifier(object):
 
     Args:
       batch_size: The number of staffline images in a batch, which must be known
-          at model definition time. int.
+        at model definition time. int.
       target_height: The height of each scaled staffline image. int.
       input_placeholder: The input layer. A placeholder will be created if None
-          is given. Dtype float32 and shape (batch_size, target_height,
-          any_width).
+        is given. Dtype float32 and shape (batch_size, target_height,
+        any_width).
       labels_placeholder: The labels tensor. A placeholder will be created if
-          None is given. Dtype int32 and shape (batch_size, width).
+        None is given. Dtype int32 and shape (batch_size, width).
 
     Returns:
       A NeuralNetworkGlyphClassifier instance holding the model.
@@ -145,8 +147,8 @@ class NeuralNetworkGlyphClassifier(object):
     autoencoder_vars.update(layer_vars)
     prediction_vars.update(layer_vars)
 
-    reconstruction, layer_vars = ReconstructionLayer(
-        hidden, target_height, target_height).get()
+    reconstruction, layer_vars = ReconstructionLayer(hidden, target_height,
+                                                     target_height).get()
     autoencoder_vars.update(layer_vars)
 
     hidden, layer_vars = HiddenLayer(hidden, 10, 10, name="hidden_2").get()
@@ -193,10 +195,9 @@ class InputConvLayer(BaseLayer):
       image: The input image (height, width). Should be wider than it is tall.
       n_hidden: The number of output nodes of the layer.
       activation: Callable applied to the convolved image. Applied to the 1D
-          convolution result to produce the activation of the layer.
-      name: The prefix for variable names for the layer.
-
-    Produces self.output with shape (width, n_hidden).
+        convolution result to produce the activation of the layer.
+      name: The prefix for variable names for the layer.  Produces self.output
+        with shape (width, n_hidden).
     """
     height = int(image.get_shape()[1])
     super(InputConvLayer, self).__init__(
@@ -227,10 +228,9 @@ class HiddenLayer(BaseLayer):
       filter_size: The width of the convolution filter.
       n_out: The number of output channels.
       activation: Callable applied to the convolved image. Applied to the 1D
-          convolution result to produce the activation of the layer.
-      name: The prefix for variable names for the layer.
-
-    Produces self.output with shape (width, n_out).
+        convolution result to produce the activation of the layer.
+      name: The prefix for variable names for the layer.  Produces self.output
+        with shape (width, n_out).
     """
     n_in = int(layer_in.get_shape()[2])
     super(HiddenLayer, self).__init__(filter_size, n_in, n_out, name)
@@ -255,10 +255,9 @@ class ReconstructionLayer(BaseLayer):
       filter_size: The width of the convolution filter.
       out_height: The height of the output image.
       activation: Callable applied to the convolved image. Applied to the 1D
-          convolution result to produce the activation of the output.
-      name: The prefix for variable names for the layer.
-
-    Produces self.output with shape (width, n_out).
+        convolution result to produce the activation of the output.
+      name: The prefix for variable names for the layer.  Produces self.output
+        with shape (width, n_out).
     """
     n_in = int(layer_in.get_shape()[2])
     super(ReconstructionLayer, self).__init__(filter_size, n_in, out_height,
@@ -277,9 +276,8 @@ class PredictionLayer(BaseLayer):
 
     Args:
       layer_in: The input layer (width, num_channels).
-      name: The prefix for variable names for the layer.
-
-    Produces the logits for each class in self.output. Shape (width, NUM_GLYPHS)
+      name: The prefix for variable names for the layer.  Produces the logits
+        for each class in self.output. Shape (width, NUM_GLYPHS)
     """
     n_in = int(layer_in.get_shape()[2])
     n_out = NUM_GLYPHS

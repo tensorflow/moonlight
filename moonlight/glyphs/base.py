@@ -80,8 +80,9 @@ class BaseGlyphClassifier(object):
         that only hold `Glyph`s. Structural information is added to the page by
         `OMREngine`.
     """
-    num_staves = (predictions[:, int(GlyphsTensorColumns.STAFF_INDEX)].max() + 1
-                  if predictions.size else 0)
+    num_staves = (
+        predictions[:, int(GlyphsTensorColumns.STAFF_INDEX)].max() + 1
+        if predictions.size else 0)
 
     def create_glyph(glyph):
       return musicscore_pb2.Glyph(
@@ -100,5 +101,6 @@ class BaseGlyphClassifier(object):
       return musicscore_pb2.Staff(glyph=map(create_glyph, glyphs))
 
     return musicscore_pb2.Page(system=[
-        musicscore_pb2.StaffSystem(staff=map(generate_staff, range(num_staves)))
+        musicscore_pb2.StaffSystem(
+            staff=map(generate_staff, range(num_staves)))
     ])

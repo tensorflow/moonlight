@@ -31,7 +31,6 @@ from moonlight.glyphs import convolutional
 from moonlight.staves import staffline_extractor
 from moonlight.util import patches
 
-
 _SIGNATURE_KEYS = [
     # Created if the ServingInputReceiver has 'patch' in
     # receiver_tensors_alternatives.
@@ -83,9 +82,8 @@ class SavedConvolutional1DClassifier(
         break
     else:
       # for/else is only executed if the loop completes without breaking.
-      raise ValueError(
-          'One of the following signatures must be present: %s' %
-          _SIGNATURE_KEYS)
+      raise ValueError('One of the following signatures must be present: %s' %
+                       _SIGNATURE_KEYS)
 
     input_info = signature.inputs['input']
     if not (len(input_info.tensor_shape.dim) == 3 and
@@ -113,8 +111,8 @@ class SavedConvolutional1DClassifier(
       ])
 
       # Feed in the flat extracted patches as the classifier input.
-      predictions_name = signature.outputs[
-          prediction_keys.PredictionKeys.CLASS_IDS].name
+      predictions_name = signature.outputs[prediction_keys.PredictionKeys
+                                           .CLASS_IDS].name
       predictions = tf.contrib.graph_editor.graph_replace(
           sess.graph.get_tensor_by_name(predictions_name), {
               sess.graph.get_tensor_by_name(signature.inputs['input'].name):
@@ -129,14 +127,12 @@ class SavedConvolutional1DClassifier(
       width = tf.shape(stafflines)[-1]
       predictions_width = tf.shape(predictions)[-1]
       pad_before = (width - predictions_width) // 2
-      pad_shape_before = tf.concat(
-          [staffline_patches_shape[:2], [pad_before]], axis=0)
-      pad_shape_after = tf.concat(
-          [
-              staffline_patches_shape[:2],
-              [width - predictions_width - pad_before]
-          ],
-          axis=0)
+      pad_shape_before = tf.concat([staffline_patches_shape[:2], [pad_before]],
+                                   axis=0)
+      pad_shape_after = tf.concat([
+          staffline_patches_shape[:2], [width - predictions_width - pad_before]
+      ],
+                                  axis=0)
       self.output = tf.concat(
           [
               # NONE has value 1.

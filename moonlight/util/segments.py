@@ -39,7 +39,7 @@ def true_segments_1d(segments,
   Args:
     segments: 1D boolean tensor.
     mode: The SegmentsMode. Returns the start of each segment (STARTS), or the
-        rounded center of each segment (CENTERS).
+      rounded center of each segment (CENTERS).
     max_gap: Fill gaps of length at most `max_gap` between true segments. int.
     min_length: Minimum length of a returned segment. int.
     name: Optional name for the op.
@@ -119,7 +119,7 @@ def _segments_1d(values, mode, name=None):
   Args:
     values: 1D tensor of any type.
     mode: The SegmentsMode. Returns the start of each segment (STARTS), or the
-        rounded center of each segment (CENTERS).
+      rounded center of each segment (CENTERS).
     name: Optional name for the op.
 
   Returns:
@@ -131,6 +131,7 @@ def _segments_1d(values, mode, name=None):
     ValueError: if mode is not recognized.
   """
   with tf.name_scope(name, "segments", [values]):
+
     def do_segments(values):
       """Actually does segmentation.
 
@@ -178,10 +179,10 @@ def peaks(values, minval=None, invalidate_distance=0, name=None):
     values: 1D tensor of a numeric type.
     minval: Minimum value which is considered a peak.
     invalidate_distance: Invalidates nearby potential peaks. The peaks are
-        searched sequentially by descending value, and from left to right for
-        equal values. Once a peak is found in this order, it invalidates any
-        peaks yet to be seen that are <= invalidate_distance away. A distance of
-        0 effectively produces no invalidation.
+      searched sequentially by descending value, and from left to right for
+      equal values. Once a peak is found in this order, it invalidates any peaks
+      yet to be seen that are <= invalidate_distance away. A distance of 0
+      effectively produces no invalidation.
     name: Optional name for the op.
 
   Returns:
@@ -206,9 +207,9 @@ def peaks(values, minval=None, invalidate_distance=0, name=None):
         lambda: tuple(tf.constant(0, values.dtype) for i in range(4)))
     # Each segment must be greater than the segment before and after it.
     segment_is_peak = tf.concat(
-        [[first_val > second_val], tf.greater(
-            segment_values[1:-1],
-            tf.maximum(segment_values[:-2], segment_values[2:])),
+        [[first_val > second_val],
+         tf.greater(segment_values[1:-1],
+                    tf.maximum(segment_values[:-2], segment_values[2:])),
          [last_val > penultimate_val]],
         axis=0)
     if minval is not None:
@@ -242,7 +243,8 @@ def peaks(values, minval=None, invalidate_distance=0, name=None):
     accepted_peaks = tf.while_loop(
         loop_condition,
         loop_body, [tf.zeros([0], all_peaks.dtype), all_peaks],
-        shape_invariants=[tf.TensorShape([None]), tf.TensorShape([None])])[0]
+        shape_invariants=[tf.TensorShape([None]),
+                          tf.TensorShape([None])])[0]
     # Sort the peaks by index.
     # TODO(ringw): Add a tf.sort op that sorts in ascending order.
     sorted_negative_peaks, _ = tf.nn.top_k(

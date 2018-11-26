@@ -50,27 +50,30 @@ class SegmentsTest(tf.test.TestCase, absltest.TestCase):
     centers, lengths = segments.true_segments_1d(
         values, mode=segments.SegmentsMode.CENTERS)
     with self.test_session():
-      self.assertAllEqual(
-          centers.eval(),
-          [sum(run_lengths[:1]) + (run_lengths[1] - 1) // 2,
-           sum(run_lengths[:3]) + (run_lengths[3] - 1) // 2,
-           sum(run_lengths[:5]) + (run_lengths[5] - 1) // 2,
-           sum(run_lengths[:7]) + (run_lengths[7] - 1) // 2])
+      self.assertAllEqual(centers.eval(), [
+          sum(run_lengths[:1]) + (run_lengths[1] - 1) // 2,
+          sum(run_lengths[:3]) + (run_lengths[3] - 1) // 2,
+          sum(run_lengths[:5]) + (run_lengths[5] - 1) // 2,
+          sum(run_lengths[:7]) + (run_lengths[7] - 1) // 2
+      ])
       self.assertAllEqual(lengths.eval(), run_lengths[1::2])
     starts, lengths = segments.true_segments_1d(
         values, mode=segments.SegmentsMode.STARTS)
     with self.test_session():
-      self.assertAllEqual(
-          starts.eval(),
-          [sum(run_lengths[:1]), sum(run_lengths[:3]),
-           sum(run_lengths[:5]), sum(run_lengths[:7])])
+      self.assertAllEqual(starts.eval(), [
+          sum(run_lengths[:1]),
+          sum(run_lengths[:3]),
+          sum(run_lengths[:5]),
+          sum(run_lengths[:7])
+      ])
       self.assertAllEqual(lengths.eval(), run_lengths[1::2])
 
   def test_true_segments_1d_empty(self):
     for mode in list(segments.SegmentsMode):
       for max_gap in [0, 1]:
-        centers, lengths = segments.true_segments_1d(
-            [], mode=mode, max_gap=max_gap)
+        centers, lengths = segments.true_segments_1d([],
+                                                     mode=mode,
+                                                     max_gap=max_gap)
         with self.test_session():
           self.assertAllEqual(centers.eval(), [])
           self.assertAllEqual(lengths.eval(), [])

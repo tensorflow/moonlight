@@ -94,9 +94,8 @@ class ScoreReader(object):
 
   def _read_glyph(self, glyph, staff_state):
     if glyph.type not in ScoreReader.GLYPH_HANDLERS_:
-      logging.warning(
-          'Handler not implemented: %s',
-          musicscore_pb2.Glyph.Type.Name(glyph.type))
+      logging.warning('Handler not implemented: %s',
+                      musicscore_pb2.Glyph.Type.Name(glyph.type))
       return
 
     ScoreReader.GLYPH_HANDLERS_[glyph.type](self, staff_state, glyph)
