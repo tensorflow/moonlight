@@ -50,16 +50,18 @@ class FilteredHoughStaffDetector(base.BaseStaffDetector):
   close to `pi / 2`).
   """
 
-  def __init__(self, image=None, max_abs_theta=DEFAULT_MAX_ABS_THETA,
+  def __init__(self,
+               image=None,
+               max_abs_theta=DEFAULT_MAX_ABS_THETA,
                num_theta=DEFAULT_NUM_THETA):
     """Filtered hough staff detector.
 
     Args:
       image: The image. If None, a placeholder will be created.
       max_abs_theta: The maximum deviation of the angle for the staff from the
-          horizontal, in radians.
-      num_theta: The number of thetas to be detected, between
-          `pi/2 - max_abs_theta` and `pi/2 + max_abs_theta`.
+        horizontal, in radians.
+      num_theta: The number of thetas to be detected, between `pi/2 -
+        max_abs_theta` and `pi/2 + max_abs_theta`.
     """
     super(FilteredHoughStaffDetector, self).__init__(image)
     staffline_distance, staffline_thickness = (
@@ -94,7 +96,7 @@ class FilteredHoughStaffDetector(base.BaseStaffDetector):
         i: The index of the current staffline distance to use.
         staves: The current staves tensor of shape (N, 2, 2).
         staffline_distances: The current staffline distance tensor. 1D with
-            length N.
+          length N.
 
       Returns:
         i + 1.
@@ -108,12 +110,12 @@ class FilteredHoughStaffDetector(base.BaseStaffDetector):
           self.estimated_staffline_thickness, self.max_abs_theta,
           self.num_theta).staves
       staves = tf.concat([staves, current_staves], axis=0)
-      staffline_distances = tf.concat(
-          [
-              staffline_distances,
-              tf.tile([current_staffline_distance], tf.shape(staves)[0:1]),
-          ],
-          axis=0)
+      staffline_distances = tf.concat([
+          staffline_distances,
+          tf.tile([current_staffline_distance],
+                  tf.shape(staves)[0:1]),
+      ],
+                                      axis=0)
       return i + 1, staves, staffline_distances
 
     num_staffline_distances = tf.shape(self.estimated_staffline_distance)[0]
@@ -159,9 +161,9 @@ class _SingleSizeFilteredHoughStaffDetector(object):
       staffline_distance: The single staffline distance scalar to use.
       staffline_thickness: The staffline thickness.
       max_abs_theta: The maximum deviation of the angle for the staff from the
-          horizontal, in radians.
-      num_theta: The number of thetas to be detected, between
-          `pi/2 - max_abs_theta` and `pi/2 + max_abs_theta`.
+        horizontal, in radians.
+      num_theta: The number of thetas to be detected, between `pi/2 -
+        max_abs_theta` and `pi/2 + max_abs_theta`.
     """
     self.image = image
     self.estimated_staffline_distance = staffline_distance

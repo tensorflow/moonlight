@@ -34,9 +34,9 @@ from moonlight.training.clustering import kmeans_labeler_request_handler as hand
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('clusters_path', None, 'Path to the input patch TFRecords')
-flags.DEFINE_string('output_path', None,
-                    'Path to the output patch TFRecords. Defaults to '
-                    'overwriting clusters_path.')
+flags.DEFINE_string(
+    'output_path', None, 'Path to the output patch TFRecords. Defaults to '
+    'overwriting clusters_path.')
 flags.DEFINE_integer('port', 8000, 'Port for serving the labeler.')
 
 

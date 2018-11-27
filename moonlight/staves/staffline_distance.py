@@ -73,10 +73,10 @@ def _single_peak(values, relative_cutoff, minval, invalidate_distance):
   Args:
     values: 1D tensor of values to take the peaks on.
     relative_cutoff: The fraction of the highest peak which all other peaks
-        should be below.
+      should be below.
     minval: The peak should have at least this value.
     invalidate_distance: Exclude values that are up to invalidate_distance away
-        from the peak.
+      from the peak.
 
   Returns:
     The index of the single peak in `values`, or -1 if there is not a single
@@ -173,7 +173,7 @@ def _estimate_staffline_thickness(columns, values, lengths, staffline_distance):
     values: 1D array. The value (0 or 1) of each vertical run.
     lengths: 1D array. The length of each vertical run.
     staffline_distance: A 1D tensor of the possible staffline distances in the
-        image. One of the distances may be chosen arbitrarily.
+      image. One of the distances may be chosen arbitrarily.
 
   Returns:
     A scalar tensor with the staffline thickness for the entire page, or -1 if

@@ -37,10 +37,9 @@ class StaffState(object):
     """Updates `measure_state` for a new measure.
 
     Args:
-      start_time: The start time of the new measure.
-
-    Copies state which is persisted between measures, and initializes other
-    state to the defaults for the new measure.
+      start_time: The start time of the new measure.  Copies state which is
+        persisted between measures, and initializes other state to the defaults
+        for the new measure.
     """
     self.measure_state = self.measure_state.new_measure(start_time)
 
@@ -69,9 +68,7 @@ class StaffState(object):
     """Updates the current time of the current measure.
 
     Args:
-      time: A floating-point time.
-
-    Updates `self.measure_state`.
+      time: A floating-point time.  Updates `self.measure_state`.
     """
     self.measure_state.time = time
 
@@ -79,8 +76,6 @@ class StaffState(object):
     """Updates the clef.
 
     Args:
-      clef: A TrebleClef or BassClef.
-
-    Updates `self.measure_state`.
+      clef: A TrebleClef or BassClef.  Updates `self.measure_state`.
     """
     self.measure_state.set_clef(clef)

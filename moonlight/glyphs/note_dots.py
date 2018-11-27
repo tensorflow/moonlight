@@ -93,10 +93,10 @@ def _extract_dots(structure):
   max_height_width = np.median(
       structure.staff_detector.staffline_distance) * 2 / 3
   connected_components = structure.connected_components.components
-  width = connected_components[:, COMPONENTS.
-                               X1] - connected_components[:, COMPONENTS.X0]
-  height = connected_components[:, COMPONENTS.
-                                Y1] - connected_components[:, COMPONENTS.Y0]
+  width = connected_components[:, COMPONENTS
+                               .X1] - connected_components[:, COMPONENTS.X0]
+  height = connected_components[:, COMPONENTS
+                                .Y1] - connected_components[:, COMPONENTS.Y0]
   is_full = np.greater_equal(connected_components[:, COMPONENTS.SIZE] * 2,
                              width * height)
   candidates = connected_components[

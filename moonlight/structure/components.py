@@ -83,12 +83,10 @@ def get_component_bounds(image):
     component_y0 = _unsorted_segment_min(ys, components, num_components)[1:]
     component_y1 = tf.unsorted_segment_max(ys, components, num_components)[1:]
     component_size = tf.bincount(components)[1:]
-    return tf.stack(
-        [
-            component_x0, component_y0, component_x1, component_y1,
-            component_size
-        ],
-        axis=1)
+    return tf.stack([
+        component_x0, component_y0, component_x1, component_y1, component_size
+    ],
+                    axis=1)
 
 
 def _unsorted_segment_min(data, segment_ids, num_segments):

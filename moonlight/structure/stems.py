@@ -86,8 +86,9 @@ class Stems(object):
             staff.staffline_distance)
         for glyph in staff.glyph:
           if glyph_types.is_stemmed_notehead(glyph):
-            glyph_y = (staff_ys[glyph.x] -
-                       glyph.y_position * staff.staffline_distance / 2.0)
+            glyph_y = (
+                staff_ys[glyph.x] -
+                glyph.y_position * staff.staffline_distance / 2.0)
             # Compute the ideal coordinates for the glyph to be assigned to each
             # stem.
 

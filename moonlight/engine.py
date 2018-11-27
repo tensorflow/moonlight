@@ -39,7 +39,6 @@ from moonlight.structure import beams
 from moonlight.structure import components
 from moonlight.structure import verticals
 
-
 # TODO(ringw): Get OMR running on GPU. It seems to create too many individual
 # ops/allocations and can freeze the machine.
 CONFIG = tf.ConfigProto(device_count={'GPU': 0})
@@ -104,7 +103,7 @@ class OMREngine(object):
     Args:
       input_pngs: A list of PNG filenames to process.
       output_notesequence: Whether to return a NoteSequence, as opposed to a
-          Score containing Pages with Glyphs.
+        Score containing Pages with Glyphs.
 
     Returns:
       A NoteSequence message, or a Score message holding Pages for each input

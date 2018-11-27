@@ -46,27 +46,20 @@ class StaffDetectorsTest(tf.test.TestCase):
     staff_row = [255] * 4 + [0] * 42 + [255] * 4
     # Create an image with 5 staff lines, with a slightly noisy staffline
     # thickness and distance.
-    image = np.asarray([blank_row] * 25
-                       + [staff_row] * 2
-                       + [blank_row] * 8
-                       + [staff_row] * 3
-                       + [blank_row] * 8
-                       + [staff_row] * 3
-                       + [blank_row] * 9
-                       + [staff_row] * 2
-                       + [blank_row] * 8
-                       + [staff_row] * 2
-                       + [blank_row] * 25,
-                       np.uint8)
+    image = np.asarray(
+        [blank_row] * 25 + [staff_row] * 2 + [blank_row] * 8 + [staff_row] * 3 +
+        [blank_row] * 8 + [staff_row] * 3 + [blank_row] * 9 + [staff_row] * 2 +
+        [blank_row] * 8 + [staff_row] * 2 + [blank_row] * 25, np.uint8)
     for detector in self.generate_staff_detectors(image):
       with self.test_session() as sess:
         staves_arr, staffline_distances, staffline_thickness = sess.run(
             (detector.staves, detector.staffline_distance,
              detector.staffline_thickness))
       expected_y = 25 + 2 + 8 + 3 + 8 + 1  # y coordinate of the center line
-      self.assertEqual(staves_arr.shape[0], 1,
-                       'Expected single staff from detector %s. Got: %d' %
-                       (detector, staves_arr.shape[0]))
+      self.assertEqual(
+          staves_arr.shape[0], 1,
+          'Expected single staff from detector %s. Got: %d' %
+          (detector, staves_arr.shape[0]))
       self.assertAlmostEqual(
           np.mean(staves_arr[0, :, 1]),  # average y position
           expected_y,
@@ -110,8 +103,8 @@ class StaffDetectorsTest(tf.test.TestCase):
   def test_staves_interpolated_y_empty(self):
     with self.test_session():
       self.assertAllEqual(
-          testing.FakeStaves(tf.zeros([50, 25]), tf.zeros([0, 2, 2], np.int32))
-          .staves_interpolated_y.eval().shape, [0, 25])
+          testing.FakeStaves(tf.zeros([50, 25]), tf.zeros(
+              [0, 2, 2], np.int32)).staves_interpolated_y.eval().shape, [0, 25])
 
   def test_staves_interpolated_y_staves_dont_extend_to_edge(self):
     staff = tf.constant(np.array([[[5, 10], [12, 8]]], np.int32))

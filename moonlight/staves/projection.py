@@ -79,20 +79,20 @@ def _projection_to_staves(projection, width):
     if len(current_staff) > 5:
       del current_staff[0]
     if len(current_staff) == 5:
-      dists = np.array([current_staff[1] - current_staff[0],
-                        current_staff[2] - current_staff[1],
-                        current_staff[3] - current_staff[2],
-                        current_staff[4] - current_staff[3]])
+      dists = np.array([
+          current_staff[1] - current_staff[0],
+          current_staff[2] - current_staff[1],
+          current_staff[3] - current_staff[2],
+          current_staff[4] - current_staff[3]
+      ])
       if np.max(dists) - np.min(dists) < 3:
         staff_center = round(np.mean(current_staff))
-        staff_center_lines.append([[0, staff_center],
-                                   [width - 1, staff_center]])
+        staff_center_lines.append([[0, staff_center], [width - 1,
+                                                       staff_center]])
         staffline_distance.append(round(np.mean(dists)))
         staffline_thicknesses.append(staffline_thickness)
   staffline_thickness = (
       np.median(staffline_thicknesses).astype(np.int32)
-      if staffline_thicknesses
-      else np.int32(1))
+      if staffline_thicknesses else np.int32(1))
   return (np.array(staff_center_lines, np.int32),
-          np.array(staffline_distance, np.int32),
-          staffline_thickness)
+          np.array(staffline_distance, np.int32), staffline_thickness)

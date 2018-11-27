@@ -80,9 +80,8 @@ class KnnTest(tf.test.TestCase):
             examples_file.name, FakeStafflineExtractor(), run_min_length=1)
         k_nearest_value = tf.get_default_graph().get_tensor_by_name(
             'k_nearest_value:0')
-        glyphs = classifier.get_detected_glyphs().eval(feed_dict={
-            k_nearest_value: 1
-        })
+        glyphs = classifier.get_detected_glyphs().eval(
+            feed_dict={k_nearest_value: 1})
     # The patches of the staffline that match non-NONE patterns (in row-major
     # order) should appear here (x is their center coordinate).
     # pyformat: disable

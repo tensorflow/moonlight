@@ -49,14 +49,14 @@ class StafflinePatchesDoFn(beam.DoFn):
     self.num_stafflines = num_stafflines
     self.timeout_ms = timeout_ms
     self.max_patches_per_page = max_patches_per_page
-    self.total_pages_counter = metrics.Metrics.counter(
-        self.__class__, 'total_pages')
-    self.failed_pages_counter = metrics.Metrics.counter(
-        self.__class__, 'failed_pages')
+    self.total_pages_counter = metrics.Metrics.counter(self.__class__,
+                                                       'total_pages')
+    self.failed_pages_counter = metrics.Metrics.counter(self.__class__,
+                                                        'failed_pages')
     self.successful_pages_counter = metrics.Metrics.counter(
         self.__class__, 'successful_pages')
-    self.empty_pages_counter = metrics.Metrics.counter(
-        self.__class__, 'empty_pages')
+    self.empty_pages_counter = metrics.Metrics.counter(self.__class__,
+                                                       'empty_pages')
     self.total_patches_counter = metrics.Metrics.counter(
         self.__class__, 'total_patches')
     self.emitted_patches_counter = metrics.Metrics.counter(
@@ -64,7 +64,8 @@ class StafflinePatchesDoFn(beam.DoFn):
 
   def start_bundle(self):
     self.extractor = staffline_extractor.StafflinePatchExtractor(
-        patch_height=self.patch_height, patch_width=self.patch_width,
+        patch_height=self.patch_height,
+        patch_width=self.patch_width,
         run_options=tf.RunOptions(timeout_in_ms=self.timeout_ms))
     self.session = tf.Session(graph=self.extractor.graph)
 
@@ -82,8 +83,8 @@ class StafflinePatchesDoFn(beam.DoFn):
 
     if 0 < self.max_patches_per_page:
       # Subsample patches.
-      patches = more_iter_tools.iter_sample(
-          patches_iter, self.max_patches_per_page)
+      patches = more_iter_tools.iter_sample(patches_iter,
+                                            self.max_patches_per_page)
     else:
       patches = list(patches_iter)
 

@@ -49,6 +49,5 @@ def decode_music_score_png(contents):
     threshold = 127
     num_pixels = tf.shape(image_t)[0] * tf.shape(image_t)[1]
     majority_dark = tf.greater(
-        tf.reduce_sum(tf.cast(image_t < threshold, tf.int32)),
-        num_pixels // 2)
+        tf.reduce_sum(tf.cast(image_t < threshold, tf.int32)), num_pixels // 2)
     return tf.cond(majority_dark, inverted_image, lambda: image_t)

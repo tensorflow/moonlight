@@ -42,12 +42,10 @@ flags.DEFINE_string(
     'glyphs_saved_model', None,
     'Path to the patch-based glyph classifier saved model dir. Defaults to the'
     ' included KNN classifier.')
-flags.DEFINE_string(
-    'output', '/dev/stdout',
-    'Path to write the output text-format or binary proto.')
-flags.DEFINE_string(
-    'output_type', 'Score',
-    'Which output type to produce (Score or NoteSequence).')
+flags.DEFINE_string('output', '/dev/stdout',
+                    'Path to write the output text-format or binary proto.')
+flags.DEFINE_string('output_type', 'Score',
+                    'Which output type to produce (Score or NoteSequence).')
 flags.DEFINE_boolean('text_format', True, 'Whether the output is text format.')
 
 
@@ -58,7 +56,7 @@ def run(input_pngs, glyphs_saved_model=None, output_notesequence=False):
     input_pngs: A list of PNG filenames to process.
     glyphs_saved_model: Optional saved model dir to override the included model.
     output_notesequence: Whether to return a NoteSequence, as opposed to a Score
-        containing Pages with Glyphs.
+      containing Pages with Glyphs.
 
   Returns:
     A NoteSequence message, or a Score message holding Pages for each input

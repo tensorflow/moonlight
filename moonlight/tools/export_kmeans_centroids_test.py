@@ -38,8 +38,8 @@ class ExportKmeansCentroidsTest(tf.test.TestCase):
 
       # Now load the saved model.
       omr = engine.OMREngine(
-          glyph_classifier_fn=saved_classifier.SavedConvolutional1DClassifier.
-          glyph_classifier_fn(export_dir))
+          glyph_classifier_fn=saved_classifier.SavedConvolutional1DClassifier
+          .glyph_classifier_fn(export_dir))
       filename = os.path.join(tf.resource_loader.get_data_files_path(),
                               '../testdata/IMSLP00747-000.png')
       notes = omr.run(filename, output_notesequence=True)

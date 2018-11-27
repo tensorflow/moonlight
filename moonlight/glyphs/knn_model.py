@@ -38,7 +38,7 @@ def knn_kmeans_model(centroids, labels, patches=None):
       patch_height, patch_width)`.
     labels: The centroid labels NumPy array. Vector with length `num_centroids`.
     patches: Optional input tensor for the patches. If None, a placeholder will
-        be used.
+      be used.
 
   Returns:
     The predictions (class ids) tensor determined from the input patches. Vector
@@ -127,8 +127,8 @@ def export_knn_model(centroids, labels, export_path):
       builder.add_meta_graph_and_variables(
           sess, ['serve'],
           signature_def_map={
-              tf.saved_model.signature_constants.
-              DEFAULT_SERVING_SIGNATURE_DEF_KEY:
+              tf.saved_model.signature_constants
+              .DEFAULT_SERVING_SIGNATURE_DEF_KEY:
                   tf.saved_model.signature_def_utils.build_signature_def(
                       inputs={'input': patches_info},
                       outputs={

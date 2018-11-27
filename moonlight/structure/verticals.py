@@ -51,7 +51,7 @@ class ColumnBasedVerticals(object):
     threshold: The image threshold. int.
     thresholded_image: Whether each pixel of the image is black.
     max_gap: Multiple values for the maximum gap allowed in a line segment, in
-        pixels. Tensor (1D) of ints.
+      pixels. Tensor (1D) of ints.
     min_length: The minimum length of a line segment, in pixels. int.
   """
 
@@ -73,8 +73,8 @@ class ColumnBasedVerticals(object):
     # We use a frozenset so there is no risk of mutating the default argument.
     self.max_gap = tf.to_int32(
         tf.round(
-            tf.to_float(staffline_distance) * sorted(
-                max_gap_staffline_distance)))
+            tf.to_float(staffline_distance) *
+            sorted(max_gap_staffline_distance)))
     self.min_length = tf.to_int32(
         tf.round(
             tf.to_float(staffline_distance) * min_length_staffline_distance))
@@ -89,6 +89,7 @@ class ColumnBasedVerticals(object):
           ((start_x, start_y), (end_x, end_y)).
     """
     columns = tf.range(tf.shape(self.image)[1])
+
     def map_max_gap(max_gap):
       """Process all columns with the given value for max_gap."""
       return functional_ops.flat_map_fn(
@@ -118,11 +119,11 @@ class ColumnBasedVerticals(object):
     x = tf.fill([num_runs], column)
     y0 = run_starts
     y1 = run_starts + run_lengths - 1
-    return tf.stack(
-        [
-            tf.stack([x, y0], axis=1),
-            tf.stack([x, y1], axis=1),
-        ], axis=1)
+    return tf.stack([
+        tf.stack([x, y0], axis=1),
+        tf.stack([x, y1], axis=1),
+    ],
+                    axis=1)
 
   @property
   def data(self):

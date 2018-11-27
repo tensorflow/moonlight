@@ -86,7 +86,7 @@ def _get_overlapping_beams(stem, beams):
   Args:
     stem: NumPy array `((x0, y0), (x1, y1))` representing the stem line.
     beams: NumPy array of shape `(num_beams, 2, 2)`. The line segment for every
-        candidate beam.
+      candidate beam.
 
   Returns:
     Filtered beams of shape `(num_filtered_beams, 2, 2)`. All of the beams which
@@ -114,7 +114,7 @@ def _maybe_duplicate_beams(beams, staffline_distance):
 
   Args:
     beams: The connected component array with shape (N, 5). The values in the
-        columns are determined in `components.ConnectedComponentsColumns`.
+      columns are determined in `components.ConnectedComponentsColumns`.
     staffline_distance: The scalar staffline distance (median from all staves).
 
   Returns:

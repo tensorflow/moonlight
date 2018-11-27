@@ -44,12 +44,12 @@ def create_structure(image,
   Args:
     image: The image tensor.
     staff_detector: A callable that accepts the image and returns a
-        StaffDetector.
+      StaffDetector.
     beams: A callable that accept a StaffRemover and returns a Beams.
     verticals: A callable that accepts the staff detector and returns a
-        verticals impl (e.g. ColumnBasedVerticals).
+      verticals impl (e.g. ColumnBasedVerticals).
     components: A callable that accepts a StaffRemover and returns a
-        ConnectedComponents.
+      ConnectedComponents.
 
   Returns:
     The Structure instance.

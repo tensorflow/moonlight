@@ -44,8 +44,7 @@ class GenerationTest(tf.test.TestCase):
         negative_to_positive_example_ratio=1.0)
     patch_examples.start_bundle()
     examples = [
-        example
-        for page in page_gen.process(0)
+        example for page in page_gen.process(0)
         for example in patch_examples.process(page)
     ]
     page_gen.finish_bundle()

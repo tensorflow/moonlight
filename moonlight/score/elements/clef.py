@@ -32,7 +32,7 @@ class Clef(object):
 
   Attributes:
     center_line_pitch: A _ScalePitch representing the center line (3rd line of
-        the staff).
+      the staff).
   """
   center_line_pitch = None
 
@@ -63,10 +63,10 @@ class _ScalePitch(object):
 
   Attributes:
     scale: The scale which this pitch is based on. A list of MIDI pitch values
-        spanning one octave.
+      spanning one octave.
     index: The index of the pitch's pitch class within the scale.
     octave: The index of the octave that the pitch is in, relative to the octave
-        spanning the scale notes.
+      spanning the scale notes.
   """
 
   def __init__(self, scale, midi):

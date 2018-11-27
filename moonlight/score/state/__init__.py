@@ -31,7 +31,7 @@ class ScoreState(object):
 
   Attributes:
     staves: A list of StaffState objects, representing each staff in the current
-        staff system.
+      staff system.
   """
 
   def __init__(self):
@@ -64,8 +64,8 @@ class ScoreState(object):
       The start time of the new measure, which is the max of the current time of
       each current staff.
     """
-    time = (max([staff.get_time() for staff in self.staves])
-            if self.staves else 0)
+    time = (
+        max([staff.get_time() for staff in self.staves]) if self.staves else 0)
     for staff in self.staves:
       staff.add_measure(time)
     return time
