@@ -168,8 +168,9 @@ def _augment_shift(patch):
       return patch
 
     shift_prob = min(1., FLAGS.augmentation_x_shift_probability)
-    return tf.cond(rand < shift_prob / 2, shift_left,
-                   lambda: tf.cond(rand < shift_prob, shift_right, identity))
+    return tf.cond(
+        rand < shift_prob / 2,
+        shift_left, lambda: tf.cond(rand < shift_prob, shift_right, identity))
 
 
 def _shift_left(patch):
@@ -234,7 +235,7 @@ def metrics_fn(features, labels, predictions):
   """Metrics to be computed on every evaluation run, viewable in TensorBoard.
 
   This function has the expected signature of a callable to be passed to
-  `tf.contrib.estimator.add_metrics`.
+  `tf.estimator.add_metrics`.
 
   Args:
     features: Dict of feature tensors.
@@ -265,7 +266,7 @@ def metrics_fn(features, labels, predictions):
 
 def train_and_evaluate(estimator):
   tf.estimator.train_and_evaluate(
-      tf.contrib.estimator.add_metrics(estimator, metrics_fn),
+      tf.estimator.add_metrics(estimator, metrics_fn),
       tf.estimator.TrainSpec(
           input_fn=lambda: input_fn(FLAGS.train_input_patches),
           max_steps=FLAGS.train_max_steps),
