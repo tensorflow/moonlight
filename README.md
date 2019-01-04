@@ -1,6 +1,5 @@
 <img align="center" width="400" height="94,358" src="https://user-images.githubusercontent.com/34600369/40580500-74088e4a-6137-11e8-9705-ecac1499b1ce.png">
 
-
 # Moonlight Optical Music Recognition (OMR) [![Build Status](https://travis-ci.org/tensorflow/moonlight.svg?branch=master)](https://travis-ci.org/tensorflow/moonlight)
 
 An experimental [optical music
@@ -15,8 +14,10 @@ models.
 
 Moonlight is not an officially supported Google product.
 
-### Usage
+### Command-Line Usage
 
+    git clone https://github.com/tensorflow/moonlight
+    cd moonlight
     # You may want to run this inside a virtualenv.
     pip install -r requirements.txt
     # Build the OMR command-line tool.
@@ -36,6 +37,18 @@ message by default, or [MusicXML](https://www.musicxml.com/) or a
 Moonlight is intended to be run in bulk, and will not offer a full UI for
 correcting the score. The main entry point will be an Apache Beam pipeline that
 processes an entire corpus of images.
+
+There is no release yet, and Moonlight is not ready for end users. To run
+interactively or import the module, you can use the [sandbox
+directory](sandbox/README.md).
+
+### Dependencies
+
+* [Protobuf 3.6.1](https://pypi.org/project/protobuf/3.6.1/)
+* [Bazel 0.20.0](https://github.com/bazelbuild/bazel/releases/tag/0.20.0). We
+  encountered some errors using Bazel 0.21.0 to build Protobuf 3.6.1, which is
+  the latest Protobuf release at the time of writing.
+* Python dependencies specified in the [requirements](requirements.txt).
 
 ### Resources
 
