@@ -120,6 +120,7 @@ py_library(
 py_test(
     name = "staffline_extractor_test",
     size = "small",
+    timeout = "moderate",
     srcs = ["staffline_extractor_test.py"],
     srcs_version = "PY2AND3",
     data = ["//moonlight/testdata:images"],
