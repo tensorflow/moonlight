@@ -10,13 +10,20 @@ licenses(["notice"])  # Apache 2.0
 py_library(
     name = "evaluation",
     deps = [
-        ":evaluator",
+        ":evaluator_lib",
         ":musicxml",
     ],
 )
 
 py_binary(
     name = "evaluator",
+    srcs = ["evaluator.py"],
+    srcs_version = "PY2AND3",
+    deps = [":evaluator_lib"],
+)
+
+py_library(
+    name = "evaluator_lib",
     srcs = ["evaluator.py"],
     srcs_version = "PY2AND3",
     deps = [
@@ -39,7 +46,7 @@ py_test(
     ],
     srcs_version = "PY2AND3",
     deps = [
-        ":evaluator",
+        ":evaluator_lib",
         "//moonlight/protobuf:protobuf_py_pb2",
         # tensorflow dep
     ],

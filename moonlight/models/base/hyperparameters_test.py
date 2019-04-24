@@ -41,8 +41,8 @@ class HyperparametersTest(tf.test.TestCase):
       # The entire graph will also be written to the saved model in training.
       self.assertEqual(
           learning_rate,
-          tf.get_default_graph().get_tensor_by_name('params/learning_rate:0')
-          .eval())
+          tf.get_default_graph().get_tensor_by_name(
+              'params/learning_rate:0').eval())
 
 
 if __name__ == '__main__':

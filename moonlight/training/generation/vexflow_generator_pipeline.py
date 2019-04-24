@@ -57,11 +57,11 @@ flags.DEFINE_integer(
 
 def main(_):
   with pipeline_flags.create_pipeline() as pipeline:
-    num_pages = (
-        FLAGS.num_positive_examples + generation.POSITIVE_EXAMPLES_PER_IMAGE -
-        1) // generation.POSITIVE_EXAMPLES_PER_IMAGE
-    num_batches = (
-        num_pages + FLAGS.num_pages_per_batch - 1) // FLAGS.num_pages_per_batch
+    num_pages = (FLAGS.num_positive_examples +
+                 generation.POSITIVE_EXAMPLES_PER_IMAGE -
+                 1) // generation.POSITIVE_EXAMPLES_PER_IMAGE
+    num_batches = (num_pages + FLAGS.num_pages_per_batch -
+                   1) // FLAGS.num_pages_per_batch
     batch_nums = pipeline | beam.transforms.Create(list(range(num_batches)))
     pages = batch_nums | beam.ParDo(
         generation.PageGenerationDoFn(

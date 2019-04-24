@@ -53,8 +53,8 @@ class GlyphPatchesTest(tf.test.TestCase):
 
         self.assertAllEqual(
             batch[0]['patch'],
-            np.arange(height * width).reshape((1, height, width)).repeat(
-                3, axis=0))
+            np.arange(height * width).reshape(
+                (1, height, width)).repeat(3, axis=0))
         self.assertAllEqual(batch[1], [label, label, label])
 
   def testShiftLeft(self):

@@ -58,8 +58,8 @@ def load_clusters(input_path):
     height = example.features.feature['height'].int64_list.value[0]
     width = example.features.feature['width'].int64_list.value[0]
     return np.asarray(
-        example.features.feature['features'].float_list.value).reshape((height,
-                                                                        width))
+        example.features.feature['features'].float_list.value).reshape(
+            (height, width))
 
   return np.asarray([
       parse_example(example)

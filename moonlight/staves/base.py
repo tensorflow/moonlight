@@ -120,8 +120,8 @@ class BaseStaffDetector(object):
         segment_ys = (
             tf.cast(
                 tf.round(
-                    tf.cast(y1 - y0, tf.float32) * tf.linspace(
-                        0., 1., x1 - x0 + 1)[:-1]), tf.int32) + y0)
+                    tf.cast(y1 - y0, tf.float32) *
+                    tf.linspace(0., 1., x1 - x0 + 1)[:-1]), tf.int32) + y0)
         # Update the loop variables. Increment i, and write the current segment
         # ys to the array.
         return i + 1, ys_array.write(i, segment_ys)
@@ -155,9 +155,9 @@ class BaseStaffDetector(object):
     # The map_fn will fail if there are no staves. In that case, return an empty
     # array with the correct width.
     return tf.cond(
-        tf.shape(self.staves)[0] > 0,
-        lambda: tf.map_fn(_get_staff_center_line_y, self.staves),
-        lambda: tf.zeros([0, image_shape[1]], tf.int32))
+        tf.shape(self.staves)[0] >
+        0, lambda: tf.map_fn(_get_staff_center_line_y, self.staves
+                            ), lambda: tf.zeros([0, image_shape[1]], tf.int32))
 
   def compute(self, session=None, feed_dict=None):
     """Runs staff detection.

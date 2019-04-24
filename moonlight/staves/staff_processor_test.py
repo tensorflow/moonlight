@@ -43,8 +43,8 @@ class StaffProcessorTest(absltest.TestCase):
                             np.int32),
         staffline_distance_t=np.asarray([5, 20], np.int32),
         staffline_thickness_t=np.asarray(1, np.int32))
-    structure = structure_module.create_structure(image,
-                                                  lambda unused_image: staves)
+    structure = structure_module.create_structure(
+        image, lambda unused_image: staves)
 
     class DummyStafflineExtractor(object):
       """A placeholder for StafflineExtractor.

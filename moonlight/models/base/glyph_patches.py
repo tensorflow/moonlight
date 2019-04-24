@@ -168,8 +168,9 @@ def _augment_shift(patch):
       return patch
 
     shift_prob = min(1., FLAGS.augmentation_x_shift_probability)
-    return tf.cond(rand < shift_prob / 2, shift_left,
-                   lambda: tf.cond(rand < shift_prob, shift_right, identity))
+    return tf.cond(
+        rand < shift_prob / 2,
+        shift_left, lambda: tf.cond(rand < shift_prob, shift_right, identity))
 
 
 def _shift_left(patch):

@@ -161,8 +161,8 @@ def _estimate_staffline_distance(columns, lengths):
       return tf.boolean_mask(peaks, allowed_peaks)
 
     return tf.cond(
-        tf.greater(tf.shape(peaks)[0], 0), do_filter_peaks,
-        lambda: tf.identity(peaks))
+        tf.greater(tf.shape(peaks)[0], 0),
+        do_filter_peaks, lambda: tf.identity(peaks))
 
 
 def _estimate_staffline_thickness(columns, values, lengths, staffline_distance):
@@ -210,8 +210,8 @@ def _estimate_staffline_thickness(columns, values, lengths, staffline_distance):
           invalidate_distance=_STAFFLINE_THICKNESS_INVALIDATE_DISTANCE)
 
     return tf.cond(
-        tf.greater(tf.shape(staffline_distance)[0], 0), do_estimate,
-        lambda: tf.constant(-1, tf.int32))
+        tf.greater(tf.shape(staffline_distance)[0], 0),
+        do_estimate, lambda: tf.constant(-1, tf.int32))
 
 
 def estimate_staffline_distance_and_thickness(image, threshold=127):

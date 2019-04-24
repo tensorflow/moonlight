@@ -94,5 +94,6 @@ def _projection_to_staves(projection, width):
   staffline_thickness = (
       np.median(staffline_thicknesses).astype(np.int32)
       if staffline_thicknesses else np.int32(1))
-  return (np.array(staff_center_lines, np.int32),
-          np.array(staffline_distance, np.int32), staffline_thickness)
+  return (np.array(staff_center_lines,
+                   np.int32), np.array(staffline_distance,
+                                       np.int32), staffline_thickness)

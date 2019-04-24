@@ -15,6 +15,13 @@ py_binary(
 py_binary(
     name = "export_kmeans_centroids",
     srcs = ["export_kmeans_centroids.py"],
+    srcs_version = "PY2AND3",
+    deps = [":export_kmeans_centroids_lib"],
+)
+
+py_library(
+    name = "export_kmeans_centroids_lib",
+    srcs = ["export_kmeans_centroids.py"],
     data = ["//moonlight/testdata:images"],
     srcs_version = "PY2AND3",
     deps = [
@@ -36,7 +43,7 @@ py_test(
         "notap",
     ],
     deps = [
-        ":export_kmeans_centroids",
+        ":export_kmeans_centroids_lib",
         # backports.tempfile dep
         "//moonlight:engine",
         "//moonlight/glyphs:saved_classifier",

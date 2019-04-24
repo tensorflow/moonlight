@@ -46,10 +46,10 @@ class StaffDetectorsTest(tf.test.TestCase):
     staff_row = [255] * 4 + [0] * 42 + [255] * 4
     # Create an image with 5 staff lines, with a slightly noisy staffline
     # thickness and distance.
-    image = np.asarray(
-        [blank_row] * 25 + [staff_row] * 2 + [blank_row] * 8 + [staff_row] * 3 +
-        [blank_row] * 8 + [staff_row] * 3 + [blank_row] * 9 + [staff_row] * 2 +
-        [blank_row] * 8 + [staff_row] * 2 + [blank_row] * 25, np.uint8)
+    image = np.asarray([blank_row] * 25 + [staff_row] * 2 + [blank_row] * 8 +
+                       [staff_row] * 3 + [blank_row] * 8 + [staff_row] * 3 +
+                       [blank_row] * 9 + [staff_row] * 2 + [blank_row] * 8 +
+                       [staff_row] * 2 + [blank_row] * 25, np.uint8)
     for detector in self.generate_staff_detectors(image):
       with self.test_session() as sess:
         staves_arr, staffline_distances, staffline_thickness = sess.run(
