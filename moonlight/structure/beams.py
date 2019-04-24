@@ -49,8 +49,9 @@ class Beams(object):
         staff_detector.staffline_thickness)
     beams = components.get_component_bounds(image)
     staffline_distance = tf.cond(
-        tf.greater(tf.shape(staff_detector.staves)[0], 0),
-        lambda: tf.reduce_mean(staff_detector.staffline_distance),
+        tf.greater(
+            tf.shape(staff_detector.staves)[0],
+            0), lambda: tf.reduce_mean(staff_detector.staffline_distance),
         lambda: tf.constant(0, tf.int32))
     min_length = 2 * staffline_distance
     keep_beam = tf.greater_equal(beams[:, COLUMNS.X1] - beams[:, COLUMNS.X0],

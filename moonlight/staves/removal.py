@@ -60,9 +60,9 @@ class StaffRemover(object):
     staff_center_ys = self.staff_detector.staves_interpolated_y
     all_staffline_center_ys = (
         staff_center_ys[:, None, :] +
-        self.staff_detector.staffline_distance[:, None, None] * tf.range(
-            -LINES_TO_REMOVE_ABOVE_AND_BELOW,
-            LINES_TO_REMOVE_ABOVE_AND_BELOW + 1)[None, :, None])
+        self.staff_detector.staffline_distance[:, None, None] *
+        tf.range(-LINES_TO_REMOVE_ABOVE_AND_BELOW,
+                 LINES_TO_REMOVE_ABOVE_AND_BELOW + 1)[None, :, None])
     ys = tf.range(height)
 
     def _process_column(i):
@@ -113,8 +113,8 @@ class StaffRemover(object):
         return tf.where(erase_y, white_column, column)
 
       return tf.cond(
-          tf.shape(runs)[0] > 0, lambda: do_process_column(runs, run_lengths),
-          lambda: column)
+          tf.shape(runs)[0] >
+          0, lambda: do_process_column(runs, run_lengths), lambda: column)
 
     return tf.transpose(
         tf.map_fn(

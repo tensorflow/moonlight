@@ -31,8 +31,8 @@ py_test(
     srcs = ["musicxml_test.py"],
     deps = [
         ":musicxml",
-        "@magenta//protobuf:music_py_pb2",
         # absl/testing dep
+        "@magenta//protobuf:music_py_pb2",
         "//moonlight/protobuf:protobuf_py_pb2",
     ],
 )

@@ -39,6 +39,13 @@ py_binary(
     name = "staffline_patches_kmeans_pipeline",
     srcs = ["staffline_patches_kmeans_pipeline.py"],
     srcs_version = "PY2AND3",
+    deps = [":staffline_patches_kmeans_pipeline_lib"],
+)
+
+py_library(
+    name = "staffline_patches_kmeans_pipeline_lib",
+    srcs = ["staffline_patches_kmeans_pipeline.py"],
+    srcs_version = "PY2AND3",
     deps = [
         ":staffline_patches_dofn",
         # absl dep
@@ -54,7 +61,7 @@ py_test(
     srcs_version = "PY2ONLY",
     tags = ["py2only"],
     deps = [
-        ":staffline_patches_kmeans_pipeline",
+        ":staffline_patches_kmeans_pipeline_lib",
         # absl dep
         # absl/testing dep
         # numpy dep

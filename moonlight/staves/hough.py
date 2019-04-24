@@ -200,9 +200,9 @@ class _SingleSizeFilteredHoughStaffDetector(object):
     y0 = tf.cast(
         tf.cast(staff_rhos, tf.float32) / tf.sin(staff_thetas), tf.int32)
     x1 = tf.fill([num_staves], width - 1)
-    y1 = tf.cast((tf.cast(staff_rhos, tf.float32) - tf.cast(
-        width - 1, tf.float32) * tf.cos(staff_thetas)) / tf.sin(staff_thetas),
-                 tf.int32)
+    y1 = tf.cast((tf.cast(staff_rhos, tf.float32) -
+                  tf.cast(width - 1, tf.float32) * tf.cos(staff_thetas)) /
+                 tf.sin(staff_thetas), tf.int32)
     # Cut out staves which have a start or end y outside of the image.
     is_valid = tf.logical_and(
         tf.logical_and(0 <= y0, y0 < height),

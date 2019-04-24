@@ -111,8 +111,8 @@ class SavedConvolutional1DClassifier(
       ])
 
       # Feed in the flat extracted patches as the classifier input.
-      predictions_name = signature.outputs[prediction_keys.PredictionKeys
-                                           .CLASS_IDS].name
+      predictions_name = signature.outputs[
+          prediction_keys.PredictionKeys.CLASS_IDS].name
       predictions = tf.contrib.graph_editor.graph_replace(
           sess.graph.get_tensor_by_name(predictions_name), {
               sess.graph.get_tensor_by_name(signature.inputs['input'].name):

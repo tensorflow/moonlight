@@ -81,8 +81,8 @@ class BaseGlyphClassifier(object):
         `OMREngine`.
     """
     num_staves = (
-        predictions[:, int(GlyphsTensorColumns.STAFF_INDEX)].max() + 1
-        if predictions.size else 0)
+        predictions[:, int(GlyphsTensorColumns.STAFF_INDEX)].max() +
+        1 if predictions.size else 0)
 
     def create_glyph(glyph):
       return musicscore_pb2.Glyph(

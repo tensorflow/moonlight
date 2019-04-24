@@ -202,8 +202,9 @@ def peaks(values, minval=None, invalidate_distance=0, name=None):
     # If we have zero or one segments, there are no peaks. Just use zeros as the
     # edge values in that case.
     first_val, second_val, penultimate_val, last_val = tf.cond(
-        tf.greater_equal(tf.shape(segment_values)[0], 2),
-        lambda: tuple(segment_values[i] for i in (0, 1, -2, -1)),
+        tf.greater_equal(
+            tf.shape(segment_values)[0],
+            2), lambda: tuple(segment_values[i] for i in (0, 1, -2, -1)),
         lambda: tuple(tf.constant(0, values.dtype) for i in range(4)))
     # Each segment must be greater than the segment before and after it.
     segment_is_peak = tf.concat(

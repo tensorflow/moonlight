@@ -54,11 +54,11 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":engine",
-        "@magenta//protobuf:music_py_pb2",
         # pillow dep
         # absl/testing dep
         # librosa dep
         # lxml dep
+        "@magenta//protobuf:music_py_pb2",
         "//moonlight/conversions",
         # numpy dep
         # tensorflow dep
