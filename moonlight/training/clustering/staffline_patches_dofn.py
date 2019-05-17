@@ -95,7 +95,8 @@ class StafflinePatchesDoFn(beam.DoFn):
     # Serialize each patch as an Example.
     for patch_name, patch in patches:
       example = tf.train.Example()
-      example.features.feature['name'].bytes_list.value.append(patch_name)
+      example.features.feature['name'].bytes_list.value.append(
+          patch_name.encode('utf-8'))
       example.features.feature['features'].float_list.value.extend(
           patch.ravel())
       example.features.feature['height'].int64_list.value.append(patch.shape[0])
