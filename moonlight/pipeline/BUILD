@@ -9,7 +9,7 @@ licenses(["notice"])  # Apache 2.0
 py_library(
     name = "pipeline_flags",
     srcs = ["pipeline_flags.py"],
-    srcs_version = "PY2ONLY",
+    srcs_version = "PY2AND3",
     deps = [
         # absl dep
         # apache-beam dep

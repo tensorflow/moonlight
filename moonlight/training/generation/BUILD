@@ -8,7 +8,7 @@ py_library(
     name = "generation",
     srcs = ["generation.py"],
     data = ["vexflow_generator.js"],
-    srcs_version = "PY2ONLY",
+    srcs_version = "PY2AND3",
     deps = [
         "@com_google_protobuf//:protobuf_python",
         # apache-beam dep
@@ -24,7 +24,7 @@ py_library(
 py_test(
     name = "generation_test",
     srcs = ["generation_test.py"],
-    srcs_version = "PY2ONLY",
+    srcs_version = "PY2AND3",
     tags = ["manual"],
     deps = [
         ":generation",
@@ -43,7 +43,7 @@ py_library(
 py_binary(
     name = "vexflow_generator_pipeline",
     srcs = ["vexflow_generator_pipeline.py"],
-    srcs_version = "PY2ONLY",
+    srcs_version = "PY2AND3",
     deps = [
         ":generation",
         ":image_noise",
