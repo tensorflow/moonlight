@@ -23,7 +23,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import itertools
 import logging
 
 import apache_beam as beam
@@ -31,6 +30,7 @@ from apache_beam import metrics
 from moonlight.staves import staffline_extractor
 from moonlight.util import more_iter_tools
 import numpy as np
+from six.moves import filter
 import tensorflow as tf
 
 
@@ -79,7 +79,7 @@ class StafflinePatchesDoFn(beam.DoFn):
       logging.exception('Skipping failed music score (%s)', png_path)
       self.failed_pages_counter.inc()
       return
-    patches_iter = itertools.ifilter(_filter_patch, patches_iter)
+    patches_iter = filter(_filter_patch, patches_iter)
 
     if 0 < self.max_patches_per_page:
       # Subsample patches.

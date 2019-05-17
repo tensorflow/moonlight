@@ -16,6 +16,7 @@ py_library(
         "//moonlight/staves:staffline_extractor",
         "//moonlight/util:more_iter_tools",
         # numpy dep
+        # six dep
         # tensorflow dep
     ],
 )
