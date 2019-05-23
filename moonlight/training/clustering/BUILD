@@ -27,7 +27,6 @@ py_test(
     srcs = ["staffline_patches_dofn_test.py"],
     data = ["//moonlight/testdata:images"],
     srcs_version = "PY2AND3",
-    tags = ["py2only"],
     deps = [
         ":staffline_patches_dofn",
         # absl/testing dep
@@ -60,7 +59,6 @@ py_test(
     name = "staffline_patches_kmeans_pipeline_test",
     srcs = ["staffline_patches_kmeans_pipeline_test.py"],
     srcs_version = "PY2AND3",
-    tags = ["py2only"],
     deps = [
         ":staffline_patches_kmeans_pipeline_lib",
         # absl dep
