@@ -92,7 +92,7 @@ def main(argv):
   sys.stderr.write('OMR elapsed time: %.2f\n' % (end - start))
 
   if FLAGS.output_type == 'MusicXML':
-    output_bytes = conversions.score_to_musicxml(output).encode('utf-8')
+    output_bytes = conversions.score_to_musicxml(output)
   else:
     if FLAGS.text_format:
       output_bytes = text_format.MessageToString(output).encode('utf-8')
