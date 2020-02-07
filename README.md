@@ -48,6 +48,7 @@ directory](sandbox/README.md).
 * [Bazel 0.20.0](https://github.com/bazelbuild/bazel/releases/tag/0.20.0). We
   encountered some errors using Bazel 0.21.0 to build Protobuf 3.6.1, which is
   the latest Protobuf release at the time of writing.
+* Python version supported by TensorFlow (Python 3.5-3.7)
 * Python dependencies specified in the [requirements](requirements.txt).
 
 ### Resources
