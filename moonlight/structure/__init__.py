@@ -29,6 +29,7 @@ from moonlight.staves import base as staves_base
 from moonlight.staves import removal
 from moonlight.structure import beams as beams_module
 from moonlight.structure import components as components_module
+from moonlight.structure import time_signature
 from moonlight.structure import verticals as verticals_module
 
 
@@ -64,11 +65,14 @@ def create_structure(image,
     verticals = verticals(staff_detector)
   with tf.name_scope('components'):
     components = components(staff_remover)
+  with tf.name_scope('time_signature'):
+    sig = time_signature.TimeSignatureData(staff_remover)
   structure = Structure(
       staff_detector,
       beams,
       verticals,
       components,
+      sig,
       image=image,
       staff_remover=staff_remover)
   return structure
@@ -82,6 +86,7 @@ class Structure(object):
                beams,
                verticals,
                connected_components,
+               time_sig,
                image=None,
                staff_remover=None):
     self.image = image
@@ -89,6 +94,7 @@ class Structure(object):
     self.beams = beams
     self.verticals = verticals
     self.connected_components = connected_components
+    self.time_signature = time_sig
     self.staff_remover = staff_remover
 
   def compute(self, session=None, image=None):
@@ -124,8 +130,13 @@ class Structure(object):
       components_data = []
     else:
       components_data = self.connected_components.data
+    if isinstance(self.time_signature,
+                  time_signature.ComputedTimeSignatureData):
+      time_signature_data = []
+    else:
+      time_signature_data = self.time_signature.data
     if not (staff_detector_data or beams_data or verticals_data or
-            components_data):
+            components_data or time_signature_data):
       return self
 
     if not session:
@@ -134,10 +145,13 @@ class Structure(object):
       feed_dict = {self.staff_detector.image: image}
     else:
       feed_dict = {}
-    staff_detector_data, beams_data, verticals_data, components_data = (
-        session.run(
-            [staff_detector_data, beams_data, verticals_data, components_data],
-            feed_dict=feed_dict))
+    (staff_detector_data, beams_data, verticals_data, components_data,
+     time_signature_data) = (
+         session.run([
+             staff_detector_data, beams_data, verticals_data, components_data,
+             time_signature_data
+         ],
+                     feed_dict=feed_dict))
     staff_detector_data = staff_detector_data or self.staff_detector.data
     staff_detector = staves_base.ComputedStaves(*staff_detector_data)
     beams_data = beams_data or self.beams.data
@@ -146,19 +160,30 @@ class Structure(object):
     verticals = verticals_module.ComputedVerticals(*verticals_data)
     connected_components = components_module.ConnectedComponents(
         *components_data)
+    time_sig = time_signature.ComputedTimeSignatureData(*time_signature_data)
     return Structure(
-        staff_detector, beams, verticals, connected_components, image=image)
+        staff_detector,
+        beams,
+        verticals,
+        connected_components,
+        time_sig,
+        image=image)
 
   def is_computed(self):
     return (isinstance(self.staff_detector, staves_base.ComputedStaves) and
             isinstance(self.beams, beams_module.ComputedBeams) and
             isinstance(self.verticals, verticals_module.ComputedVerticals) and
             isinstance(self.connected_components,
-                       components_module.ComputedComponents))
+                       components_module.ComputedComponents) and
+            isinstance(self.time_signature,
+                       time_signature.ComputedTimeSignatureData))
 
   @property
   def data(self):
     return [
-        self.staff_detector.data, self.beams.data, self.verticals.data,
-        self.connected_components.data
+        self.staff_detector.data,
+        self.beams.data,
+        self.verticals.data,
+        self.connected_components.data,
+        self.time_signature.data,
     ]
