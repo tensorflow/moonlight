@@ -2,7 +2,6 @@ dist: trusty
 
 language: python
 python:
-  - "2.7"
   - "3.6"
 
 addons:
@@ -17,6 +16,10 @@ before_install:
   - wget https://github.com/bazelbuild/bazel/releases/download/0.20.0/bazel_0.20.0-linux-x86_64.deb
   - sha256sum -c tools/bazel_0.20.0-linux-x86_64.deb.sha256
   - sudo dpkg -i bazel_0.20.0-linux-x86_64.deb
+
+install:
+  - python -m pip install --upgrade pip setuptools
+  - pip install -r requirements.txt
 
 before_script:
   - pip install flake8

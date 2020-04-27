@@ -44,7 +44,7 @@ directory](sandbox/README.md).
 
 ### Dependencies
 
-* [Protobuf 3.11.4](https://pypi.org/project/protobuf/3.11.4/)
+* [Protobuf 3.11.3](https://pypi.org/project/protobuf/3.11.3/)
 * [Bazel 3.1.0](https://github.com/bazelbuild/bazel/releases/tag/3.1.0). 
 * Python version supported by TensorFlow (Python 3.5-3.7)
 * Python dependencies specified in the [requirements](requirements.txt).
