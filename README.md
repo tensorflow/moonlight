@@ -44,10 +44,9 @@ directory](sandbox/README.md).
 
 ### Dependencies
 
-* [Protobuf 3.6.1](https://pypi.org/project/protobuf/3.6.1/)
-* [Bazel 0.20.0](https://github.com/bazelbuild/bazel/releases/tag/0.20.0). We
-  encountered some errors using Bazel 0.21.0 to build Protobuf 3.6.1, which is
-  the latest Protobuf release at the time of writing.
+* [Protobuf 3.11.4](https://pypi.org/project/protobuf/3.11.4/)
+* [Bazel 3.1.0](https://github.com/bazelbuild/bazel/releases/tag/3.1.0). 
+* Python version supported by TensorFlow (Python 3.5-3.7)
 * Python dependencies specified in the [requirements](requirements.txt).
 
 ### Resources
