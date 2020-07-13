@@ -25,6 +25,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
+from tensorflow.contrib import image as contrib_image
 
 
 def vertical_run_length_encoding(image):
@@ -50,7 +51,7 @@ def vertical_run_length_encoding(image):
     # of "images" for connected component analysis, where each image is a single
     # column of the original image. Therefore, the connected components are
     # actually runs from a single column.
-    components = tf.contrib.image.connected_components(
+    components = contrib_image.connected_components(
         tf.to_int32(tf.expand_dims(tf.transpose(image), axis=1)) + 1)
     # Flatten in order to use with unsorted segment ops.
     flat_components = tf.reshape(components, [-1])

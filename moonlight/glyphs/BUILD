@@ -64,6 +64,7 @@ py_test(
         ":base",
         ":convolutional",
         ":testing",
+        # disable_tf2
         "//moonlight/protobuf:protobuf_py_pb2",
         # numpy dep
         # pandas dep
@@ -102,6 +103,7 @@ py_test(
     deps = [
         ":base",
         ":knn",
+        # disable_tf2
         "//moonlight/protobuf:protobuf_py_pb2",
         # pandas dep
         # tensorflow dep
@@ -138,6 +140,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":neural",
+        # disable_tf2
         # numpy dep
         # tensorflow dep
     ],
@@ -152,6 +155,8 @@ py_library(
         "//moonlight/staves:staffline_extractor",
         "//moonlight/util:patches",
         # tensorflow dep
+        # tensorflow.contrib.graph_editor py dep
+        # tensorflow.contrib.util py dep
     ],
 )
 
@@ -162,6 +167,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":saved_classifier",
+        # disable_tf2
         # backports.tempfile dep
         "//moonlight:image",
         "//moonlight/protobuf:protobuf_py_pb2",

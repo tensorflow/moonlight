@@ -115,8 +115,8 @@ def _shift_y(image, y_offset):
     return tf.concat([tf.zeros([-y_offset, width], dtype=image.dtype), sliced],
                      axis=0)
 
-  return tf.cond(height <= tf.abs(y_offset),
-                 invalid, lambda: tf.cond(y_offset >= 0, shift_up, shift_down))
+  return tf.cond(height <= tf.abs(y_offset), invalid,
+                 lambda: tf.cond(y_offset >= 0, shift_up, shift_down))
 
 
 def _get_staff_ys(is_staff, staffline_thickness):

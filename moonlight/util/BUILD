@@ -31,6 +31,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":functional_ops",
+        # disable_tf2
         # tensorflow dep
     ],
 )
@@ -73,6 +74,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":patches",
+        # disable_tf2
         # tensorflow dep
     ],
 )
@@ -81,7 +83,10 @@ py_library(
     name = "run_length",
     srcs = ["run_length.py"],
     srcs_version = "PY2AND3",
-    deps = [],  # tensorflow dep
+    deps = [
+        # tensorflow dep
+        # tensorflow.contrib.image py dep
+    ],
 )
 
 py_test(
@@ -90,6 +95,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":run_length",
+        # disable_tf2
         # tensorflow dep
     ],
 )
@@ -111,6 +117,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":segments",
+        # disable_tf2
         # absl/testing dep
         # numpy dep
         # tensorflow dep

@@ -19,7 +19,10 @@ py_binary(
     name = "evaluator",
     srcs = ["evaluator.py"],
     srcs_version = "PY2AND3",
-    deps = [":evaluator_lib"],
+    deps = [
+        ":evaluator_lib",
+        # disable_tf2
+    ],
 )
 
 py_library(
@@ -47,6 +50,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":evaluator_lib",
+        # disable_tf2
         "//moonlight/protobuf:protobuf_py_pb2",
         # tensorflow dep
     ],
@@ -71,6 +75,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":musicxml",
+        # disable_tf2
         # absl/testing dep
         # lxml dep
         # pandas dep

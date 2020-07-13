@@ -207,8 +207,8 @@ class StafflineExtractor(object):
     # Use area resizing because we expect the output to be smaller.
     # Add extra axes, because we only have 1 image and 1 channel.
     staffline_image = tf.image.resize_area(
-        staffline_image[None, :, :, None],
-        [self.target_height, resized_width])[0, :, :, 0]
+        staffline_image[None, :, :,
+                        None], [self.target_height, resized_width])[0, :, :, 0]
     # Pad to make the width consistent with target_width.
     staffline_image = tf.pad(staffline_image,
                              [[0, 0], [0, self.target_width - resized_width]])

@@ -206,8 +206,8 @@ class PatchExampleDoFn(beam.DoFn):
     negative_example_overlap_from_end = max(self.negative_example_distance,
                                             self.patch_width // 2)
     negative_example_whitelist[:, :negative_example_overlap_from_end] = False
-    negative_example_whitelist[:, -negative_example_overlap_from_end -
-                               1:] = False
+    negative_example_whitelist[:,
+                               -negative_example_overlap_from_end - 1:] = False
     all_positive_examples = []
     for glyph in staff_message.glyph:
       staffline = staffline_extractor.get_staffline(glyph.y_position,

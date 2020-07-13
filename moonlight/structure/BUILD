@@ -29,6 +29,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":structure",
+        # disable_tf2
         "//moonlight:image",
         # numpy dep
         # tensorflow dep
@@ -55,6 +56,7 @@ py_test(
         ":components",
         ":structure",
         ":verticals",
+        # disable_tf2
         # absl/testing dep
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/staves:base",
@@ -93,6 +95,7 @@ py_library(
     deps = [
         # enum34 dep
         # tensorflow dep
+        # tensorflow.contrib.image py dep
     ],
 )
 
@@ -102,6 +105,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":components",
+        # disable_tf2
         # tensorflow dep
     ],
 )
@@ -139,6 +143,7 @@ py_test(
         ":stems",
         ":structure",
         ":verticals",
+        # disable_tf2
         # absl/testing dep
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/staves:base",
@@ -167,6 +172,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":verticals",
+        # disable_tf2
         "//moonlight/staves:testing",
         # numpy dep
         # tensorflow dep

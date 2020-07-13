@@ -25,9 +25,9 @@ py_library(
     srcs_version = "PY2AND3",
     deps = [
         # enum34 dep
-        "@magenta//protobuf:music_py_pb2",
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/score/elements:key_signature",
+        "@magenta//protobuf:music_py_pb2",
     ],
 )
 

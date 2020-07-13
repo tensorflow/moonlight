@@ -1,7 +1,7 @@
 ## OMR Engine Detailed Reference
 
-The OMR engine converts a PNG image to a Magenta [NoteSequence
-message](https://github.com/tensorflow/magenta/blob/master/magenta/protobuf/music.proto),
+The OMR engine converts a PNG image to a Magenta
+[NoteSequence message](https://github.com/magenta/note-seq/blob/master/note_seq/protobuf/music.proto),
 which is interoperable with MIDI and MusicXML.
 
 OMR uses TensorFlow for glyph (symbol) classification, as well as all other
@@ -156,7 +156,7 @@ Staves are scanned from left to right for glyphs. The `ScoreReader` manages a
 hierarchy of state, from the global `ScoreState` to the `MeasureState`, holding
 local state such as accidentals. Based on the preceding `Glyph`s, each notehead
 `Glyph` gets assigned a
-[`Note`](https://github.com/tensorflow/magenta/blob/2e7bc85eb30e100733ea34c0ecdd080a4cec1c1f/magenta/protobuf/music.proto#L93)
+[`Note`](https://github.com/magenta/note-seq/blob/d7153cdb26758a69c2fa022782c5817970de7066/note_seq/protobuf/music.proto#L104)
 field holding its musical value.
 
 Afterwards, the `Score` can be converted to a `NoteSequence` (just pulling out

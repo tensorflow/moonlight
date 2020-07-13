@@ -29,6 +29,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":staffline_patches_dofn",
+        # disable_tf2
         # absl/testing dep
         # apache-beam dep
         # tensorflow dep
@@ -39,7 +40,10 @@ py_binary(
     name = "staffline_patches_kmeans_pipeline",
     srcs = ["staffline_patches_kmeans_pipeline.py"],
     srcs_version = "PY2AND3",
-    deps = [":staffline_patches_kmeans_pipeline_lib"],
+    deps = [
+        ":staffline_patches_kmeans_pipeline_lib",
+        # disable_tf2
+    ],
 )
 
 py_library(
@@ -52,6 +56,7 @@ py_library(
         # apache-beam dep
         "//moonlight/pipeline:pipeline_flags",
         # tensorflow dep
+        # tensorflow.contrib.learn dep
     ],
 )
 
@@ -61,6 +66,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":staffline_patches_kmeans_pipeline_lib",
+        # disable_tf2
         # absl dep
         # absl/testing dep
         # numpy dep
@@ -89,6 +95,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":kmeans_labeler_request_handler",
+        # disable_tf2
         # absl/testing dep
         # mako dep
         "//moonlight/protobuf:protobuf_py_pb2",
@@ -103,6 +110,7 @@ py_binary(
     srcs_version = "PY2AND3",
     deps = [
         ":kmeans_labeler_request_handler",
+        # disable_tf2
         # pillow dep
         # absl dep
         # mako dep

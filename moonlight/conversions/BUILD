@@ -32,8 +32,8 @@ py_test(
     deps = [
         ":musicxml",
         # absl/testing dep
-        "@magenta//protobuf:music_py_pb2",
         "//moonlight/protobuf:protobuf_py_pb2",
+        "@magenta//protobuf:music_py_pb2",
     ],
 )
 
@@ -41,7 +41,7 @@ py_library(
     name = "notesequence",
     srcs = ["notesequence.py"],
     deps = [
-        "@magenta//protobuf:music_py_pb2",
         "//moonlight/protobuf:protobuf_py_pb2",
+        "@magenta//protobuf:music_py_pb2",
     ],
 )

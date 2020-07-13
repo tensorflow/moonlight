@@ -32,6 +32,8 @@ from moonlight.models.base import label_weights
 from moonlight.protobuf import musicscore_pb2
 from moonlight.util import memoize
 import tensorflow as tf
+from tensorflow.contrib import estimator as contrib_estimator
+from tensorflow.contrib import image as contrib_image
 from tensorflow.python.lib.io import file_io
 from tensorflow.python.lib.io import tf_record
 
@@ -168,9 +170,8 @@ def _augment_shift(patch):
       return patch
 
     shift_prob = min(1., FLAGS.augmentation_x_shift_probability)
-    return tf.cond(
-        rand < shift_prob / 2,
-        shift_left, lambda: tf.cond(rand < shift_prob, shift_right, identity))
+    return tf.cond(rand < shift_prob / 2, shift_left,
+                   lambda: tf.cond(rand < shift_prob, shift_right, identity))
 
 
 def _shift_left(patch):
@@ -191,7 +192,7 @@ def _augment_rotation(patch):
                                maxval=max_rotation_radians)
   # Background is white (1.0) but tf.contrib.image.rotate currently always fills
   # the edges with black (0). Invert the patch before rotating.
-  return 1. - tf.contrib.image.rotate(
+  return 1. - contrib_image.rotate(
       1. - patch, rotation, interpolation='BILINEAR')
 
 
@@ -235,7 +236,7 @@ def metrics_fn(features, labels, predictions):
   """Metrics to be computed on every evaluation run, viewable in TensorBoard.
 
   This function has the expected signature of a callable to be passed to
-  `tf.estimator.add_metrics`.
+  `tf.contrib.estimator.add_metrics`.
 
   Args:
     features: Dict of feature tensors.
@@ -266,7 +267,7 @@ def metrics_fn(features, labels, predictions):
 
 def train_and_evaluate(estimator):
   tf.estimator.train_and_evaluate(
-      tf.estimator.add_metrics(estimator, metrics_fn),
+      contrib_estimator.add_metrics(estimator, metrics_fn),
       tf.estimator.TrainSpec(
           input_fn=lambda: input_fn(FLAGS.train_input_patches),
           max_steps=FLAGS.train_max_steps),

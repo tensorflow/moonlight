@@ -113,8 +113,8 @@ class StaffRemover(object):
         return tf.where(erase_y, white_column, column)
 
       return tf.cond(
-          tf.shape(runs)[0] >
-          0, lambda: do_process_column(runs, run_lengths), lambda: column)
+          tf.shape(runs)[0] > 0, lambda: do_process_column(runs, run_lengths),
+          lambda: column)
 
     return tf.transpose(
         tf.map_fn(
