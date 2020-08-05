@@ -18,7 +18,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-from tensorflow.contrib import image as contrib_image
+from tensorflow_addons.image import transform_ops
 
 
 # TODO(ringw): Replace once github.com/tensorflow/tensorflow/pull/10748
@@ -43,4 +43,4 @@ def translate(image, x, y):
       [one, zero, tf.to_float(-x),
        zero, one, tf.to_float(-y),
        zero, zero], tf.float32)  # pyformat: disable
-  return contrib_image.transform(image, translation_matrix)
+  return transform_ops.transform(image, translation_matrix)

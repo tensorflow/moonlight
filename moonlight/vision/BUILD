@@ -22,7 +22,7 @@ py_library(
     srcs_version = "PY2AND3",
     deps = [
         # tensorflow dep
-        # tensorflow.contrib.image py dep
+        # tensorflow_addons.image dep
     ],
 )
 
