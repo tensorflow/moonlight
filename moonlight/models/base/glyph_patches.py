@@ -32,10 +32,8 @@ from moonlight.models.base import label_weights
 from moonlight.protobuf import musicscore_pb2
 from moonlight.util import memoize
 import tensorflow as tf
-from tensorflow.contrib import estimator as contrib_estimator
-from tensorflow.contrib import image as contrib_image
+from tensorflow_addons.image import transform_ops
 from tensorflow.python.lib.io import file_io
-from tensorflow.python.lib.io import tf_record
 
 WEIGHT_COLUMN_NAME = 'weight'
 
@@ -97,7 +95,7 @@ def read_patch_dimensions():
   """
   for filename in file_io.get_matching_files(FLAGS.train_input_patches):
     # If one matching file is empty, go on to the next file.
-    for record in tf_record.tf_record_iterator(filename):
+    for record in tf.io.tf_record_iterator(filename):
       example = tf.train.Example.FromString(record)
       # Convert long (int64) to int, necessary for use in feature columns in
       # Python 2.
@@ -192,7 +190,7 @@ def _augment_rotation(patch):
                                maxval=max_rotation_radians)
   # Background is white (1.0) but tf.contrib.image.rotate currently always fills
   # the edges with black (0). Invert the patch before rotating.
-  return 1. - contrib_image.rotate(
+  return 1. - transform_ops.rotate(
       1. - patch, rotation, interpolation='BILINEAR')
 
 
@@ -267,7 +265,7 @@ def metrics_fn(features, labels, predictions):
 
 def train_and_evaluate(estimator):
   tf.estimator.train_and_evaluate(
-      contrib_estimator.add_metrics(estimator, metrics_fn),
+      tf.estimator.add_metrics(estimator, metrics_fn),
       tf.estimator.TrainSpec(
           input_fn=lambda: input_fn(FLAGS.train_input_patches),
           max_steps=FLAGS.train_max_steps),
