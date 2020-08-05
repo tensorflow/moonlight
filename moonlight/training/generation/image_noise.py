@@ -23,7 +23,7 @@ from __future__ import print_function
 import math
 
 import tensorflow as tf
-from tensorflow.contrib import image as contrib_image
+from tensorflow_addons.image import transform_ops
 
 
 def placeholder_image():
@@ -31,7 +31,7 @@ def placeholder_image():
 
 
 def random_rotation(image, angle=math.pi / 180):
-  return 255. - contrib_image.rotate(
+  return 255. - transform_ops.rotate(
       255. - tf.to_float(image),
       tf.random_uniform((), -angle, angle),
       interpolation='BILINEAR')
