@@ -15,4 +15,5 @@ Pillow
 protobuf==3.6.1
 scipy
 tensorflow==1.15.2
+tensorflow-addons==0.11.0
 tensorflow-estimator==1.15.1
