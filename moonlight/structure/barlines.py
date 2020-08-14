@@ -30,8 +30,8 @@ class Barlines(object):
   def __init__(self, structure, close_barline_threshold=None):
     barline_valid, self.barline_staff_start, self.barline_staff_end = (
         assign_barlines_to_staves(
-            barline_x=structure.verticals.lines[:, :, 0].mean(
-                axis=1).astype(int),
+            barline_x=structure.verticals.lines[:, :,
+                                                0].mean(axis=1).astype(int),
             barline_y0=structure.verticals.lines[:, 0, 1],
             barline_y1=structure.verticals.lines[:, 1, 1],
             staff_detector=structure.staff_detector))

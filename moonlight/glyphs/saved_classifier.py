@@ -25,6 +25,8 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
+from tensorflow.contrib import graph_editor as contrib_graph_editor
+from tensorflow.contrib import util as contrib_util
 from tensorflow_estimator.python.estimator.canned import prediction_keys
 
 from moonlight.glyphs import convolutional
@@ -113,7 +115,7 @@ class SavedConvolutional1DClassifier(
       # Feed in the flat extracted patches as the classifier input.
       predictions_name = signature.outputs[
           prediction_keys.PredictionKeys.CLASS_IDS].name
-      predictions = tf.contrib.graph_editor.graph_replace(
+      predictions = contrib_graph_editor.graph_replace(
           sess.graph.get_tensor_by_name(predictions_name), {
               sess.graph.get_tensor_by_name(signature.inputs['input'].name):
                   flat_patches
@@ -150,7 +152,7 @@ class SavedConvolutional1DClassifier(
         # on a per-model basis.
         run_min_length_t = sess.graph.get_tensor_by_name(
             _RUN_MIN_LENGTH_CONSTANT_NAME)
-        run_min_length = tf.contrib.util.constant_value(run_min_length_t)
+        run_min_length = contrib_util.constant_value(run_min_length_t)
         # Implicit comparison is invalid on a NumPy array.
         # pylint: disable=g-explicit-bool-comparison
         if run_min_length is None or run_min_length.shape != ():

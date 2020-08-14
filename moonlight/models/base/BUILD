@@ -22,6 +22,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":batches",
+        # disable_tf2
         # absl dep
         # tensorflow dep
     ],
@@ -38,6 +39,8 @@ py_library(
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/util:memoize",
         # tensorflow dep
+        # tensorflow.contrib.estimator py dep
+        # tensorflow.contrib.image py dep
     ],
 )
 
@@ -47,6 +50,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":glyph_patches",
+        # disable_tf2
         # numpy dep
         # tensorflow dep
     ],
@@ -68,6 +72,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":hyperparameters",
+        # disable_tf2
         # numpy dep
     ],
 )
@@ -90,6 +95,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":label_weights",
+        # disable_tf2
         # tensorflow dep
     ],
 )

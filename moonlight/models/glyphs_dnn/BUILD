@@ -25,6 +25,7 @@ py_binary(
     srcs_version = "PY2AND3",
     deps = [
         ":model",
+        # disable_tf2
         # absl dep
         "//moonlight/models/base:glyph_patches",
     ],

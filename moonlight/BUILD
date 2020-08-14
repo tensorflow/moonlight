@@ -37,6 +37,7 @@ py_binary(
     srcs_version = "PY2AND3",
     deps = [
         ":engine",
+        # disable_tf2
         "@com_google_protobuf//:protobuf_python",
         # absl dep
         "//moonlight/conversions",
@@ -54,14 +55,15 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":engine",
+        # disable_tf2
         # pillow dep
         # absl/testing dep
         # librosa dep
         # lxml dep
-        "@magenta//protobuf:music_py_pb2",
         "//moonlight/conversions",
+        "@magenta//protobuf:music_py_pb2",
         # numpy dep
-        # tensorflow dep
+        # tensorflow.python.platform dep
     ],
 )
 
@@ -75,6 +77,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":engine",
+        # disable_tf2
         # absl/testing dep
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/score:reader",

@@ -40,8 +40,8 @@ py_test(
         ":reader",
         # absl/testing dep
         # librosa dep
-        "@magenta//protobuf:music_py_pb2",
         "//moonlight/conversions",
         "//moonlight/protobuf:protobuf_py_pb2",
+        "@magenta//protobuf:music_py_pb2",
     ],
 )

@@ -17,7 +17,7 @@ package tensorflow.moonlight;
 
 // TODO(ringw): Fix python import issue, then load magenta with a prefix of
 // "magenta" instead of "magenta/magenta". The import here should be
-// "magenta/protobuf/music.proto".
+// "magenta/music/protobuf/music.proto".
 import "protobuf/music.proto";
 
 // Alpha-stage OMR page model. Most protos (except Glyph.Type) are subject to
@@ -97,7 +97,7 @@ message Glyph {
 
   // The Glyph may be detected as a Note by ScoreReader. The Note is stored as
   // part of the Glyph.
-  optional tensorflow.magenta.NoteSequence.Note note = 7;
+  optional magenta.NoteSequence.Note note = 7;
 
   // Glyph Types are used as labels for the Examples in our corpus. Don't change
   // or reuse the numbers!

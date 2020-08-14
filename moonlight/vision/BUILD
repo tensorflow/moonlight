@@ -22,6 +22,7 @@ py_library(
     srcs_version = "PY2AND3",
     deps = [
         # tensorflow dep
+        # tensorflow.contrib.image py dep
     ],
 )
 
@@ -31,6 +32,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":images",
+        # disable_tf2
         # tensorflow dep
     ],
 )
@@ -51,6 +53,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":hough",
+        # disable_tf2
         # numpy dep
         # tensorflow dep
     ],
@@ -72,6 +75,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":morphology",
+        # disable_tf2
         # numpy dep
         # tensorflow dep
     ],

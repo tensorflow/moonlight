@@ -75,6 +75,7 @@ py_test(
         ":staffline_distance",
         ":staves",
         ":testing",
+        # disable_tf2
         "//moonlight:image",
         # numpy dep
         # tensorflow dep
@@ -94,6 +95,7 @@ py_test(
     deps = [
         ":staff_processor",
         ":testing",
+        # disable_tf2
         # absl/testing dep
         "//moonlight:engine",
         "//moonlight/glyphs:testing",
@@ -127,6 +129,7 @@ py_test(
     deps = [
         ":staffline_extractor",
         ":staves",
+        # disable_tf2
         # numpy dep
         # tensorflow dep
     ],
@@ -150,6 +153,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":staffline_distance",
+        # disable_tf2
         "//moonlight:image",
         # tensorflow dep
     ],
@@ -173,6 +177,7 @@ py_test(
         ":removal",
         ":staffline_distance",
         ":staves",
+        # disable_tf2
         "//moonlight:image",
         # numpy dep
         # tensorflow dep

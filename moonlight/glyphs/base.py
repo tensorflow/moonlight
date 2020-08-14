@@ -91,8 +91,9 @@ class BaseGlyphClassifier(object):
           type=glyph[GlyphsTensorColumns.TYPE])
 
     def generate_staff(staff_num):
-      glyphs = predictions[
-          predictions[:, int(GlyphsTensorColumns.STAFF_INDEX)] == staff_num]
+      glyphs = predictions[predictions[:,
+                                       int(GlyphsTensorColumns.STAFF_INDEX)] ==
+                           staff_num]
       # For determinism, sort glyphs by x, breaking ties by position (low to
       # high).
       glyph_order = np.lexsort(

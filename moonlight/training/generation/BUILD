@@ -28,6 +28,7 @@ py_test(
     tags = ["manual"],
     deps = [
         ":generation",
+        # disable_tf2
         "//moonlight/staves:staffline_extractor",
         # tensorflow dep
     ],
@@ -37,7 +38,10 @@ py_library(
     name = "image_noise",
     srcs = ["image_noise.py"],
     srcs_version = "PY2AND3",
-    deps = [],  # tensorflow dep
+    deps = [
+        # tensorflow dep
+        # tensorflow.contrib.image py dep
+    ],
 )
 
 py_binary(
@@ -47,6 +51,7 @@ py_binary(
     deps = [
         ":generation",
         ":image_noise",
+        # disable_tf2
         # absl dep
         # apache-beam dep
         "//moonlight/pipeline:pipeline_flags",

@@ -32,6 +32,7 @@ from apache_beam.transforms import combiners
 from moonlight.pipeline import pipeline_flags
 from moonlight.training.clustering import staffline_patches_dofn
 import tensorflow as tf
+from tensorflow.contrib import learn as contrib_learn
 from tensorflow.contrib.learn.python.learn import learn_runner
 from tensorflow.python.lib.io import file_io
 from tensorflow.python.lib.io import tf_record
@@ -94,7 +95,7 @@ def train_kmeans(patch_file_pattern,
           (batch_size, patch_height * patch_width).
       None for labels (not applicable to k-means).
     """
-    examples = tf.contrib.learn.read_batch_examples(
+    examples = contrib_learn.read_batch_examples(
         patch_file_pattern,
         batch_size,
         tf.TFRecordReader,
@@ -117,9 +118,9 @@ def train_kmeans(patch_file_pattern,
     Returns:
       A tf.contrib.learn.Experiment.
     """
-    kmeans = tf.contrib.learn.KMeansClustering(
+    kmeans = contrib_learn.KMeansClustering(
         num_clusters=num_clusters, config=run_config)
-    return tf.contrib.learn.Experiment(
+    return contrib_learn.Experiment(
         estimator=kmeans,
         train_steps=train_steps,
         train_input_fn=input_fn,
@@ -130,8 +131,7 @@ def train_kmeans(patch_file_pattern,
   output_dir = tempfile.mkdtemp(prefix='staffline_patches_kmeans')
   try:
     learn_runner.run(
-        experiment_fn,
-        run_config=tf.contrib.learn.RunConfig(model_dir=output_dir))
+        experiment_fn, run_config=contrib_learn.RunConfig(model_dir=output_dir))
     num_features = FLAGS.patch_height * FLAGS.patch_width
     clusters_t = tf.Variable(
         tf.zeros((num_clusters, num_features)),  # Dummy init op

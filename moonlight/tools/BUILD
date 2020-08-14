@@ -7,6 +7,7 @@ py_binary(
     srcs = ["gen_structure_test_case.py"],
     srcs_version = "PY2AND3",
     deps = [
+        # disable_tf2
         # absl dep
         "//moonlight:engine",
     ],
@@ -16,7 +17,10 @@ py_binary(
     name = "export_kmeans_centroids",
     srcs = ["export_kmeans_centroids.py"],
     srcs_version = "PY2AND3",
-    deps = [":export_kmeans_centroids_lib"],
+    deps = [
+        ":export_kmeans_centroids_lib",
+        # disable_tf2
+    ],
 )
 
 py_library(
@@ -44,6 +48,7 @@ py_test(
     ],
     deps = [
         ":export_kmeans_centroids_lib",
+        # disable_tf2
         # backports.tempfile dep
         "//moonlight:engine",
         "//moonlight/glyphs:saved_classifier",
