@@ -39,8 +39,7 @@ py_library(
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/util:memoize",
         # tensorflow dep
-        # tensorflow.contrib.estimator py dep
-        # tensorflow.contrib.image py dep
+        # tensorflow_addons.image dep
     ],
 )
 

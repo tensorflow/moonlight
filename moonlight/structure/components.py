@@ -23,7 +23,8 @@ from __future__ import print_function
 
 import enum
 import tensorflow as tf
-from tensorflow.contrib import image as contrib_image
+
+from tensorflow_addons.image.connected_components import connected_components
 
 
 class ConnectedComponentsColumns(enum.IntEnum):
@@ -74,7 +75,7 @@ def get_component_bounds(image):
         and bottom right corners of the bounding box.
   """
   with tf.name_scope('get_component_bounds'):
-    components = contrib_image.connected_components(image)
+    components = connected_components(image)
     num_components = tf.reduce_max(components) + 1
     width = tf.shape(image)[1]
     height = tf.shape(image)[0]

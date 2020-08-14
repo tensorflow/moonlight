@@ -85,7 +85,7 @@ py_library(
     srcs_version = "PY2AND3",
     deps = [
         # tensorflow dep
-        # tensorflow.contrib.image py dep
+        # tensorflow_addons.image dep
     ],
 )
 
@@ -112,7 +112,7 @@ py_library(
 
 py_test(
     name = "segments_test",
-    size = "small",
+    size = "medium",
     srcs = ["segments_test.py"],
     srcs_version = "PY2AND3",
     deps = [

@@ -95,7 +95,7 @@ py_library(
     deps = [
         # enum34 dep
         # tensorflow dep
-        # tensorflow.contrib.image py dep
+        # tensorflow_addons.image dep
     ],
 )
 
