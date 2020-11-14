@@ -11,6 +11,7 @@ addons:
     packages:
       - wget
       - pkg-config
+      - libtcmalloc-minimal4
 
 before_install:
   - wget https://github.com/bazelbuild/bazel/releases/download/0.20.0/bazel_0.20.0-linux-x86_64.deb
@@ -20,6 +21,9 @@ before_install:
 install:
   - python -m pip install --upgrade pip setuptools
   - pip install -r requirements.txt
+
+env:
+  - LD_PRELOAD="/usr/lib/libtcmalloc_minimal.so.4"
 
 before_script:
   - pip install flake8
