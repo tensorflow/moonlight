@@ -49,7 +49,6 @@ py_test(
     deps = [
         ":export_kmeans_centroids_lib",
         # disable_tf2
-        # backports.tempfile dep
         "//moonlight:engine",
         "//moonlight/glyphs:saved_classifier",
         # tensorflow dep

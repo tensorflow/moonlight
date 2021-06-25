@@ -3,7 +3,6 @@ absl-py
 # TODO(ringw): Get the latest apache beam version working in py2 tests.
 apache_beam==2.5.0; python_version < '3.0'
 apache_beam==2.11.0; python_version >= '3.0'
-backports.tempfile
 enum34
 librosa==0.4.0
 lxml

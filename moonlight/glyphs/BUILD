@@ -168,7 +168,6 @@ py_test(
     deps = [
         ":saved_classifier",
         # disable_tf2
-        # backports.tempfile dep
         "//moonlight:image",
         "//moonlight/protobuf:protobuf_py_pb2",
         "//moonlight/structure",
