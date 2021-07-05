@@ -15,3 +15,4 @@ protobuf==3.6.1
 scipy
 tensorflow==1.15.4
 tensorflow-estimator==1.15.1
+
