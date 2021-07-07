@@ -11,7 +11,7 @@ Mako
 numpy>=1.14.2
 pandas
 Pillow
-protobuf==3.6.1
+protobuf>=3.11.3
 scipy
 tensorflow==1.15.4
 tensorflow-estimator==1.15.1

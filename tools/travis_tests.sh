@@ -10,9 +10,8 @@ if [ "${TRAVIS_PYTHON_VERSION:0:1}" = 3 ]; then
 fi
 
 # Test that we can build and import the "engine" module in the sandbox.
-bazel build --incompatible_remove_native_http_archive=false //moonlight:omr
+bazel build //moonlight:omr
 PYTHONPATH=sandbox python -m moonlight.engine
 
-bazel test --incompatible_remove_native_http_archive=false \
-    --test_output=errors --local_test_jobs=1 $PYTHON_VERSION_FILTERS \
+bazel test --test_output=errors --local_test_jobs=1 $PYTHON_VERSION_FILTERS \
     //moonlight/...
