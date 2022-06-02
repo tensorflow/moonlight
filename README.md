@@ -40,10 +40,14 @@ processes an entire corpus of images.
 
 There is no release yet, and Moonlight is not ready for end users. To run
 interactively or import the module, you can use the [sandbox
-directory](sandbox/README.md).
+directory](sandbox/README.md). Moonlight will be used offline for digitizing
+a scanned corpus (it can be installed on all Cloud Compute platforms, and OS
+compatibility is not a priority).
 
 ### Dependencies
 
+* Linux
+  - Note: Our Google dep versions are fragile, and updating them or updating other OS may break directory structure in fragile ways.
 * [Protobuf 3.6.1](https://pypi.org/project/protobuf/3.6.1/)
 * [Bazel 0.20.0](https://github.com/bazelbuild/bazel/releases/tag/0.20.0). We
   encountered some errors using Bazel 0.21.0 to build Protobuf 3.6.1, which is
