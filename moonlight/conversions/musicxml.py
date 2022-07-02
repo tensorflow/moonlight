@@ -193,6 +193,19 @@ def _glyph_to_note(glyph):
   etree.SubElement(pitch, 'alter').text = str(
       ACCIDENTAL_TO_ALTER[pitch_match.group(2)])
   etree.SubElement(pitch, 'octave').text = pitch_match.group(3)
+
+  if glyph.HasField('stem'):
+    # Check for stem direction
+    # If more of the stem is above the y_position, stem direction = up
+    # Otherwise, stem direction = down
+    # If the distances above and below are equal, set stem direction = up
+    stem_distance_above = glyph.y_position - glyph.stem.start.y
+    stem_distance_below = glyph.y_position - glyph.stem.end.y
+    if stem_distance_above >= stem_distance_below:
+      etree.SubElement(note, 'stem').text = 'up'
+    else:
+      etree.SubElement(note, 'stem').text = 'down'
+
   return note
 
 
