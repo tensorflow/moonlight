@@ -26,6 +26,7 @@ from moonlight.staves import base as staves_base
 from moonlight.structure import beams
 from moonlight.structure import components
 from moonlight.structure import stems as stems_module
+from moonlight.structure import time_signature
 from moonlight.structure import verticals
 
 Point = musicscore_pb2.Point  # pylint: disable=invalid-name
@@ -45,7 +46,8 @@ class StemsTest(absltest.TestCase):
         beams=beams.ComputedBeams(np.zeros((0, 2, 2))),
         verticals=verticals.ComputedVerticals(
             lines=[[[20, 38], [20, 38 + 12 * 4]]]),
-        connected_components=components.ComputedComponents([]))
+        connected_components=components.ComputedComponents([]),
+        time_sig=time_signature.ComputedTimeSignatureData([]))
     stems = stems_module.Stems(struct)
     # Create a Page with Glyphs.
     input_page = musicscore_pb2.Page(system=[

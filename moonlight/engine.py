@@ -35,9 +35,10 @@ from moonlight import structure as structure_module
 from moonlight.glyphs import saved_classifier_fn
 from moonlight.protobuf import musicscore_pb2
 from moonlight.staves import base as staves_base
-from moonlight.structure import beams
-from moonlight.structure import components
-from moonlight.structure import verticals
+from moonlight.structure import beams as beams_module
+from moonlight.structure import components as components_module
+from moonlight.structure import time_signature
+from moonlight.structure import verticals as verticals_module
 
 # TODO(ringw): Get OMR running on GPU. It seems to create too many individual
 # ops/allocations and can freeze the machine.
@@ -96,6 +97,7 @@ class OMREngine(object):
         # TODO(ringw): TF should be able to load models gracefully within a
         # name scope.
         self.glyph_classifier = glyph_classifier_fn(self.structure)
+    # if ocr_external.OCR:
 
   def run(self, input_pngs, output_notesequence=False):
     """Converts input PNGs into a `Score` message.
@@ -157,15 +159,15 @@ class OMREngine(object):
         [structure_data,
          self.glyph_classifier.get_detected_glyphs()],
         feed_dict=feed_dict)
-    computed_staves, computed_beams, computed_verticals, computed_components = (
-        structure_data)
+    staves, beams, verticals, components, time_sig = structure_data
 
-    # Construct and return a computed Structure.
+    # Construct the computed Structure which processors will pull raw data from.
     computed_structure = structure_module.Structure(
-        staves_base.ComputedStaves(*computed_staves),
-        beams.ComputedBeams(*computed_beams),
-        verticals.ComputedVerticals(*computed_verticals),
-        components.ComputedComponents(*computed_components))
+        staves_base.ComputedStaves(*staves),
+        beams_module.ComputedBeams(*beams),
+        verticals_module.ComputedVerticals(*verticals),
+        components_module.ComputedComponents(*components),
+        time_signature.ComputedTimeSignatureData(*time_sig))
 
     # The Page without staff location information.
     labels_page = self.glyph_classifier.glyph_predictions_to_page(glyphs)

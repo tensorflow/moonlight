@@ -23,6 +23,7 @@ py_library(
         "//moonlight/structure",
         "//moonlight/structure:beams",
         "//moonlight/structure:components",
+        "//moonlight/structure:time_signature",
         "//moonlight/structure:verticals",
         # numpy dep
         # six dep

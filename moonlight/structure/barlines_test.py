@@ -26,6 +26,7 @@ from moonlight.staves import base as staves_base
 from moonlight.structure import barlines as barlines_module
 from moonlight.structure import beams
 from moonlight.structure import components
+from moonlight.structure import time_signature
 from moonlight.structure import verticals
 
 Point = musicscore_pb2.Point  # pylint: disable=invalid-name
@@ -67,7 +68,8 @@ class BarlinesTest(absltest.TestCase):
             # Staff 2 has 2 barlines.
             [[11, 350 - 12 * 2], [11, 350 + 12 * 2]],
             [[90, 350 - 12 * 2], [90, 350 + 12 * 2]],
-        ]))
+        ]),
+        time_sig=time_signature.ComputedTimeSignatureData([]))
     barlines = barlines_module.Barlines(struct, close_barline_threshold=3)
     # Create a Page with Glyphs.
     input_page = musicscore_pb2.Page(system=[
